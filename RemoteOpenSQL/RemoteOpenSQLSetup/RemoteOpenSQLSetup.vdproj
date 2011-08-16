@@ -33,6 +33,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
+        "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
+        "OwnerKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_15EE32EA6A2349DDA7BD3B6688262B01"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,8 +69,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_44EC8F2DE1A724E0DC5C9A8640CAA4BC"
+        "OwnerKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_44EC8F2DE1A724E0DC5C9A8640CAA4BC"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_59639F562E511BEF1394B9C7980845CF"
         "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59639F562E511BEF1394B9C7980845CF"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,13 +112,49 @@
         "Entry"
         {
         "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
+        "OwnerKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
+        "OwnerKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
         "OwnerKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
         "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
+        "OwnerKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -101,6 +173,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_800A33868F1646EE449000FAB8F4AF63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -160,15 +244,15 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 e x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.4.5"
                     {
-                    "Name" = "8:Windows Installer 3.1"
-                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    "Name" = "8:Windows Installer 4.5"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.4.5"
                     }
                 }
             }
@@ -296,6 +380,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0DCBAA2526ED07747FF44210FB0FAC08"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SapNetConnector2Proxy2010, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_0DCBAA2526ED07747FF44210FB0FAC08"
+                    {
+                    "Name" = "8:SapNetConnector2Proxy2010.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SapNetConnector2Proxy2010.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_15EE32EA6A2349DDA7BD3B6688262B01"
@@ -431,6 +546,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_800A33868F1646EE449000FAB8F4AF63"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RemoteOpenSQLLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_800A33868F1646EE449000FAB8F4AF63"
+                    {
+                    "Name" = "8:RemoteOpenSQLLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RemoteOpenSQLLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8BDC6F78316730A9328BA6F35EA0C4DB"
             {
             "AssemblyRegister" = "3:1"
@@ -561,7 +707,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RemoteOpenSQL"
         "ProductCode" = "8:{2BC55620-8395-400D-954D-C9E6D6528F65}"
-        "PackageCode" = "8:{22537B75-68F5-4A6E-95C3-21499E61220B}"
+        "PackageCode" = "8:{777B9345-EB6A-4E15-BE0A-0319DDFDDB1D}"
         "UpgradeCode" = "8:{F77AF266-B57D-4951-964D-464F89D6CED6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -681,18 +827,18 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1B0A38FB39354B72819A6C806A192678"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F4E2EC4AE42F4614AD5B04DF03A4B23D"
             {
             "Name" = "8:Remote Open SQL Manager"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
-            "IconIndex" = "3:32512"
+            "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
             "Folder" = "8:_D4ED6DC359734D80BE8B1104F0CA16C8"
             "WorkingFolder" = "8:_80F050400F62419288514B97F6E127CE"
-            "Icon" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
