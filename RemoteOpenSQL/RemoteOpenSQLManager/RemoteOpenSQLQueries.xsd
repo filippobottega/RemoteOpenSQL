@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RemoteOpenSQLQueries" targetNamespace="http://tempuri.org/RemoteOpenSQLQueries.xsd" xmlns:mstns="http://tempuri.org/RemoteOpenSQLQueries.xsd" xmlns="http://tempuri.org/RemoteOpenSQLQueries.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RemoteOpenSQLQueries" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="RemoteOpenSQLQueries" msprop:Generator_UserDSName="RemoteOpenSQLQueries">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="QueryTree" msprop:Generator_TableClassName="QueryTreeDataTable" msprop:Generator_TableVarName="tableQueryTree" msprop:Generator_TablePropName="QueryTree" msprop:Generator_RowDeletingName="QueryTreeRowDeleting" msprop:Generator_UserTableName="QueryTree" msprop:Generator_RowChangingName="QueryTreeRowChanging" msprop:Generator_RowEvHandlerName="QueryTreeRowChangeEventHandler" msprop:Generator_RowDeletedName="QueryTreeRowDeleted" msprop:Generator_RowEvArgName="QueryTreeRowChangeEvent" msprop:Generator_RowChangedName="QueryTreeRowChanged" msprop:Generator_RowClassName="QueryTreeRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="FatherID" msprop:Generator_ColumnVarNameInTable="columnFatherID" msprop:Generator_ColumnPropNameInRow="FatherID" msprop:Generator_ColumnPropNameInTable="FatherIDColumn" msprop:Generator_UserColumnName="FatherID" type="xs:string" default="0" />
+              <xs:element name="IsFolder" msprop:Generator_ColumnVarNameInTable="columnIsFolder" msprop:Generator_ColumnPropNameInRow="IsFolder" msprop:Generator_ColumnPropNameInTable="IsFolderColumn" msprop:Generator_UserColumnName="IsFolder" type="xs:boolean" default="true" />
+              <xs:element name="Name" msdata:Caption="Description" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" default="" />
+              <xs:element name="IsExpanded" msprop:Generator_ColumnVarNameInTable="columnIsExpanded" msprop:Generator_ColumnPropNameInRow="IsExpanded" msprop:Generator_ColumnPropNameInTable="IsExpandedColumn" msprop:Generator_UserColumnName="IsExpanded" type="xs:boolean" default="true" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Query" msprop:Generator_TableClassName="QueryDataTable" msprop:Generator_TableVarName="tableQuery" msprop:Generator_TablePropName="Query" msprop:Generator_RowDeletingName="QueryRowDeleting" msprop:Generator_UserTableName="Query" msprop:Generator_RowChangingName="QueryRowChanging" msprop:Generator_RowEvHandlerName="QueryRowChangeEventHandler" msprop:Generator_RowDeletedName="QueryRowDeleted" msprop:Generator_RowEvArgName="QueryRowChangeEvent" msprop:Generator_RowChangedName="QueryRowChanged" msprop:Generator_RowClassName="QueryRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" default="0" />
+              <xs:element name="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" msprop:Generator_UserColumnName="Description" type="xs:string" default="" />
+              <xs:element name="Query" msprop:Generator_ColumnVarNameInTable="columnQuery" msprop:Generator_ColumnPropNameInRow="Query" msprop:Generator_ColumnPropNameInTable="QueryColumn" msprop:Generator_UserColumnName="Query" type="xs:string" default="" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="QueriesTreeSelectedID" msprop:Generator_TableClassName="QueriesTreeSelectedIDDataTable" msprop:Generator_TableVarName="tableQueriesTreeSelectedID" msprop:Generator_TablePropName="QueriesTreeSelectedID" msprop:Generator_RowDeletingName="QueriesTreeSelectedIDRowDeleting" msprop:Generator_UserTableName="QueriesTreeSelectedID" msprop:Generator_RowChangingName="QueriesTreeSelectedIDRowChanging" msprop:Generator_RowEvHandlerName="QueriesTreeSelectedIDRowChangeEventHandler" msprop:Generator_RowDeletedName="QueriesTreeSelectedIDRowDeleted" msprop:Generator_RowEvArgName="QueriesTreeSelectedIDRowChangeEvent" msprop:Generator_RowChangedName="QueriesTreeSelectedIDRowChanged" msprop:Generator_RowClassName="QueriesTreeSelectedIDRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SelectedID" msprop:Generator_ColumnVarNameInTable="columnSelectedID" msprop:Generator_ColumnPropNameInRow="SelectedID" msprop:Generator_ColumnPropNameInTable="SelectedIDColumn" msprop:Generator_UserColumnName="SelectedID" type="xs:int" default="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:QueryTree" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="Query_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Query" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="QueriesTreeSelectedID_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:QueriesTreeSelectedID" />
+      <xs:field xpath="mstns:SelectedID" />
+    </xs:unique>
+    <xs:keyref name="FK_QueriesTree_Query" refer="Constraint1" msprop:rel_Generator_UserChildTable="Query" msprop:rel_Generator_ChildPropName="GetQueryRows" msprop:rel_Generator_ParentPropName="QueriesTreeRow" msprop:rel_Generator_UserRelationName="FK_QueriesTree_Query" msprop:rel_Generator_RelationVarName="relationFK_QueriesTree_Query" msprop:rel_Generator_UserParentTable="QueryTree">
+      <xs:selector xpath=".//mstns:Query" />
+      <xs:field xpath="mstns:ID" />
+    </xs:keyref>
+  </xs:element>
+</xs:schema>

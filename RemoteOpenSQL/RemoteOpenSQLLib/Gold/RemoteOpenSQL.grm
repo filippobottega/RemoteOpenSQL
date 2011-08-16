@@ -1,0 +1,120 @@
+﻿! -----------------------------------------------------------------------------------
+! RemoteOpenSQL
+!
+! © 2011 Filippo Bottega
+! email: filippo.bottega@gmail.com
+! www.remoteopensql.com
+!
+! -----------------------------------------------------------------------------------
+
+"Name"         = 'RemoteOpenSQL'
+"Version"      = '2011'
+"About"        = 'RemoteOpenSQL is a SAP OpenSQL derived grammar. Some rules derives from SQL89 grammar.'
+
+"Start Symbol" = <Query>
+
+! =============================================================================
+! Comments
+! =============================================================================
+
+Comment Start = '/*'
+Comment End   = '*/'
+Comment Line  = '--'
+
+! =============================================================================
+! Terminals
+! =============================================================================
+
+{String Ch 1}      = {Printable} - ["]
+{String Ch 2}      = {Printable} - ['']
+{Id Ch Standard}   = {Alphanumeric} + [_] + [/]
+{Id Ch Extended}   = {Printable} - ['['] - [']']
+{Letter Standard}  = {Letter} + [/]     
+
+StringLiteral   = '"'{String Ch 1}*'"' | ''{String Ch 2}*''
+IntegerLiteral  = {Digit}+
+RealLiteral     = {Digit}+'.'{Digit}+
+
+!----- Identifiers in SQL are very complex. 
+
+Id             = ({Letter Standard}{Id Ch Standard}* | '['{Id Ch Extended}+']')  ('.'({Letter Standard}{Id Ch Standard}* | '['{Id Ch Extended}+']'))?
+Component      = {Letter Standard}{Id Ch Standard}+'-'{Letter Standard}{Id Ch Standard}+
+
+! =============================================================================
+! Rules
+! =============================================================================
+
+<Query>       ::= <Select Stm>
+
+! =============================================================================
+! Select Statement
+! =============================================================================
+
+<Select Stm>    ::= SELECT <Columns> <From Clause> <Where Clause> <Order Clause>
+
+<Columns>       ::= ' *'
+                  | <Column List>
+
+<Column List>   ::= <Column Item> <Column List>
+                  | <Column Item>
+
+<Column Item>   ::= <Column Source>
+                  | <Column Source> AS Id      !ALIAS   
+                  
+<Column Source> ::= Id               
+
+<From Clause>   ::= FROM <Id List> <Client Specified Clause>
+
+<Client Specified Clause> ::= 'CLIENT SPECIFIED'
+                  | 
+
+<Where Clause>  ::= WHERE <Expression>
+                  |
+
+<Order Clause>  ::= 'ORDER BY' <Order List>
+                  | 'ORDER BY PRIMARY KEY'
+                  |
+
+<Order List>    ::= ID <Order List>
+                  | ID
+
+! ============================================================================= 
+! Expressions
+! =============================================================================
+
+<Expression>  ::= <And Exp> OR <Expression>
+                | <And Exp>
+
+<And Exp>     ::= <Not Exp> AND <And Exp>
+                | <Not Exp>
+
+<Not Exp>     ::= NOT <Pred Exp>
+                | <Pred Exp>
+
+<Pred Exp>    ::= <Col> BETWEEN <Dobj> AND <Dobj>
+                | <Col> 'NOT BETWEEN' <Dobj> AND <Dobj>
+                | <Col> 'IS NOT NULL'
+                | <Col> 'IS NULL'
+                | <Col> LIKE StringLiteral
+                | <Col> ' ='  <Dobj>
+                | <Col> ' <>' <Dobj>
+                | <Col> ' !=' <Dobj>
+                | <Col> ' >'  <Dobj>
+                | <Col> ' >=' <Dobj>
+                | <Col> ' <'  <Dobj>
+                | <Col> ' <=' <Dobj>
+                | <Col>
+                | '(' <Expression> ')'
+
+<Col>         ::= ID
+
+<Dobj>        ::= IntegerLiteral
+                | RealLiteral
+                | StringLiteral
+                | NULL
+                | Component
+
+<Id List>     ::= <Id Member> ',' <Id List> 
+                | <Id Member>
+
+<Id Member>   ::= Id

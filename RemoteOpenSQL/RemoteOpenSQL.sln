@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RemoteOpenSQLLib", "RemoteOpenSQLLib\RemoteOpenSQLLib.vbproj", "{794ACEC6-5237-4307-BF25-D0B06B8E40F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C} = {714963AD-ABBA-4083-A68F-5893AEE90E5C}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2F5E168A-5C08-49E4-B76C-43CF7417BD7D}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SapNetConnector2Proxy2010", "SapNetConnector2Proxy2010\SapNetConnector2Proxy2010.vbproj", "{714963AD-ABBA-4083-A68F-5893AEE90E5C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RemoteOpenSQLManager", "RemoteOpenSQLManager\RemoteOpenSQLManager.vbproj", "{B2736C7E-4D5B-4545-A70A-55067D16C48E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C} = {714963AD-ABBA-4083-A68F-5893AEE90E5C}
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RemoteOpenSQLSetup", "RemoteOpenSQLSetup\RemoteOpenSQLSetup.vdproj", "{A0A8FE84-5781-40BF-8F65-725D0AB00FDB}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = RemoteOpenSQLLib\\RemoteOpenSQLLib.vbproj
+		SccProjectName1 = RemoteOpenSQLLib
+		SccLocalPath1 = RemoteOpenSQLLib
+		SccProjectUniqueName2 = RemoteOpenSQLManager\\RemoteOpenSQLManager.vbproj
+		SccProjectName2 = RemoteOpenSQLManager
+		SccLocalPath2 = RemoteOpenSQLManager
+		SccProjectUniqueName3 = RemoteOpenSQLSetup\\RemoteOpenSQLSetup.vdproj
+		SccProjectName3 = RemoteOpenSQLSetup
+		SccLocalPath3 = RemoteOpenSQLSetup
+		SccProjectUniqueName4 = SapNetConnector2Proxy2010\\SapNetConnector2Proxy2010.vbproj
+		SccProjectName4 = SapNetConnector2Proxy2010
+		SccLocalPath4 = SapNetConnector2Proxy2010
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{794ACEC6-5237-4307-BF25-D0B06B8E40F5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{794ACEC6-5237-4307-BF25-D0B06B8E40F5}.Debug|Any CPU.Build.0 = Debug|x86
+		{794ACEC6-5237-4307-BF25-D0B06B8E40F5}.Release|Any CPU.ActiveCfg = Release|x86
+		{794ACEC6-5237-4307-BF25-D0B06B8E40F5}.Release|Any CPU.Build.0 = Release|x86
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C}.Debug|Any CPU.Build.0 = Debug|x86
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C}.Release|Any CPU.ActiveCfg = Release|x86
+		{714963AD-ABBA-4083-A68F-5893AEE90E5C}.Release|Any CPU.Build.0 = Release|x86
+		{B2736C7E-4D5B-4545-A70A-55067D16C48E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B2736C7E-4D5B-4545-A70A-55067D16C48E}.Debug|Any CPU.Build.0 = Debug|x86
+		{B2736C7E-4D5B-4545-A70A-55067D16C48E}.Release|Any CPU.ActiveCfg = Release|x86
+		{B2736C7E-4D5B-4545-A70A-55067D16C48E}.Release|Any CPU.Build.0 = Release|x86
+		{A0A8FE84-5781-40BF-8F65-725D0AB00FDB}.Debug|Any CPU.ActiveCfg = Debug
+		{A0A8FE84-5781-40BF-8F65-725D0AB00FDB}.Release|Any CPU.ActiveCfg = Release
+		{A0A8FE84-5781-40BF-8F65-725D0AB00FDB}.Release|Any CPU.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

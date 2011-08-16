@@ -1,0 +1,1103 @@
+* Remote open sql function module
+* © Copyright 2011 By Filippo Bottega, all rights reserved.
+
+  TYPES: BEGIN OF ros_parse_node,
+    id TYPE i,
+    parent TYPE i,
+    symbol TYPE char255,
+    text_or_rule TYPE char255,
+    terminal TYPE xfeld,
+    END OF ros_parse_node.
+  TYPES: ros_parse_node_table TYPE STANDARD TABLE OF ros_parse_node.
+
+  TYPES: BEGIN OF ros_symbol_node,
+    symbol TYPE char255,
+    END OF ros_symbol_node.
+  TYPES: ros_symbol_node_table TYPE STANDARD TABLE OF ros_symbol_node.
+
+  TYPES: BEGIN OF ros_production,
+    index TYPE i,
+    head TYPE char255,
+    handle TYPE char255,
+    END OF ros_production.
+  TYPES: ros_production_table TYPE STANDARD TABLE OF ros_production.
+
+  TYPES: BEGIN OF ros_field_info,
+    fieldname TYPE char30,
+    rollname_or_abaptype TYPE char30,
+    dfiesindex TYPE i,
+    END OF ros_field_info.
+  TYPES: ros_field_info_table TYPE STANDARD TABLE OF ros_field_info.
+
+  TYPES: BEGIN OF ros_subpoolline,
+  line TYPE char255,
+  END OF ros_subpoolline.
+  TYPES: ros_subpoolline_table TYPE STANDARD TABLE OF ros_subpoolline.
+
+  FUNCTION z_remote_open_sql.
+*"----------------------------------------------------------------------
+*"*"Interfaccia locale:
+*"----------------------------------------------------------------------
+
+    DATA: callcount TYPE i.
+    DATA: context_index TYPE i.
+    DATA: max_rows TYPE i.
+    DATA: partition_size TYPE i.
+    DATA: cancel TYPE c.
+    DATA: parse_nodes_step_1 TYPE TABLE OF ros_parse_node WITH HEADER LINE.
+    DATA: parse_nodes_step_n TYPE TABLE OF ros_parse_node WITH HEADER LINE.
+    DATA: selected_fields TYPE TABLE OF ros_field_info WITH HEADER LINE.
+    DATA: orderby_fields TYPE TABLE OF ros_field_info WITH HEADER LINE.
+    DATA: message TYPE char255.
+    DATA: line TYPE i.
+
+    callcount = 1.
+    DO.
+      CALL FUNCTION 'SEND_CALL_CONTEXT'
+        DESTINATION 'BACK'
+        EXPORTING
+          abap_code_version     = '1.0.0.0'
+        IMPORTING
+          context_index         = context_index
+          max_rows              = max_rows
+          partition_size        = partition_size
+          cancel                = cancel
+        TABLES
+          parse_nodes_step_1    = parse_nodes_step_1
+          parse_nodes_step_n    = parse_nodes_step_n
+          selected_fields       = selected_fields
+          orderby_fields        = orderby_fields
+        EXCEPTIONS
+          system_failure        = 1
+          communication_failure = 2.
+
+      IF sy-subrc = 0.
+        IF cancel = 'X'.
+          RETURN.
+        ELSE.
+          EXIT.
+        ENDIF.
+      ELSEIF callcount >= 10.
+        RETURN.
+      ELSE .
+        callcount = callcount + 1.
+        WAIT UP TO 1 SECONDS.
+      ENDIF.
+    ENDDO.
+
+    IF cancel = 'X'.
+      EXIT.
+    ENDIF.
+
+    DATA: productions TYPE TABLE OF ros_production WITH HEADER LINE.
+
+*   Create allowed grammar productions
+
+    PERFORM get_productions CHANGING productions[].
+
+*   Check if parse_nodes_step_1 table contain allowed rules
+
+    PERFORM check_parse_nodes
+      USING productions[]
+            parse_nodes_step_1[]
+      CHANGING
+        message.
+
+    IF NOT message IS INITIAL.
+      PERFORM receive_message USING message 0.
+      EXIT.
+    ENDIF.
+
+*   Check if parse_nodes_step_n table contain allowed rules
+
+    PERFORM check_parse_nodes
+      USING productions[]
+            parse_nodes_step_n[]
+      CHANGING
+        message.
+
+    IF NOT message IS INITIAL.
+      PERFORM receive_message USING message 0.
+      EXIT.
+    ENDIF.
+
+*   Check view authority for tables used in parse_nodes_step_1[]
+    PERFORM view_authority_check
+                USING
+                   parse_nodes_step_1[]
+                CHANGING
+                   message.
+
+    IF NOT message IS INITIAL.
+      PERFORM receive_message USING message 0.
+      EXIT.
+    ENDIF.
+
+*   Check view authority for tables used in parse_nodes_step_n[]
+    PERFORM view_authority_check
+                USING
+                   parse_nodes_step_n[]
+                CHANGING
+                   message.
+
+    IF NOT message IS INITIAL.
+      PERFORM receive_message USING message 0.
+      EXIT.
+    ENDIF.
+
+
+    DATA: subpoollines TYPE ros_subpoolline_table.
+
+    PERFORM get_standard_sub_pool_lines
+      USING parse_nodes_step_1[]
+            parse_nodes_step_n[]
+            selected_fields[]
+            orderby_fields[]
+      CHANGING subpoollines[].
+
+    DATA prog  TYPE string.
+    DATA sid  TYPE string.
+
+    DATA myref TYPE REF TO cx_sy_generate_subpool_full .
+    DATA myref2 TYPE REF TO cx_sy_gen_source_too_wide .
+    DATA err_text TYPE string.
+    DATA result TYPE i.
+    TRY.
+        GENERATE SUBROUTINE POOL subpoollines  NAME  prog
+          MESSAGE message
+          LINE line
+          SHORTDUMP-ID sid.
+      CATCH cx_sy_generate_subpool_full  INTO myref.
+        err_text = myref->get_text( ).
+        message = err_text.
+      CATCH cx_sy_gen_source_too_wide INTO myref2.
+        err_text = myref2->get_text( ).
+        message = err_text.
+    ENDTRY.
+
+    IF NOT message IS INITIAL.
+      PERFORM receive_message USING message line.
+      EXIT.
+    ENDIF.
+
+    PERFORM ('EXEC_QUERY') IN PROGRAM (prog)
+      USING max_rows
+            partition_size
+            context_index.
+
+  ENDFUNCTION.
+
+*&---------------------------------------------------------------------*
+*&      Form  Receive_Message
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->MESSAGE    text
+*      -->LINE       text
+*----------------------------------------------------------------------*
+  FORM receive_message
+      USING message TYPE char255
+            line TYPE i.
+
+    DATA: callcount TYPE i.
+
+    callcount = 1.
+    DO.
+      CALL FUNCTION 'RECEIVE_MESSAGE'
+        DESTINATION 'BACK'
+        EXPORTING
+          message               = message
+          line                  = line
+        EXCEPTIONS
+          system_failure        = 1
+          communication_failure = 2.
+
+      IF sy-subrc = 0 .
+        EXIT.
+      ELSEIF callcount >= 10 .
+        RETURN.
+      ELSE .
+        callcount = callcount + 1 .
+        WAIT UP TO 1 SECONDS.
+      ENDIF.
+    ENDDO.
+  ENDFORM.                    "Receive_Message
+
+*&---------------------------------------------------------------------*
+*&      Form  check_parse_nodes
+*&---------------------------------------------------------------------*
+*       Check productions of parse_nodes
+*----------------------------------------------------------------------*
+*      -->PRODUCTIONS  grammar productions
+*      -->PARSE_NODES  parse tree
+*      -->RESULT       result
+*----------------------------------------------------------------------*
+  FORM check_parse_nodes
+    USING productions TYPE ros_production_table
+          parse_nodes TYPE ros_parse_node_table
+    CHANGING message TYPE char255.
+
+    DATA: wa_parse_node TYPE ros_parse_node.
+    DATA: wa_production TYPE ros_production.
+
+    READ TABLE parse_nodes INTO wa_parse_node INDEX 1.
+
+*   Check if parse node tree is enpty
+    IF sy-subrc <> 0.
+      message = 'Parse node tree is enpty.'.
+      EXIT.
+    ENDIF.
+
+*   Check if productions table is enpty
+    READ TABLE productions INTO wa_production INDEX 1.
+    IF sy-subrc <> 0.
+      message = 'Productions table is enpty.'.
+      EXIT.
+    ENDIF.
+
+*   First Parse Node Rule must be terminal
+    IF NOT wa_parse_node-terminal IS INITIAL.
+      message = 'First parse node must be terminal.'.
+      EXIT.
+    ENDIF.
+
+*   First Parse Node Rule must be equal to First Production Handle
+    IF wa_parse_node-text_or_rule <> wa_production-handle.
+      message = 'First parse node rule must be equal to first production handle.'.
+      EXIT.
+    ENDIF.
+
+*   Check that all nodes have a valid parent and a valid id
+    DATA: parent_nodes TYPE ros_parse_node_table.
+    DATA: wa_parent_node TYPE ros_parse_node.
+    DATA: node_index TYPE i.
+
+    LOOP AT parse_nodes INTO wa_parse_node.
+
+*     Check ids
+      IF sy-tabix <> wa_parse_node-id.
+        DATA: sy_tabix TYPE char5.
+        sy_tabix = sy-tabix.
+        CONCATENATE 'Wrong id at index' sy_tabix INTO message SEPARATED BY space.
+        RETURN.
+      ENDIF.
+
+      IF sy-tabix EQ 1.
+        APPEND wa_parse_node TO parent_nodes.
+      ELSE.
+*       Check parent id
+        DATA: delete_index TYPE i.
+        READ TABLE parent_nodes INTO wa_parent_node WITH KEY id = wa_parse_node-parent.
+        IF sy-subrc <> 0.
+          message = 'Parent id not found.'.
+          RETURN.
+        ENDIF.
+        delete_index = sy-tabix + 1.
+
+        IF wa_parse_node-terminal IS INITIAL.
+*         If parse node is not terminal than add to parents
+          APPEND wa_parse_node TO parent_nodes.
+        ELSE.
+*         Delete parents: parse tree must be hierarchically ordered
+          DELETE parent_nodes FROM delete_index.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
+
+*   For each non terminal node check that rule exists in productions.
+    LOOP AT parse_nodes INTO  wa_parse_node  WHERE terminal IS INITIAL.
+      READ TABLE productions INTO wa_production WITH KEY handle = wa_parse_node-text_or_rule.
+      IF sy-subrc <> 0.
+        CONCATENATE 'Rule' wa_parse_node-text_or_rule 'not allowed.'
+          INTO  message SEPARATED BY space.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+
+    IF NOT message IS INITIAL.
+      EXIT.
+    ENDIF.
+
+
+*   For each non terminal node check that rule is equal to all childs concatenation.
+
+    DATA: wa_parse_node_parent TYPE ros_parse_node.
+    DATA: wa_parse_node_child TYPE ros_parse_node.
+    DATA: rule_to_check TYPE char255.
+    DATA: id_string TYPE string.
+
+    LOOP AT parse_nodes INTO wa_parse_node_parent WHERE terminal IS INITIAL.
+      rule_to_check = ''.
+      LOOP AT parse_nodes INTO wa_parse_node_child WHERE parent = wa_parse_node_parent-id.
+        IF rule_to_check IS INITIAL.
+          rule_to_check = wa_parse_node_child-symbol.
+        ELSE.
+          CONCATENATE rule_to_check wa_parse_node_child-symbol INTO rule_to_check SEPARATED BY space.
+        ENDIF.
+      ENDLOOP.
+
+      IF wa_parse_node_parent-text_or_rule <> rule_to_check.
+        id_string = wa_parse_node_parent-id.
+        CONCATENATE 'Error checking rule' wa_parse_node_parent-text_or_rule 'id' id_string
+          INTO  message SEPARATED BY space.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+
+    IF NOT message IS INITIAL.
+      EXIT.
+    ENDIF.
+
+*   For each terminal node check that symbol is equal to text_or_rule
+*   or text_or_rule is a single word (spaces not allowed): simple text but enough
+*   to avoid SQL injection.
+
+    DATA: wa_terminal_parse_node TYPE ros_parse_node.
+    DATA: condensed_text_or_rule TYPE char255.
+
+    LOOP AT parse_nodes INTO wa_terminal_parse_node WHERE NOT terminal IS INITIAL.
+      IF wa_terminal_parse_node-text_or_rule = wa_terminal_parse_node-symbol.
+        CONTINUE.
+      ENDIF.
+
+      condensed_text_or_rule = wa_terminal_parse_node-text_or_rule.
+      CONDENSE condensed_text_or_rule NO-GAPS.
+
+      IF condensed_text_or_rule = wa_terminal_parse_node-text_or_rule.
+        CONTINUE.
+      ENDIF.
+
+      id_string = wa_terminal_parse_node-id.
+      CONCATENATE 'Error checking text ' wa_terminal_parse_node-text_or_rule 'id' id_string
+        INTO  message SEPARATED BY space.
+      EXIT.
+    ENDLOOP.
+
+    IF NOT message IS INITIAL.
+      EXIT.
+    ENDIF.
+  ENDFORM.                    "check_parse_nodes
+
+*&---------------------------------------------------------------------*
+*&      Form  get_filtered_parse_nodes
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PARSE_NODES           text
+*      -->PATH                  text
+*      -->SYMBOL_FILTER         text
+*      -->TERMINAL_FILTER       text
+*      -->RECURSIVE             text
+*      -->FILTERED_PARSE_NODES  text
+*----------------------------------------------------------------------*
+  FORM get_filtered_parse_nodes
+    USING parse_nodes TYPE ros_parse_node_table
+          path TYPE ros_symbol_node_table
+          symbol_filter TYPE char255
+          get_terminals TYPE c
+          get_nonterminals TYPE c
+          recursive TYPE c
+    CHANGING filtered_parse_nodes TYPE ros_parse_node_table
+             message TYPE char255.
+
+    DATA: wa_parse_node TYPE ros_parse_node.
+    DATA: root_id TYPE i.
+
+*   Search root id
+    IF path IS INITIAL.
+      root_id = 1.
+    ELSE.
+      DATA: wa_path TYPE ros_symbol_node.
+      DATA: parent_id TYPE i.
+      parent_id = 0.
+
+      LOOP AT path INTO wa_path.
+        READ TABLE parse_nodes INTO wa_parse_node WITH KEY
+          parent = parent_id
+          symbol = wa_path-symbol.
+
+        IF sy-subrc <> 0.
+          CONCATENATE 'Symbol' wa_path-symbol ' not found.'
+           INTO message
+           SEPARATED BY space.
+          RETURN.
+        ENDIF.
+
+        parent_id =  wa_parse_node-id.
+      ENDLOOP.
+      root_id = wa_parse_node-id.
+    ENDIF.
+
+    LOOP AT parse_nodes INTO wa_parse_node.
+      IF sy-tabix <= root_id.
+        CONTINUE.
+      ENDIF.
+
+      IF wa_parse_node-parent < root_id.
+        RETURN.
+      ENDIF.
+
+      IF recursive IS INITIAL AND wa_parse_node-parent <> root_id.
+        CONTINUE.
+      ENDIF.
+
+      IF ( wa_parse_node-terminal = 'X' AND get_terminals = 'X' ) OR
+         ( wa_parse_node-terminal = '' AND get_nonterminals = 'X' ).
+      ELSE.
+        CONTINUE.
+      ENDIF.
+
+      IF symbol_filter <> wa_parse_node-symbol.
+        CONTINUE.
+      ENDIF.
+
+      APPEND wa_parse_node TO filtered_parse_nodes.
+    ENDLOOP.
+  ENDFORM.                    "get_filtered_parse_nodes
+
+*&---------------------------------------------------------------------*
+*&      Form  VIEW_AUTHORITY_CHECK
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PARSE_NODES  text
+*      -->MESSAGE      text
+*----------------------------------------------------------------------*
+  FORM view_authority_check
+    USING parse_nodes TYPE ros_parse_node_table
+    CHANGING message TYPE char255.
+
+    DATA: path TYPE ros_symbol_node_table WITH HEADER LINE.
+    DATA: filtered_parse_nodes TYPE ros_parse_node_table WITH HEADER LINE.
+
+    path = '<Query>'.
+    APPEND path.
+    path = '<Select Stm>'.
+    APPEND path.
+    path = '<From Clause>'.
+    APPEND path.
+
+    PERFORM get_filtered_parse_nodes
+                USING
+                   parse_nodes
+                   path[]
+                   'Id'
+                   'X'
+                   ''
+                   'X'
+                CHANGING
+                   filtered_parse_nodes[]
+                   message.
+
+    IF NOT message IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF filtered_parse_nodes[] IS INITIAL.
+      message = 'No tables found into FROM clause.'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT filtered_parse_nodes.
+      DATA: view_name LIKE dd25v-viewname.
+      view_name = filtered_parse_nodes-text_or_rule.
+      CALL FUNCTION 'VIEW_AUTHORITY_CHECK'
+        EXPORTING
+          view_action                    = 'S'
+          view_name                      = view_name
+        EXCEPTIONS
+          no_authority                   = 2
+          no_clientindependent_authority = 2
+          no_linedependent_authority     = 2
+          OTHERS                         = 1.
+
+      IF sy-subrc = 2.
+        CONCATENATE 'Not uthorized to read table' filtered_parse_nodes-text_or_rule
+          INTO message SEPARATED BY space.
+        RETURN.
+      ELSEIF sy-subrc = 1.
+        CONCATENATE 'Table' filtered_parse_nodes-text_or_rule ' not available.'
+          INTO message SEPARATED BY space.
+        RETURN.
+      ENDIF.
+
+    ENDLOOP.
+  ENDFORM.                    "VIEW_AUTHORITY_CHECK
+
+*&---------------------------------------------------------------------*
+*&      Form  timestamp_subtract
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->TSTMP1     text
+*      -->TSTMP2     text
+*      -->SECS       text
+*----------------------------------------------------------------------*
+  FORM timestamp_subtract
+    USING tstmp1 TYPE timestampl
+          tstmp2 TYPE timestampl
+    CHANGING secs TYPE tzntstmpl.
+
+    TRY.
+        CALL METHOD cl_abap_tstmp=>subtract
+          EXPORTING
+            tstmp1 = tstmp1
+            tstmp2 = tstmp2
+          RECEIVING
+            r_secs = secs.
+      CATCH cx_parameter_invalid_range .
+      CATCH cx_parameter_invalid_type .
+    ENDTRY.
+
+  ENDFORM.                    "timestamp_subtract
+
+*&---------------------------------------------------------------------*
+*&      Form  GET_standard_SUB_pool_lines
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PARSE_NODES_STEP_1  text
+*      -->PARSE_NODES_STEP_N  text
+*      -->SUBPOOLLINES        text
+*----------------------------------------------------------------------*
+  FORM get_standard_sub_pool_lines
+    USING parse_nodes_step_1 TYPE ros_parse_node_table
+          parse_nodes_step_n TYPE ros_parse_node_table
+          selected_fields TYPE ros_field_info_table
+          orderby_fields TYPE ros_field_info_table
+    CHANGING subpoollines TYPE ros_subpoolline_table.
+
+    DATA: wa_selected_field TYPE ros_field_info.
+    DATA: wa_orderby_field TYPE ros_field_info.
+    DATA: wa_subpoolline TYPE ros_subpoolline.
+
+
+    APPEND `* Remote open sql generated program`                                        TO subpoollines.
+    APPEND `* © Copyright 2011 By Filippo Bottega, all rights reserved.`                TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `  PROGRAM z_remote_open_sql_reader.`                                        TO subpoollines.
+    APPEND `  TYPES: BEGIN OF linestruct,`                                              TO subpoollines.
+    LOOP AT selected_fields INTO wa_selected_field.
+      CONCATENATE `    ` wa_selected_field-fieldname ` TYPE` ` ` wa_selected_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    APPEND `  END OF linestruct.`                                                       TO subpoollines.
+    APPEND `  TYPES: BEGIN OF orderbystruct,`                                           TO subpoollines.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      CONCATENATE `    ` wa_orderby_field-fieldname ` TYPE` ` ` wa_orderby_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    APPEND `  END OF orderbystruct.`                                                    TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*  PERFORM exec_query.`                                                     TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*  &---------------------------------------------------------------------*` TO subpoollines.
+    APPEND `*  &      Form  EXEC_QUERY`                                                 TO subpoollines.
+    APPEND `*  &---------------------------------------------------------------------*` TO subpoollines.
+    APPEND `*         Invoke this form to run query`                                    TO subpoollines.
+    APPEND `*  ----------------------------------------------------------------------*` TO subpoollines.
+    APPEND `  FORM exec_query`                                                          TO subpoollines.
+    APPEND `    USING max_rows       TYPE int4`                                         TO subpoollines.
+    APPEND `          partition_size TYPE int4`                                         TO subpoollines.
+    APPEND `          context_index  TYPE i.`                                           TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `    DATA: ta_lines         TYPE TABLE OF linestruct.`                       TO subpoollines.
+    APPEND `    DATA: wa_line          TYPE linestruct.`                                TO subpoollines.
+    APPEND `    DATA: wa_first_line    TYPE linestruct.`                                TO subpoollines.
+    APPEND `    DATA: wa_orderby       TYPE orderbystruct.`                             TO subpoollines.
+    APPEND `    DATA: wa_orderby_last  TYPE orderbystruct.`                             TO subpoollines.
+    APPEND `    DATA: wa_orderby_first TYPE orderbystruct.`                             TO subpoollines.
+    APPEND `    DATA: uptorows         TYPE i.`                                         TO subpoollines.
+    APPEND `    DATA: linescount       TYPE i.`                                         TO subpoollines.
+    APPEND `    DATA: blockindex       TYPE i.`                                         TO subpoollines.
+    APPEND `    DATA: partition_error  TYPE c.`                                         TO subpoollines.
+    APPEND `    DATA: completeadding   TYPE c.`                                         TO subpoollines.
+    APPEND `    DATA: selecterror      TYPE c.`                                         TO subpoollines.
+    APPEND `    DATA: cancel           TYPE c.`                                         TO subpoollines.
+    APPEND `    DATA: selectstart      TYPE timestampl.`                                TO subpoollines.
+    APPEND `    DATA: selectend        TYPE timestampl.`                                TO subpoollines.
+    APPEND `    DATA: selectlengthc    TYPE char21.`                                    TO subpoollines.
+    APPEND `    DATA: rfcstart         TYPE timestampl.`                                TO subpoollines.
+    APPEND `    DATA: rfcend           TYPE timestampl.`                                TO subpoollines.
+    APPEND `    DATA: rfclenght        TYPE timestampl.`                                TO subpoollines.
+    APPEND `    DATA: message          TYPE char255.`                                   TO subpoollines.
+    APPEND `    DATA: token1           TYPE char255.`                                   TO subpoollines.
+    APPEND `    DATA: token2           TYPE char255.`                                   TO subpoollines.
+    APPEND `    DATA: callcount        TYPE i.`                                         TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `    blockindex = 0.`                                                        TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*   If max_rows is defined then don't partition results`                    TO subpoollines.
+    APPEND `    IF max_rows > 0.`                                                       TO subpoollines.
+    APPEND `      partition_size = 0.`                                                  TO subpoollines.
+    APPEND `      uptorows = max_rows.`                                                 TO subpoollines.
+    APPEND `    ELSEIF partition_size > 0.`                                             TO subpoollines.
+    APPEND `      partition_size = partition_size + 1.`                                 TO subpoollines.
+    APPEND `      uptorows = partition_size.`                                           TO subpoollines.
+    APPEND `    ELSE.`                                                                  TO subpoollines.
+    APPEND `      partition_size = 1000001.`                                            TO subpoollines.
+    APPEND `      uptorows = partition_size.`                                           TO subpoollines.
+    APPEND `    ENDIF.`                                                                 TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `    DO.`                                                                    TO subpoollines.
+    APPEND `*     Reset dialog timeout`                                                 TO subpoollines.
+    APPEND `      COMMIT WORK.`                                                         TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      CLEAR wa_orderby.`                                                    TO subpoollines.
+    APPEND `      blockindex = blockindex + 1.`                                         TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      IF blockindex = 1 AND context_index = 1.`                             TO subpoollines.
+    APPEND `        GET TIME STAMP FIELD selectstart.`                                  TO subpoollines.
+    PERFORM add_query USING parse_nodes_step_1 CHANGING subpoollines.
+    APPEND `        GET TIME STAMP FIELD selectend.`                                    TO subpoollines.
+    APPEND `      ELSE.`                                                                TO subpoollines.
+    APPEND `*       In case of SYSTEM_FAILURE or COMMUNICATION_FAILURE retry send data.` TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        callcount = 1.`                                                     TO subpoollines.
+    APPEND `        DO.`                                                                TO subpoollines.
+    APPEND `          CALL FUNCTION 'SEND_NEXT_ROW'`                                    TO subpoollines.
+    APPEND `            DESTINATION 'BACK'`                                             TO subpoollines.
+    APPEND `            IMPORTING`                                                      TO subpoollines.
+    APPEND `              next_row              = wa_orderby`                           TO subpoollines.
+    APPEND `              cancel                = cancel`                               TO subpoollines.
+    APPEND `            EXCEPTIONS`                                                     TO subpoollines.
+    APPEND `              system_failure        = 1`                                    TO subpoollines.
+    APPEND `              communication_failure = 2.`                                   TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `          IF sy-subrc = 0.`                                                 TO subpoollines.
+    APPEND `            IF cancel = 'X'.`                                               TO subpoollines.
+    APPEND `              RETURN.`                                                      TO subpoollines.
+    APPEND `            ELSE.`                                                          TO subpoollines.
+    APPEND `              EXIT.`                                                        TO subpoollines.
+    APPEND `            ENDIF.`                                                         TO subpoollines.
+    APPEND `          ELSEIF callcount >= 10.`                                          TO subpoollines.
+    APPEND `            RETURN.`                                                        TO subpoollines.
+    APPEND `          ELSE .`                                                           TO subpoollines.
+    APPEND `            callcount = callcount + 1.`                                     TO subpoollines.
+    APPEND `            WAIT UP TO 1 SECONDS.`                                          TO subpoollines.
+    APPEND `          ENDIF.`                                                           TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        ENDDO.`                                                             TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        GET TIME STAMP FIELD selectstart.`                                  TO subpoollines.
+    PERFORM add_query USING parse_nodes_step_n CHANGING subpoollines.
+    APPEND `        GET TIME STAMP FIELD selectend.`                                    TO subpoollines.
+    APPEND `      ENDIF.`                                                               TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      DESCRIBE TABLE ta_lines LINES linescount.`                            TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      IF ( linescount = 0 ) OR`                                             TO subpoollines.
+    APPEND `         ( linescount < uptorows ) OR`                                      TO subpoollines.
+    APPEND `         ( linescount = uptorows AND partition_size = 0 ) .`                TO subpoollines.
+    APPEND `        completeadding = 'X'.`                                              TO subpoollines.
+    APPEND `      ELSE.`                                                                TO subpoollines.
+    APPEND `        READ TABLE ta_lines INDEX linescount INTO wa_line.`                 TO subpoollines.
+    APPEND `        READ TABLE ta_lines INDEX 1 INTO wa_first_line.`                    TO subpoollines.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      CONCATENATE `        wa_orderby-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    APPEND `        message = 'LAST SELECTED RECORD:'.`                                 TO subpoollines.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      APPEND `        token1 = message.` TO subpoollines.
+      CONCATENATE `        token2 = wa_orderby-` wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+      CONCATENATE `        CONCATENATE token1 '` wa_orderby_field-fieldname `' token2`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+      APPEND `          INTO message SEPARATED BY space.` TO subpoollines.
+    ENDLOOP.
+    APPEND ``                                                                           TO subpoollines.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      CONCATENATE `        wa_orderby_last-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      CONCATENATE `        wa_orderby_first-` wa_orderby_field-fieldname ` = wa_first_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    APPEND `        IF wa_orderby_first EQ wa_orderby.`                                 TO subpoollines.
+    APPEND `          linescount = 0.`                                                  TO subpoollines.
+    APPEND `          REFRESH ta_lines.`                                                TO subpoollines.
+    APPEND `          completeadding = 'X'.`                                            TO subpoollines.
+    APPEND `          selecterror = 'X'.`                                               TO subpoollines.
+    APPEND `        ENDIF.`                                                             TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        DO.`                                                                TO subpoollines.
+    APPEND `          IF linescount = 0.`                                               TO subpoollines.
+    APPEND `            completeadding = 'X'.`                                          TO subpoollines.
+    APPEND `            selecterror = 'X'.`                                             TO subpoollines.
+    APPEND `            EXIT.`                                                          TO subpoollines.
+    APPEND `          ENDIF.`                                                           TO subpoollines.
+    APPEND `          DELETE ta_lines INDEX linescount.`                                TO subpoollines.
+    APPEND `          DESCRIBE TABLE ta_lines LINES linescount.`                        TO subpoollines.
+    APPEND `          READ TABLE ta_lines INDEX linescount INTO wa_line.`               TO subpoollines.
+    LOOP AT orderby_fields INTO wa_orderby_field.
+      CONCATENATE `          wa_orderby_last-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      APPEND wa_subpoolline TO  subpoollines.
+    ENDLOOP.
+    APPEND `          IF wa_orderby_last NE wa_orderby.`                                TO subpoollines.
+    APPEND `            EXIT.`                                                          TO subpoollines.
+    APPEND `          ENDIF.`                                                           TO subpoollines.
+    APPEND `        ENDDO.`                                                             TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*       In case of SYSTEM_FAILURE or COMMUNICATION_FAILURE retry send data.` TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        IF completeadding IS INITIAL AND selecterror IS INITIAL.`           TO subpoollines.
+    APPEND `          callcount = 1.`                                                   TO subpoollines.
+    APPEND `          DO.`                                                              TO subpoollines.
+    APPEND `            CALL FUNCTION 'RECEIVE_NEXT_ROW'`                               TO subpoollines.
+    APPEND `              DESTINATION 'BACK'`                                           TO subpoollines.
+    APPEND `              EXPORTING`                                                    TO subpoollines.
+    APPEND `                next_row              = wa_orderby`                         TO subpoollines.
+    APPEND `              IMPORTING`                                                    TO subpoollines.
+    APPEND `                cancel                = cancel`                             TO subpoollines.
+    APPEND `              EXCEPTIONS`                                                   TO subpoollines.
+    APPEND `                system_failure        = 1`                                  TO subpoollines.
+    APPEND `                communication_failure = 2.`                                 TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `            IF sy-subrc = 0.`                                               TO subpoollines.
+    APPEND `              IF cancel = 'X'.`                                             TO subpoollines.
+    APPEND `                RETURN.`                                                    TO subpoollines.
+    APPEND `              ELSE.`                                                        TO subpoollines.
+    APPEND `                EXIT.`                                                      TO subpoollines.
+    APPEND `              ENDIF.`                                                       TO subpoollines.
+    APPEND `            ELSEIF callcount >= 10.`                                        TO subpoollines.
+    APPEND `              RETURN.`                                                      TO subpoollines.
+    APPEND `            ELSE .`                                                         TO subpoollines.
+    APPEND `              callcount = callcount + 1.`                                   TO subpoollines.
+    APPEND `              WAIT UP TO 1 SECONDS.`                                        TO subpoollines.
+    APPEND `            ENDIF.`                                                         TO subpoollines.
+    APPEND `          ENDDO.`                                                           TO subpoollines.
+    APPEND `        ENDIF.`                                                             TO subpoollines.
+    APPEND `      ENDIF.`                                                               TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      DATA: secs TYPE tzntstmpl.`                                           TO subpoollines.
+    APPEND `      PERFORM timestamp_subtract`                                           TO subpoollines.
+    APPEND `                  USING`                                                    TO subpoollines.
+    APPEND `                     selectend`                                             TO subpoollines.
+    APPEND `                     selectstart`                                           TO subpoollines.
+    APPEND `                  CHANGING`                                                 TO subpoollines.
+    APPEND `                     secs.`                                                 TO subpoollines.
+    APPEND `      selectlengthc = secs.`                                                TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*     In case of SYSTEM_FAILURE or COMMUNICATION_FAILURE retry send data.`  TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      callcount = 1.`                                                       TO subpoollines.
+    APPEND `      DO.`                                                                  TO subpoollines.
+    APPEND `        CLEAR cancel.`                                                      TO subpoollines.
+    APPEND `        CALL FUNCTION 'RECEIVE_ROWS'`                                       TO subpoollines.
+    APPEND `          DESTINATION 'BACK'`                                               TO subpoollines.
+    APPEND `          EXPORTING`                                                        TO subpoollines.
+    APPEND `            selectlengthc         = selectlengthc`                          TO subpoollines.
+    APPEND `            completeadding        = completeadding`                         TO subpoollines.
+    APPEND `            selecterror           = selecterror`                            TO subpoollines.
+    APPEND `            message               = message`                                TO subpoollines.
+    APPEND `          IMPORTING`                                                        TO subpoollines.
+    APPEND `            cancel                = cancel`                                 TO subpoollines.
+    APPEND `          TABLES`                                                           TO subpoollines.
+    APPEND `            rows                = ta_lines`                               TO subpoollines.
+    APPEND `          EXCEPTIONS`                                                       TO subpoollines.
+    APPEND `            system_failure        = 1`                                      TO subpoollines.
+    APPEND `            communication_failure = 2.`                                     TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `        IF sy-subrc = 0.`                                                   TO subpoollines.
+    APPEND `          IF cancel = 'X'.`                                                 TO subpoollines.
+    APPEND `            RETURN.`                                                        TO subpoollines.
+    APPEND `          ELSE.`                                                            TO subpoollines.
+    APPEND `            EXIT.`                                                          TO subpoollines.
+    APPEND `          ENDIF.`                                                           TO subpoollines.
+    APPEND `        ELSEIF callcount >= 10.`                                            TO subpoollines.
+    APPEND `          RETURN.`                                                          TO subpoollines.
+    APPEND `        ELSE .`                                                             TO subpoollines.
+    APPEND `          callcount = callcount + 1.`                                       TO subpoollines.
+    APPEND `          WAIT UP TO 1 SECONDS.`                                            TO subpoollines.
+    APPEND `        ENDIF.`                                                             TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      ENDDO.`                                                               TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `      IF completeadding = 'X' OR selecterror = 'X'.`                        TO subpoollines.
+    APPEND `        RETURN.`                                                            TO subpoollines.
+    APPEND `      ENDIF.`                                                               TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `    ENDDO.`                                                                 TO subpoollines.
+    APPEND `  ENDFORM.                    "EXEC_QUERY`                                  TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `*&---------------------------------------------------------------------*`   TO subpoollines.
+    APPEND `*&      Form  timestamp_subtract`                                           TO subpoollines.
+    APPEND `*&---------------------------------------------------------------------*`   TO subpoollines.
+    APPEND `*       text`                                                               TO subpoollines.
+    APPEND `*----------------------------------------------------------------------*`   TO subpoollines.
+    APPEND `*      -->TSTMP1          text`                                             TO subpoollines.
+    APPEND `*      -->TSTMP2          text`                                             TO subpoollines.
+    APPEND `*      -->SECS            text`                                             TO subpoollines.
+    APPEND `*----------------------------------------------------------------------*`   TO subpoollines.
+    APPEND `  FORM timestamp_subtract`                                                  TO subpoollines.
+    APPEND `    USING tstmp1 TYPE timestampl`                                           TO subpoollines.
+    APPEND `          tstmp2 TYPE timestampl`                                           TO subpoollines.
+    APPEND `    CHANGING secs TYPE tzntstmpl.`                                          TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `    TRY.`                                                                   TO subpoollines.
+    APPEND `        CALL METHOD cl_abap_tstmp=>subtract`                                TO subpoollines.
+    APPEND `          EXPORTING`                                                        TO subpoollines.
+    APPEND `            tstmp1 = tstmp1`                                                TO subpoollines.
+    APPEND `            tstmp2 = tstmp2`                                                TO subpoollines.
+    APPEND `          RECEIVING`                                                        TO subpoollines.
+    APPEND `            r_secs = secs.`                                                 TO subpoollines.
+    APPEND `      CATCH cx_parameter_invalid_range .`                                   TO subpoollines.
+    APPEND `      CATCH cx_parameter_invalid_type .`                                    TO subpoollines.
+    APPEND `    ENDTRY.`                                                                TO subpoollines.
+    APPEND ``                                                                           TO subpoollines.
+    APPEND `  ENDFORM.                    "timestamp_subtract`                          TO subpoollines.
+
+  ENDFORM.                    "GET_standard_SUB_pool_lines
+
+*&---------------------------------------------------------------------*
+*&      Form  add_query
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PARSE_NODES   text
+*      -->SUBPOOLLINES  text
+*----------------------------------------------------------------------*
+  FORM add_query
+      USING parse_nodes TYPE ros_parse_node_table
+      CHANGING subpoollines TYPE ros_subpoolline_table.
+
+    DATA: subpoolline TYPE char255.
+    DATA: subpoollinelen TYPE i.
+    DATA: wa_parse_node TYPE ros_parse_node.
+
+    LOOP AT parse_nodes INTO wa_parse_node WHERE NOT terminal IS INITIAL.
+      CONCATENATE subpoolline wa_parse_node-text_or_rule INTO subpoolline SEPARATED BY space.
+      subpoollinelen = STRLEN( subpoolline ).
+      IF subpoollinelen > 100.
+        APPEND subpoolline TO subpoollines.
+        subpoolline = ''.
+      ENDIF.
+    ENDLOOP.
+
+    CONCATENATE subpoolline '.' INTO subpoolline SEPARATED BY space.
+    APPEND subpoolline TO subpoollines.
+
+  ENDFORM.                    "get_query
+
+
+
+
+*&---------------------------------------------------------------------*
+*&      Form  get_productions
+*&---------------------------------------------------------------------*
+*       Build productions table
+*----------------------------------------------------------------------*
+*      -->PRODUCTIONS  productions of RemoteOpenSQL Grammar
+*----------------------------------------------------------------------*
+  FORM get_productions CHANGING productions TYPE table.
+    TYPES: BEGIN OF production,
+      index TYPE i,
+      head TYPE char255,
+      handle TYPE char255,
+      END OF production.
+
+    DATA: wa_production TYPE production.
+
+    wa_production-index = 0.
+    wa_production-head = '<Query>'.
+    wa_production-handle = '<Select Stm>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 1.
+    wa_production-head = '<Select Stm>'.
+    wa_production-handle = 'SELECT <Columns> <From Clause> <Into Clause> <Where Clause> <Order Clause>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 2.
+    wa_production-head = '<Columns>'.
+    wa_production-handle = ' *'.
+    APPEND wa_production TO productions.
+    wa_production-index = 3.
+    wa_production-head = '<Columns>'.
+    wa_production-handle = '<Column List>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 4.
+    wa_production-head = '<Column List>'.
+    wa_production-handle = '<Column Item> <Column List>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 5.
+    wa_production-head = '<Column List>'.
+    wa_production-handle = '<Column Item>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 6.
+    wa_production-head = '<Column Item>'.
+    wa_production-handle = '<Column Source>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 7.
+    wa_production-head = '<Column Item>'.
+    wa_production-handle = '<Column Source> AS Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 8.
+    wa_production-head = '<Column Source>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 9.
+    wa_production-head = '<From Clause>'.
+    wa_production-handle = 'FROM <Id List> <Client Specified Clause> <Up To Clause>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 10.
+    wa_production-head = '<Up To Clause>'.
+    wa_production-handle = 'UP TO uptorows ROWS'.
+    APPEND wa_production TO productions.
+    wa_production-index = 11.
+    wa_production-head = '<Up To Clause>'.
+    wa_production-handle = ''.
+    APPEND wa_production TO productions.
+    wa_production-index = 12.
+    wa_production-head = '<Client Specified Clause>'.
+    wa_production-handle = 'CLIENT SPECIFIED'.
+    APPEND wa_production TO productions.
+    wa_production-index = 13.
+    wa_production-head = '<Client Specified Clause>'.
+    wa_production-handle = ''.
+    APPEND wa_production TO productions.
+    wa_production-index = 14.
+    wa_production-head = '<Into Clause>'.
+    wa_production-handle = 'INTO CORRESPONDING FIELDS OF TABLE ta_lines'.
+    APPEND wa_production TO productions.
+    wa_production-index = 15.
+    wa_production-head = '<Where Clause>'.
+    wa_production-handle = 'WHERE <Expression>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 16.
+    wa_production-head = '<Where Clause>'.
+    wa_production-handle = ''.
+    APPEND wa_production TO productions.
+    wa_production-index = 17.
+    wa_production-head = '<Order Clause>'.
+    wa_production-handle = 'ORDER BY <Order List>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 18.
+    wa_production-head = '<Order Clause>'.
+    wa_production-handle = 'ORDER BY PRIMARY KEY'.
+    APPEND wa_production TO productions.
+    wa_production-index = 19.
+    wa_production-head = '<Order List>'.
+    wa_production-handle = 'Id <Order List>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 20.
+    wa_production-head = '<Order List>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 21.
+    wa_production-head = '<Expression>'.
+    wa_production-handle = '<And Exp> OR <Expression>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 22.
+    wa_production-head = '<Expression>'.
+    wa_production-handle = '<And Exp>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 23.
+    wa_production-head = '<And Exp>'.
+    wa_production-handle = '<Not Exp> AND <And Exp>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 24.
+    wa_production-head = '<And Exp>'.
+    wa_production-handle = '<Not Exp>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 25.
+    wa_production-head = '<Not Exp>'.
+    wa_production-handle = 'NOT <Pred Exp>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 26.
+    wa_production-head = '<Not Exp>'.
+    wa_production-handle = '<Pred Exp>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 27.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col> BETWEEN <Dobj> AND <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 28.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col> NOT BETWEEN <Dobj> AND <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 29.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col> IS NOT NULL'.
+    APPEND wa_production TO productions.
+    wa_production-index = 30.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col> IS NULL'.
+    APPEND wa_production TO productions.
+    wa_production-index = 31.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col> LIKE StringLiteral'.
+    APPEND wa_production TO productions.
+    wa_production-index = 32.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  = <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 33.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  <> <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 34.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  != <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 35.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  > <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 36.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  >= <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 37.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  < <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 38.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>  <= <Dobj>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 39.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '<Col>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 40.
+    wa_production-head = '<Pred Exp>'.
+    wa_production-handle = '( <Expression> )'.
+    APPEND wa_production TO productions.
+    wa_production-index = 41.
+    wa_production-head = '<Col>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 42.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'IntegerLiteral'.
+    APPEND wa_production TO productions.
+    wa_production-index = 43.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'RealLiteral'.
+    APPEND wa_production TO productions.
+    wa_production-index = 44.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'StringLiteral'.
+    APPEND wa_production TO productions.
+    wa_production-index = 45.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'NULL'.
+    APPEND wa_production TO productions.
+    wa_production-index = 46.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'Component'.
+    APPEND wa_production TO productions.
+    wa_production-index = 47.
+    wa_production-head = '<Id List>'.
+    wa_production-handle = '<Id Member>  , <Id List>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 48.
+    wa_production-head = '<Id List>'.
+    wa_production-handle = '<Id Member>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 49.
+    wa_production-head = '<Id Member>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+  ENDFORM.                    "get_productions
