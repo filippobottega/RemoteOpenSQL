@@ -137,10 +137,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Gold\RemoteOpenSQL.cgt" />
-    <None Include="Gold\RemoteOpenSQL.grm" />
-    <None Include="Gold\SapOpenSQL.cgt" />
-    <None Include="Gold\SapOpenSQL.grm" />
+    <None Include="Gold\RemoteOpenSQL.cgt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Gold\RemoteOpenSQL.grm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Gold\SapOpenSQL.cgt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Gold\SapOpenSQL.grm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -152,7 +160,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Z_REMOTE_OPEN_SQL.txt" />
+    <None Include="Z_REMOTE_OPEN_SQL.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

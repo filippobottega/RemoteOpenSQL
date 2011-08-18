@@ -51,6 +51,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_11AD24A423DA4ACA8A9DD02E797F25E5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_15EE32EA6A2349DDA7BD3B6688262B01"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -95,12 +101,6 @@
         {
         "MsmKey" = "8:_59639F562E511BEF1394B9C7980845CF"
         "OwnerKey" = "8:_44EC8F2DE1A724E0DC5C9A8640CAA4BC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_61621F4412FC44709A9B44479989F9A6"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -171,8 +171,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DA0D7093CE294111B49D31B664609408"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -185,12 +197,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_0DCBAA2526ED07747FF44210FB0FAC08"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -413,6 +419,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_11AD24A423DA4ACA8A9DD02E797F25E5"
+            {
+            "SourcePath" = "8:..\\License.txt"
+            "TargetName" = "8:License.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_15EE32EA6A2349DDA7BD3B6688262B01"
             {
             "SourcePath" = "8:..\\RemoteOpenSQLLib\\Z_REMOTE_OPEN_SQL.txt"
@@ -493,26 +519,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_61621F4412FC44709A9B44479989F9A6"
-            {
-            "SourcePath" = "8:..\\License.txt"
-            "TargetName" = "8:License.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_618B65274538D4F963F21F893C84F85F"
@@ -628,6 +634,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA0D7093CE294111B49D31B664609408"
+            {
+            "SourcePath" = "8:..\\License.rtf"
+            "TargetName" = "8:License.rtf"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -707,7 +733,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RemoteOpenSQL"
         "ProductCode" = "8:{2BC55620-8395-400D-954D-C9E6D6528F65}"
-        "PackageCode" = "8:{777B9345-EB6A-4E15-BE0A-0319DDFDDB1D}"
+        "PackageCode" = "8:{C202BCB5-A804-4C41-AE88-0A02680E8272}"
         "UpgradeCode" = "8:{F77AF266-B57D-4951-964D-464F89D6CED6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -901,13 +927,13 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_058FEB61545D43E881B701921BA20443"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_4205960843DA4815A1A97EB1B921BBE6"
                     {
-                    "Sequence" = "3:300"
-                    "DisplayName" = "8:Conferma installazione"
+                    "Sequence" = "3:210"
+                    "DisplayName" = "8:Contratto di licenza"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
                         "Properties"
                         {
                             "BannerBitmap"
@@ -921,11 +947,36 @@
                             "Setting" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
+                            "EulaText"
+                            {
+                            "Name" = "8:EulaText"
+                            "DisplayName" = "8:#1008"
+                            "Description" = "8:#1108"
+                            "Type" = "3:6"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_DA0D7093CE294111B49D31B664609408"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Sunken"
+                            {
+                            "Name" = "8:Sunken"
+                            "DisplayName" = "8:#1007"
+                            "Description" = "8:#1107"
+                            "Type" = "3:5"
+                            "ContextData" = "8:4;True=4;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:4"
+                            "DefaultValue" = "3:4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_75D7E4DA8A60447F8CE9132F826198DD"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_59070DFCE7FB44E38D6A8FAD68D711C2"
                     {
-                    "Sequence" = "3:200"
+                    "Sequence" = "3:220"
                     "DisplayName" = "8:Cartella di installazione"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -958,13 +1009,13 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_B8C01A29D6F04CE9818589DCFA7435C4"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_CC917A7B84E34D92AC25979E6C0AE8BD"
                     {
-                    "Sequence" = "3:110"
-                    "DisplayName" = "8:Contratto di licenza"
+                    "Sequence" = "3:320"
+                    "DisplayName" = "8:Conferma installazione"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
                         "Properties"
                         {
                             "BannerBitmap"
@@ -976,31 +1027,6 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "EulaText"
-                            {
-                            "Name" = "8:EulaText"
-                            "DisplayName" = "8:#1008"
-                            "Description" = "8:#1108"
-                            "Type" = "3:6"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:_61621F4412FC44709A9B44479989F9A6"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Sunken"
-                            {
-                            "Name" = "8:Sunken"
-                            "DisplayName" = "8:#1007"
-                            "Description" = "8:#1107"
-                            "Type" = "3:5"
-                            "ContextData" = "8:4;True=4;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:4"
-                            "DefaultValue" = "3:4"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -1289,7 +1315,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_177F60E0731046E785C27AC8729A6C06"
             {
-            "SourcePath" = "8:..\\RemoteOpenSQLLib\\obj\\x86\\Debug\\RemoteOpenSQLLib.dll"
+            "SourcePath" = "8:..\\RemoteOpenSQLLib\\obj\\x86\\Release\\RemoteOpenSQLLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_80F050400F62419288514B97F6E127CE"
@@ -1317,7 +1343,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C2094E1F3F134DEE9097F2FB1D38050C"
             {
-            "SourcePath" = "8:..\\RemoteOpenSQLManager\\obj\\x86\\Debug\\RemoteOpenSQLManager.exe"
+            "SourcePath" = "8:..\\RemoteOpenSQLManager\\obj\\x86\\Release\\RemoteOpenSQLManager.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_80F050400F62419288514B97F6E127CE"
