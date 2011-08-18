@@ -62,8 +62,12 @@ Public Class RemoteOpenSQL
 
   Private GUIDValue As String
   Private DestinationValue As New Destination
-  Private RemoteOpenSQLGrammarReader As CGTReader = New CGTReader(Path.Combine(My.Application.Info.DirectoryPath, "RemoteOpenSQL.cgt"))
-  Private SapOpenSQLGrammarReader As CGTReader = New CGTReader(Path.Combine(My.Application.Info.DirectoryPath, "SapOpenSQL.cgt"))
+  Private RemoteOpenSQLCompiledGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\RemoteOpenSQL.cgt")
+  Private SapOpenSQLCompiledGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\SapOpenSQL.cgt")
+  Private RemoteOpenSQLGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\RemoteOpenSQL.grm")
+  Private SapOpenSQLGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\SapOpenSQL.grm")
+  Private RemoteOpenSQLGrammarReader As CGTReader = New CGTReader(RemoteOpenSQLCompiledGrammarFullPath)
+  Private SapOpenSQLGrammarReader As CGTReader = New CGTReader(SapOpenSQLCompiledGrammarFullPath)
   Private CancelSourceValue As New CancellationTokenSource
   Private SAPCallContexts As New Dictionary(Of String, CallContext)
   Private SAPCallContextsCollection As New BlockingCollection(Of CallContext)(2)
@@ -1737,6 +1741,10 @@ Public Class RemoteOpenSQL
     Dim Parser = SapOpenSQLGrammarReader.CreateNewParser
     Dim Result As NonterminalToken = Parser.Parse(QueryStepN)
     Return Result
+  End Function
+
+  Public Function GetRemoteOpenSQLGrammar() As String
+    Return File.ReadAllText(RemoteOpenSQLGrammarFullPath)
   End Function
 
   Public Function GetAbapCodeRfcRemoteOpenSql() As String

@@ -1,3 +1,11 @@
+                    REMOTE OPEN SQL
+
+Remote Open SQL makes it easier for SAP R3 users and developers to run Open SQL Queries on SAP R3 database. 
+It's developed in Visual Basic .NET 2010 and ABAP.
+Copyright (C) 2011 Filippo Bottega.
+
+License:
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 

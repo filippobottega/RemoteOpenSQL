@@ -43,6 +43,7 @@ Public Class MainForm
 
   Private Sub MainForm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
     AbapCodeTextBox.Text = RemoteOpenSQL.GetAbapCodeRfcRemoteOpenSql
+    GrammarTextBox.Text = RemoteOpenSQL.GetRemoteOpenSQLGrammar
 
     RemoteOpenSQLDestinationsFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLDestinations.xml")
     RemoteOpenSQLQueriesFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLQueries.xml")
