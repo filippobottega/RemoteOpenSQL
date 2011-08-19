@@ -84,6 +84,12 @@ Public Class MainForm
     TextRadioButton.Checked = My.Settings.TextRadioButton
     ExcelRadioButton.Checked = My.Settings.ExcelRadioButton
     AccessRadioButton.Checked = My.Settings.AccessRadioButton
+    If PartitionSizeTextBox.Text = String.Empty Then
+      PartitionSizeTextBox.Text = "50000"
+    End If
+    If BufferTextBox.Text = String.Empty Then
+      BufferTextBox.Text = "100"
+    End If
   End Sub
 
   Private Sub DestinationNewFolderToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DestinationNewFolderToolStripButton.Click
@@ -538,7 +544,22 @@ Public Class MainForm
     Else
       PartitionSize = 50000
     End If
+
+    Dim Buffer As Integer
+    If Integer.TryParse(BufferTextBox.Text, Buffer) Then
+      If Buffer > 1000 Then
+        Buffer = 1000
+      ElseIf Buffer < 10 And Buffer > 0 Then
+        Buffer = 10
+      ElseIf Buffer = 0 Then
+        Buffer = 100
+      End If
+    Else
+      Buffer = 100
+    End If
+
     RemoteOpenSQL.PartitionSize = PartitionSize
+    RemoteOpenSQL.Buffer = Buffer
     RemoteOpenSQL.StartRunQuery(QueryTextBox.Text, Consumer)
 
     QueryStartToolStripButton.Enabled = False
@@ -579,7 +600,7 @@ Public Class MainForm
     Consumer.ViewData()
   End Sub
 
-  Private Sub NumericKeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles PartitionSizeTextBox.KeyPress
+  Private Sub NumericKeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles PartitionSizeTextBox.KeyPress, BufferTextBox.KeyPress
 
     Dim SenderTextBox As TextBox = sender
 
@@ -591,5 +612,9 @@ Public Class MainForm
 
   Private Sub QueryTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryTimer.Tick
     QueryToolStripStatusLabel.Text = New TimeSpan(0, 0, DateDiff(DateInterval.Second, QueryStartTime, Now)).ToString
+  End Sub
+
+  Private Sub QueryStopToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStopToolStripButton.Click
+    RemoteOpenSQL.StopQuery()
   End Sub
 End Class

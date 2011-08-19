@@ -70,7 +70,6 @@ Public Class RemoteOpenSQL
   Private SapOpenSQLGrammarReader As CGTReader = New CGTReader(SapOpenSQLCompiledGrammarFullPath)
   Private CancelSourceValue As New CancellationTokenSource
   Private SAPCallContexts As New Dictionary(Of String, CallContext)
-  Private SAPCallContextsCollection As New BlockingCollection(Of CallContext)(2)
   Private RunQueryTask As Task
   Private SessionTask1 As Task
   Private SessionTask2 As Task
@@ -79,6 +78,7 @@ Public Class RemoteOpenSQL
   Private Consumer As DataConsumer
   ' 800.000 valore stabile per tabella CDPOS
   Private PartitionSizeValue = 50000
+  Private BufferValue = 100
   Private EventsTaskFactory As New TaskFactory
 
   Private Class RosFieldInfo
@@ -254,6 +254,15 @@ Public Class RemoteOpenSQL
     End Get
     Set(ByVal value As Integer)
       PartitionSizeValue = value
+    End Set
+  End Property
+
+  Public Property Buffer As Integer
+    Get
+      Return BufferValue
+    End Get
+    Set(ByVal value As Integer)
+      BufferValue = value
     End Set
   End Property
 
@@ -633,6 +642,11 @@ Public Class RemoteOpenSQL
     LineRfcStructure.Length = Offset
     LineRfcStructure.Length2 = Offset2
 
+    ' Ridefinisco il parametro PartitionSize in base alla dimensione del buffer
+    If CLng(PartitionSize) * CLng(LineRfcStructure.Length2) > CLng(Buffer) * CLng(1000000) Then
+      PartitionSize = CInt((Buffer) * CLng(1000000) / CLng(LineRfcStructure.Length2))
+    End If
+
     ' Determino i parametri della struttura orderbystruct 
     Offset = 0
     Offset2 = 0
@@ -689,8 +703,6 @@ Public Class RemoteOpenSQL
 
     SAPCallContexts.Add(CallContext1.ContextGUID, CallContext1)
     SAPCallContexts.Add(CallContext2.ContextGUID, CallContext2)
-    SAPCallContextsCollection.Add(CallContext1)
-    SAPCallContextsCollection.Add(CallContext2)
 
     Dim TaskFactoryValue As New TaskFactory
 

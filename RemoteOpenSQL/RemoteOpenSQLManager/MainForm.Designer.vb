@@ -73,6 +73,8 @@ Partial Class MainForm
     Me.TextPathLabel = New System.Windows.Forms.Label()
     Me.TextPathTextBox = New System.Windows.Forms.TextBox()
     Me.QueryOptionsGroupBox = New System.Windows.Forms.GroupBox()
+    Me.BufferTextBox = New System.Windows.Forms.TextBox()
+    Me.BufferLabel = New System.Windows.Forms.Label()
     Me.PartitionSizeTextBox = New System.Windows.Forms.TextBox()
     Me.PartitionSizeLabel = New System.Windows.Forms.Label()
     Me.GrammarTabPage = New System.Windows.Forms.TabPage()
@@ -646,6 +648,8 @@ Partial Class MainForm
     '
     'QueryOptionsGroupBox
     '
+    Me.QueryOptionsGroupBox.Controls.Add(Me.BufferTextBox)
+    Me.QueryOptionsGroupBox.Controls.Add(Me.BufferLabel)
     Me.QueryOptionsGroupBox.Controls.Add(Me.PartitionSizeTextBox)
     Me.QueryOptionsGroupBox.Controls.Add(Me.PartitionSizeLabel)
     Me.QueryOptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Top
@@ -656,10 +660,28 @@ Partial Class MainForm
     Me.QueryOptionsGroupBox.TabStop = False
     Me.QueryOptionsGroupBox.Text = "Query Options"
     '
+    'BufferTextBox
+    '
+    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.BufferTextBox.Location = New System.Drawing.Point(555, 23)
+    Me.BufferTextBox.Name = "BufferTextBox"
+    Me.BufferTextBox.Size = New System.Drawing.Size(45, 20)
+    Me.BufferTextBox.TabIndex = 3
+    Me.BufferTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.BufferTextBox
+    '
+    'BufferLabel
+    '
+    Me.BufferLabel.AutoSize = True
+    Me.BufferLabel.Location = New System.Drawing.Point(369, 26)
+    Me.BufferLabel.Name = "BufferLabel"
+    Me.BufferLabel.Size = New System.Drawing.Size(180, 13)
+    Me.BufferLabel.TabIndex = 2
+    Me.BufferLabel.Text = "Buffer (MB) (Max. 1000, Default 100)"
+    '
     'PartitionSizeTextBox
     '
     Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.PartitionSizeTextBox.Location = New System.Drawing.Point(179, 23)
+    Me.PartitionSizeTextBox.Location = New System.Drawing.Point(232, 23)
     Me.PartitionSizeTextBox.Name = "PartitionSizeTextBox"
     Me.PartitionSizeTextBox.Size = New System.Drawing.Size(100, 20)
     Me.PartitionSizeTextBox.TabIndex = 1
@@ -668,11 +690,11 @@ Partial Class MainForm
     'PartitionSizeLabel
     '
     Me.PartitionSizeLabel.AutoSize = True
-    Me.PartitionSizeLabel.Location = New System.Drawing.Point(105, 26)
+    Me.PartitionSizeLabel.Location = New System.Drawing.Point(8, 26)
     Me.PartitionSizeLabel.Name = "PartitionSizeLabel"
-    Me.PartitionSizeLabel.Size = New System.Drawing.Size(68, 13)
+    Me.PartitionSizeLabel.Size = New System.Drawing.Size(218, 13)
     Me.PartitionSizeLabel.TabIndex = 0
-    Me.PartitionSizeLabel.Text = "Partition Size"
+    Me.PartitionSizeLabel.Text = "Partition Size (Max. 2000000, Default 50000)"
     '
     'GrammarTabPage
     '
@@ -1107,4 +1129,6 @@ Partial Class MainForm
   Friend WithEvents GrammarTabPage As System.Windows.Forms.TabPage
   Friend WithEvents GrammarGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents GrammarTextBox As System.Windows.Forms.TextBox
+  Friend WithEvents BufferTextBox As System.Windows.Forms.TextBox
+  Friend WithEvents BufferLabel As System.Windows.Forms.Label
 End Class
