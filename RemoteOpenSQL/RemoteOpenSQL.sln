@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		bin\GoldParserEngine.dll = bin\GoldParserEngine.dll
 		License.rtf = License.rtf
 		License.txt = License.txt
+		Documentation\Quick Start Guide.docx = Documentation\Quick Start Guide.docx
 		bin\SAP.Connector.dll = bin\SAP.Connector.dll
 		bin\SAP.Connector.Rfc.dll = bin\SAP.Connector.Rfc.dll
 	EndProjectSection
