@@ -263,7 +263,6 @@ Public Class DelimitedTextFileConsumer
 
   Public Overrides Sub BeginConsume()
 
-    ' Todo: gestire l'eccezione se il file è bloccato
     File.Delete(FullPath)
 
     TextStreamWriter = New StreamWriter(FullPath, True, Encoding.Unicode)
@@ -384,18 +383,14 @@ Public Class MicrosoftAccessConsumer
 
   Public Overrides Sub BeginConsume()
 
-    ' Todo: gestire l'eccezione se il file è bloccato
-
     If Not File.Exists(DatabaseFullPathValue) Then
-      ' Todo: generare un'eccezione
-      Exit Sub
+      Throw New RemoteOpenSQLException("File " & DatabaseFullPathValue & " not found.")
     End If
 
     AccessApp = GetObject(DatabaseFullPathValue)
 
     If AccessApp Is Nothing Then
-      ' Todo: generare un'eccezione
-      Exit Sub
+      Throw New RemoteOpenSQLException("Unable to connect to Access Application.")
     End If
 
     SessionGUID = Guid.NewGuid.ToString
@@ -414,9 +409,7 @@ Public Class MicrosoftAccessConsumer
       Try
         AccessApp.CurrentDb.Execute("DROP TABLE " & TableNameValue, 128)
       Catch ex As System.Runtime.InteropServices.COMException
-        ' Impossibile cancellare la tabella
-        ' Todo: generare un'eccezione
-        Throw
+        Throw New RemoteOpenSQLException("Unable to DROP table " & TableNameValue & ".", ex)
       End Try
     End If
 

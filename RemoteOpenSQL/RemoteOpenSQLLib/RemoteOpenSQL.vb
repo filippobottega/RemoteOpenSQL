@@ -62,6 +62,10 @@ Public Class RemoteOpenSQLException
   Public Sub New(ByVal Message As String)
     MyBase.New(Message)
   End Sub
+
+  Public Sub New(ByVal message As String, ByVal innerException As System.Exception)
+    MyBase.New(message, innerException)
+  End Sub
 End Class
 
 Public Class RemoteOpenSQL
@@ -504,7 +508,6 @@ Public Class RemoteOpenSQL
   End Sub
 
   Public Sub Wait()
-    ' Todo: Gestire l'eccezione System.AggregateException
     RunQueryTask.Wait()
   End Sub
 
@@ -609,8 +612,7 @@ Public Class RemoteOpenSQL
       For Count = 0 To OrderByIds.Count - 1
         Dim CurrentId = OrderByIds(Count)
         If Not DfiesTabIndex.ContainsKey(CurrentId) Then
-          ' Todo: Raise an exception
-          Exit Sub
+          Throw New RemoteOpenSQLException("Field " & CurrentId & " not found in table " & TableName)
         End If
         Dim DfiesIndex = DfiesTabIndex(CurrentId)
         Dim DfiesItem = Ddif_FieldinfoOutput.Dfies_Tab.Item(DfiesIndex)
@@ -626,9 +628,8 @@ Public Class RemoteOpenSQL
 
       If CurrentId = "*" Then
         If ColumnsIds.Count <> 1 Then
-          ' Todo: Raise an exception
-          Exit Sub
-        End If
+          Throw New RemoteOpenSQLException("Field names not allowed with wildchar *.")
+         End If
         For Count2 = 0 To Ddif_FieldinfoOutput.Dfies_Tab.Count - 1
           Dim DfiesItem2 = Ddif_FieldinfoOutput.Dfies_Tab.Item(Count2)
           RosSelectedFields.Add(DfiesItem2.Fieldname, New RosFieldInfo(DfiesItem2.Fieldname, GetRollNameOrABAPType(DfiesItem2), Count2))
@@ -637,8 +638,7 @@ Public Class RemoteOpenSQL
       End If
 
       If Not DfiesTabIndex.ContainsKey(CurrentId) Then
-        ' Todo: Raise an exception
-        Exit Sub
+         Throw New RemoteOpenSQLException("Field " & CurrentId & " not found in table " & TableName)
       End If
       Dim DfiesIndex = DfiesTabIndex(CurrentId)
       Dim DfiesItem = Ddif_FieldinfoOutput.Dfies_Tab.Item(DfiesIndex)
@@ -651,8 +651,7 @@ Public Class RemoteOpenSQL
     For Each OrderByField In OrderByFields.Values
       If Not RosSelectedFields.ContainsKey(OrderByField.FieldName) Then
         If Not DfiesTabIndex.ContainsKey(OrderByField.FieldName) Then
-          ' Todo: Raise an exception
-          Exit Sub
+          Throw New RemoteOpenSQLException("Field " & OrderByField.FieldName & " not found in table " & TableName)
         End If
         Dim DfiesIndex = DfiesTabIndex(OrderByField.FieldName)
         Dim DfiesItem = Ddif_FieldinfoOutput.Dfies_Tab.Item(DfiesIndex)
