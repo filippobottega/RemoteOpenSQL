@@ -56,6 +56,14 @@ Public Class OpenSQLException
   End Sub
 End Class
 
+Public Class RemoteOpenSQLException
+  Inherits Exception
+
+  Public Sub New(ByVal Message As String)
+    MyBase.New(Message)
+  End Sub
+End Class
+
 Public Class RemoteOpenSQL
 
   Private Shared ItemsValue As Dictionary(Of String, RemoteOpenSQL) = New Dictionary(Of String, RemoteOpenSQL)
@@ -470,15 +478,29 @@ Public Class RemoteOpenSQL
     RunQueryTask.Wait()
   End Sub
 
+  Private Function ParseQuery(ByVal GrammarReader As CGTReader, ByVal Query As String) As NonterminalToken
+    If Query = String.Empty Then
+      Throw New RemoteOpenSQLException("Query is empty")
+    End If
+
+    ' Parse Query
+    Dim LALRParser = GrammarReader.CreateNewParser
+    AddHandler LALRParser.OnParseError, Sub(parser As com.calitha.goldparser.LALRParser, args As com.calitha.goldparser.ParseErrorEventArgs)
+                                          Throw New RemoteOpenSQLException("Parse error caused by token: '" + args.UnexpectedToken.ToString() + "'")
+                                        End Sub
+    Dim ParseTree = LALRParser.Parse(Query)
+
+    If ParseTree Is Nothing Then
+      Throw New RemoteOpenSQLException("Parse error")
+    End If
+
+    Return ParseTree
+  End Function
+
   Private Sub CallRfcRemoteOpenSQL(ByVal Query As String)
 
     ' Parse Query
-    Dim ParseTree = RemoteOpenSQLGrammarReader.CreateNewParser.Parse(Query)
-
-    If ParseTree Is Nothing Then
-      ' Todo: Generate exception
-      Exit Sub
-    End If
+    Dim ParseTree = ParseQuery(RemoteOpenSQLGrammarReader, Query)
 
     ' Create SAPProxyClient instance
     Dim Client = New SAPProxyClient
@@ -1106,7 +1128,7 @@ Public Class RemoteOpenSQL
       .AppendLine("                                                             Parse_Nodes_Step_N, ")
       .AppendLine("                                                             Selected_Fields, ")
       .AppendLine("                                                             Orderby_Fields)")
-       .AppendLine("      Catch ex As Exception")
+      .AppendLine("      Catch ex As Exception")
       .AppendLine("      End Try")
       .AppendLine("")
       .AppendLine("    End Sub")
@@ -1678,9 +1700,7 @@ Public Class RemoteOpenSQL
     End With
 
     ' Parse Query
-    Dim Parser = SapOpenSQLGrammarReader.CreateNewParser
-    Dim Result As NonterminalToken = Parser.Parse(QueryStep1)
-    Return Result
+    Return ParseQuery(SapOpenSQLGrammarReader, QueryStep1)
   End Function
 
   Private Sub JoinQuerySteps(ByRef QueryStep1 As String, ByRef QueryStepN As String)
@@ -1750,9 +1770,7 @@ Public Class RemoteOpenSQL
     End With
 
     ' Parse Query
-    Dim Parser = SapOpenSQLGrammarReader.CreateNewParser
-    Dim Result As NonterminalToken = Parser.Parse(QueryStepN)
-    Return Result
+    Return ParseQuery(SapOpenSQLGrammarReader, QueryStepN)
   End Function
 
   Public Function GetRemoteOpenSQLGrammar() As String
