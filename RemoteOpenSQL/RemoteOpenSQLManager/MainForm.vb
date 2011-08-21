@@ -490,11 +490,19 @@ Public Class MainForm
     OutputTextBox.Text = String.Empty
 
     If TextRadioButton.Checked Then
+      If TextApplicationTextBox.Text <> String.Empty AndAlso Not File.Exists(TextApplicationTextBox.Text) Then
+        MsgBox("File " & TextApplicationTextBox.Text & " not found.", vbCritical)
+        Exit Sub
+      End If
       Consumer = New RemoteOpenSQLLib.DelimitedTextFileConsumer(TextPathTextBox.Text)
       CType(Consumer, RemoteOpenSQLLib.DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
     ElseIf ExcelRadioButton.Checked Then
       Consumer = New RemoteOpenSQLLib.MicrosoftExcelConsumer(ExcelPathTextBox.Text)
     ElseIf AccessRadioButton.Checked Then
+      If Not File.Exists(AccessPathTextBox.Text) Then
+        MsgBox("File " & AccessPathTextBox.Text & " not found.", vbCritical)
+        Exit Sub
+      End If
       Consumer = New RemoteOpenSQLLib.MicrosoftAccessConsumer(AccessPathTextBox.Text)
     Else
       Consumer = New RemoteOpenSQLLib.DelimitedTextFileConsumer(TextPathTextBox.Text)

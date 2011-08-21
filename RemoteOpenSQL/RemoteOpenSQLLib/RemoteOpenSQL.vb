@@ -68,6 +68,8 @@ Public Class RemoteOpenSQL
 
   Private Shared ItemsValue As Dictionary(Of String, RemoteOpenSQL) = New Dictionary(Of String, RemoteOpenSQL)
 
+  Private CallbackServerExceptions As New List(Of Exception)
+
   Private GUIDValue As String
   Private DestinationValue As New Destination
   Private RemoteOpenSQLCompiledGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\RemoteOpenSQL.cgt")
@@ -76,7 +78,7 @@ Public Class RemoteOpenSQL
   Private SapOpenSQLGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\SapOpenSQL.grm")
   Private RemoteOpenSQLGrammarReader As CGTReader = New CGTReader(RemoteOpenSQLCompiledGrammarFullPath)
   Private SapOpenSQLGrammarReader As CGTReader = New CGTReader(SapOpenSQLCompiledGrammarFullPath)
-  Private CancelSourceValue As New CancellationTokenSource
+  Private CancelSourceValue As CancellationTokenSource
   Private SAPCallContexts As New Dictionary(Of String, CallContext)
   Private RunQueryTask As Task
   Private SessionTask1 As Task
@@ -248,7 +250,9 @@ Public Class RemoteOpenSQL
         Selected_Fields.FromADODataTable(.Selected_Fields.ToADODataTable)
         Orderby_Fields.FromADODataTable(.Orderby_Fields.ToADODataTable)
       End With
-    Catch ex As System.InvalidOperationException
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
     End Try
   End Sub
 
@@ -274,8 +278,6 @@ Public Class RemoteOpenSQL
     End Set
   End Property
 
-
-
   Public Sub WaitForReceiveRows(
                           ByVal GUID As String,
                           ByVal ContextGUID As String)
@@ -284,14 +286,22 @@ Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    Dim SAPCallContext = SAPCallContexts(ContextGUID)
-
     Try
-      SAPCallContext.ReceiveRowsGate.Take()
-    Catch ex As System.InvalidOperationException
-      ' Todo: Anomalia che non deve verificarsi mai, trovare il modo per darne evidenza
+      Dim SAPCallContext = SAPCallContexts(ContextGUID)
+
+      Try
+        SAPCallContext.ReceiveRowsGate.Take()
+      Catch ex As System.InvalidOperationException
+        If Not CancelSourceValue.IsCancellationRequested Then
+          Throw
+        End If
+      End Try
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
     End Try
   End Sub
+
 
   Public Sub EndToReceiveRows(
                           ByVal GUID As String,
@@ -306,27 +316,34 @@ Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    RaiseQueryStatusChanged("Exporting data from SAP. Records already exported: " & Consumer.Records & " Last Application DB query time: " & Decimal.Parse(Replace(SelectLengthC, ".", ",")).ToString("F3") & " seconds.")
-
-    Dim SAPCallContext = SAPCallContexts(ContextGUID)
-
-    If CompleteAdding = "X" OrElse SelectError = "X" OrElse IsCancellationRequested() Then
-      Cancel = "X"
-      SAPCallContext.ReceiveRowsGate.CompleteAdding()
-      SAPCallContext.NextRows.CompleteAdding()
-      SAPCallContext.LinkedContext.ReceiveRowsGate.CompleteAdding()
-      SAPCallContext.LinkedContext.NextRows.CompleteAdding()
-      If SelectError = "X" Then
-        Throw New OpenSQLException("Error reading records, try to change ORDER BY clause or increase partition size.")
-      End If
-      Exit Sub
-    End If
-
     Try
-      SAPCallContext.LinkedContext.ReceiveRowsGate.Add(True)
-    Catch ex As System.InvalidOperationException
-      ' Todo: Anomalia che non deve verificarsi mai, trovare il modo per darne evidenza
-      Cancel = "X"
+      RaiseQueryStatusChanged("Exporting data from SAP. Records already exported: " & Consumer.Records & " Last Application DB query time: " & Decimal.Parse(Replace(SelectLengthC, ".", ",")).ToString("F3") & " seconds.")
+
+      Dim SAPCallContext = SAPCallContexts(ContextGUID)
+
+      If CompleteAdding = "X" OrElse SelectError = "X" OrElse IsCancellationRequested() Then
+        Cancel = "X"
+        SAPCallContext.ReceiveRowsGate.CompleteAdding()
+        SAPCallContext.NextRows.CompleteAdding()
+        SAPCallContext.LinkedContext.ReceiveRowsGate.CompleteAdding()
+        SAPCallContext.LinkedContext.NextRows.CompleteAdding()
+        If SelectError = "X" Then
+          Throw New OpenSQLException("Error reading records, try to change ORDER BY clause or increase partition size.")
+        End If
+        Exit Sub
+      End If
+
+      Try
+        SAPCallContext.LinkedContext.ReceiveRowsGate.Add(True)
+      Catch ex As System.InvalidOperationException
+        If Not CancelSourceValue.IsCancellationRequested Then
+          Throw
+        End If
+        Cancel = "X"
+      End Try
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
     End Try
 
   End Sub
@@ -341,13 +358,20 @@ Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    Dim SAPCallContext = SAPCallContexts(ContextGUID)
-
     Try
-      SAPCallContext.LinkedContext.NextRows.Add(NextRow)
-    Catch ex As System.InvalidOperationException
-      ' Todo: Anomalia che non deve verificarsi mai, trovare il modo per darne evidenza
-      Cancel = "X"
+      Dim SAPCallContext = SAPCallContexts(ContextGUID)
+
+      Try
+        SAPCallContext.LinkedContext.NextRows.Add(NextRow)
+      Catch ex As System.InvalidOperationException
+        If Not CancelSourceValue.IsCancellationRequested Then
+          Throw
+        End If
+        Cancel = "X"
+      End Try
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
     End Try
   End Sub
 
@@ -361,11 +385,16 @@ Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    Dim SAPCallContext = SAPCallContexts(ContextGUID)
     Try
-      NextRow = SAPCallContext.NextRows.Take
-    Catch ex As System.InvalidOperationException
-      Cancel = "X"
+      Dim SAPCallContext = SAPCallContexts(ContextGUID)
+      Try
+        NextRow = SAPCallContext.NextRows.Take
+      Catch ex As System.InvalidOperationException
+        Cancel = "X"
+      End Try
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
     End Try
   End Sub
 
@@ -379,12 +408,12 @@ Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    Dim SAPCallContext = SAPCallContexts(ContextGUID)
-
-    If Not SAPCallContext Is Nothing Then
-      RaiseQueryStatusChanged("GUID: " & GUID & " ContextGUID: " & ContextGUID & " Message: " & Message & " Line: " & Line.ToString)
-    End If
-    ' Todo: generare un'eccezione
+    Try
+      Throw New CompileException("GUID: " & GUID & " ContextGUID: " & ContextGUID & " Message: " & Message & " Line: " & Line.ToString)
+    Catch ex As Exception
+      CallbackServerExceptions.Add(ex)
+      Throw
+    End Try
   End Sub
 
   Friend ReadOnly Property GUID
@@ -437,6 +466,7 @@ Public Class RemoteOpenSQL
   Public Sub StopQuery()
     If Not RunQueryTask Is Nothing AndAlso RunQueryTask.Status = TaskStatus.Running Then
       CancelSourceValue.Cancel()
+      RaiseQueryStatusChanged("Cancel executing query. Plaese wait pending tasks to complete ...")
     End If
   End Sub
 
@@ -498,6 +528,9 @@ Public Class RemoteOpenSQL
   End Function
 
   Private Sub CallRfcRemoteOpenSQL(ByVal Query As String)
+
+    ' Inizializzo un nuovo Token per la cancellazione del processo
+    CancelSourceValue = New CancellationTokenSource
 
     ' Parse Query
     Dim ParseTree = ParseQuery(RemoteOpenSQLGrammarReader, Query)
@@ -750,6 +783,11 @@ Public Class RemoteOpenSQL
     Next
     EventTasks.Clear()
     Consumer.EndConsume()
+
+    If CallbackServerExceptions.Count > 0 Then
+      Throw New AggregateException(CallbackServerExceptions.ToArray)
+    End If
+
     RaiseQueryStatusChanged("Query Excecuted. Records: " & Consumer.Records & ".")
   End Sub
 
@@ -1129,6 +1167,7 @@ Public Class RemoteOpenSQL
       .AppendLine("                                                             Selected_Fields, ")
       .AppendLine("                                                             Orderby_Fields)")
       .AppendLine("      Catch ex As Exception")
+      .AppendLine("        Cancel = ""X""")
       .AppendLine("      End Try")
       .AppendLine("")
       .AppendLine("    End Sub")
@@ -1157,6 +1196,7 @@ Public Class RemoteOpenSQL
       .AppendLine("                                                             Next_Row,")
       .AppendLine("                                                             Cancel)")
       .AppendLine("      Catch ex As Exception")
+      .AppendLine("        Cancel = ""X""")
       .AppendLine("      End Try")
       .AppendLine("")
       .AppendLine("    End Sub")
@@ -1191,6 +1231,7 @@ Public Class RemoteOpenSQL
       .AppendLine("        Next")
       .AppendLine("")
       .AppendLine("      Catch ex As Exception")
+      .AppendLine("        Cancel = ""X""")
       .AppendLine("      End Try")
       .AppendLine("")
       .AppendLine("    End Sub")
@@ -1237,6 +1278,7 @@ Public Class RemoteOpenSQL
       .AppendLine("                                                               Cancel)")
       .AppendLine("")
       .AppendLine("      Catch ex As Exception")
+      .AppendLine("        Cancel = ""X""")
       .AppendLine("      End Try")
       .AppendLine("")
       .AppendLine("    End Sub")
