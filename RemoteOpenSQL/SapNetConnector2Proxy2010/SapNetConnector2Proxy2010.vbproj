@@ -9,7 +9,7 @@
     </SchemaVersion>
     <ProjectGuid>{714963AD-ABBA-4083-A68F-5893AEE90E5C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>SapNetConnector2Proxy2010</RootNamespace>
+    <RootNamespace>RemoteOpenSQL.SapNetConnector2Proxy2010</RootNamespace>
     <AssemblyName>SapNetConnector2Proxy2010</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>

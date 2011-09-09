@@ -9,7 +9,7 @@
     </SchemaVersion>
     <ProjectGuid>{794ACEC6-5237-4307-BF25-D0B06B8E40F5}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>RemoteOpenSQLLib</RootNamespace>
+    <RootNamespace>RemoteOpenSQL.RemoteOpenSQLLib</RootNamespace>
     <AssemblyName>RemoteOpenSQLLib</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
@@ -82,11 +82,6 @@
     <Reference Include="SAP.Connector.Rfc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=50436dca5c7f7d23">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files (x86)\SAP\SAP .NET Connector 2.0\SAP.Connector.Rfc.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SapNetConnector2Proxy2010, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\SapNetConnector2Proxy2010.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -163,6 +158,13 @@
     <None Include="Z_REMOTE_OPEN_SQL.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SapNetConnector2Proxy2010\SapNetConnector2Proxy2010.vbproj">
+      <Project>{714963AD-ABBA-4083-A68F-5893AEE90E5C}</Project>
+      <Name>SapNetConnector2Proxy2010</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

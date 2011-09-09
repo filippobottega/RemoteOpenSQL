@@ -20,14 +20,15 @@
 ' EMail of the author: filippo.bottega@gmail.com
 
 Imports System.IO
+Imports RemoteOpenSQL.RemoteOpenSQLLib
 
 Public Class MainForm
 
-  Private WithEvents RemoteOpenSQL As New RemoteOpenSQLLib.RemoteOpenSQL
+  Private WithEvents RemoteOpenSQL As RemoteOpenSQLLib.RemoteOpenSQL
   Private RemoteOpenSQLDestinationsFullPath As String
   Private RemoteOpenSQLQueriesFullPath As String
   Private OutputFormatRadioButtons As New List(Of RadioButton)
-  Private Consumer As RemoteOpenSQLLib.DataConsumer
+  Private Consumer As DataConsumer
   Private QueryStartTime As DateTime
 
   Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -42,54 +43,61 @@ Public Class MainForm
   End Sub
 
   Private Sub MainForm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-    AbapCodeTextBox.Text = RemoteOpenSQL.GetAbapCodeRfcRemoteOpenSql
-    GrammarTextBox.Text = RemoteOpenSQL.GetRemoteOpenSQLGrammar
+    Try
+      RemoteOpenSQL = New RemoteOpenSQLLib.RemoteOpenSQL
 
-    RemoteOpenSQLDestinationsFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLDestinations.xml")
-    RemoteOpenSQLQueriesFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLQueries.xml")
+      AbapCodeTextBox.Text = RemoteOpenSQL.GetAbapCodeRfcRemoteOpenSql
+      GrammarTextBox.Text = RemoteOpenSQL.GetRemoteOpenSQLGrammar
 
-    If File.Exists(RemoteOpenSQLDestinationsFullPath) Then
-      RemoteOpenSQLDestinations.ReadXml(RemoteOpenSQLDestinationsFullPath, XmlReadMode.IgnoreSchema)
-    End If
+      RemoteOpenSQLDestinationsFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLDestinations.xml")
+      RemoteOpenSQLQueriesFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLQueries.xml")
 
-    If RemoteOpenSQLDestinations.DestinationTree.Rows.Count = 0 Then
-      DestinationSelectedID = RemoteOpenSQLDestinations.DestinationTree.AddDestinationTreeRow(0, True, "Destinations", True).ID
-    End If
-
-    If File.Exists(RemoteOpenSQLQueriesFullPath) Then
-      RemoteOpenSQLQueries.ReadXml(RemoteOpenSQLQueriesFullPath, XmlReadMode.IgnoreSchema)
-    End If
-
-    If RemoteOpenSQLQueries.QueryTree.Rows.Count = 0 Then
-      QuerySelectedID = RemoteOpenSQLQueries.QueryTree.AddQueryTreeRow(0, True, "Queries", True).ID
-    End If
-
-    UpdateDestinationTree()
-    UpdateQueryTree()
-
-    If MainTabControl.SelectedTab Is LogonTabPage Then
-      DestinationTreeView.Select()
-    End If
-
-    If MainTabControl.SelectedTab Is QueriesTabPage Then
-      QueryTreeView.Select()
-    End If
-
-    For Each ControItem In GetAllControls(OutputFormatGroupBox.Controls)
-      If TypeOf (ControItem) Is RadioButton Then
-        OutputFormatRadioButtons.Add(CType(ControItem, RadioButton))
+      If File.Exists(RemoteOpenSQLDestinationsFullPath) Then
+        RemoteOpenSQLDestinations.ReadXml(RemoteOpenSQLDestinationsFullPath, XmlReadMode.IgnoreSchema)
       End If
-    Next
 
-    TextRadioButton.Checked = My.Settings.TextRadioButton
-    ExcelRadioButton.Checked = My.Settings.ExcelRadioButton
-    AccessRadioButton.Checked = My.Settings.AccessRadioButton
-    If PartitionSizeTextBox.Text = String.Empty Then
-      PartitionSizeTextBox.Text = "50000"
-    End If
-    If BufferTextBox.Text = String.Empty Then
-      BufferTextBox.Text = "100"
-    End If
+      If RemoteOpenSQLDestinations.DestinationTree.Rows.Count = 0 Then
+        DestinationSelectedID = RemoteOpenSQLDestinations.DestinationTree.AddDestinationTreeRow(0, True, "Destinations", True).ID
+      End If
+
+      If File.Exists(RemoteOpenSQLQueriesFullPath) Then
+        RemoteOpenSQLQueries.ReadXml(RemoteOpenSQLQueriesFullPath, XmlReadMode.IgnoreSchema)
+      End If
+
+      If RemoteOpenSQLQueries.QueryTree.Rows.Count = 0 Then
+        QuerySelectedID = RemoteOpenSQLQueries.QueryTree.AddQueryTreeRow(0, True, "Queries", True).ID
+      End If
+
+      UpdateDestinationTree()
+      UpdateQueryTree()
+
+      If MainTabControl.SelectedTab Is LogonTabPage Then
+        DestinationTreeView.Select()
+      End If
+
+      If MainTabControl.SelectedTab Is QueriesTabPage Then
+        QueryTreeView.Select()
+      End If
+
+      For Each ControItem In GetAllControls(OutputFormatGroupBox.Controls)
+        If TypeOf (ControItem) Is RadioButton Then
+          OutputFormatRadioButtons.Add(CType(ControItem, RadioButton))
+        End If
+      Next
+
+      TextRadioButton.Checked = My.Settings.TextRadioButton
+      ExcelRadioButton.Checked = My.Settings.ExcelRadioButton
+      AccessRadioButton.Checked = My.Settings.AccessRadioButton
+      If PartitionSizeTextBox.Text = String.Empty Then
+        PartitionSizeTextBox.Text = "50000"
+      End If
+      If BufferTextBox.Text = String.Empty Then
+        BufferTextBox.Text = "100"
+      End If
+    Catch ex As Exception
+      MsgBox(ex.ToString)
+    End Try
+
   End Sub
 
   Private Sub DestinationNewFolderToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DestinationNewFolderToolStripButton.Click
@@ -494,19 +502,19 @@ Public Class MainForm
         MsgBox("File " & TextApplicationTextBox.Text & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New RemoteOpenSQLLib.DelimitedTextFileConsumer(TextPathTextBox.Text)
-      CType(Consumer, RemoteOpenSQLLib.DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
+      Consumer = New DelimitedTextFileConsumer(TextPathTextBox.Text)
+      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
     ElseIf ExcelRadioButton.Checked Then
-      Consumer = New RemoteOpenSQLLib.MicrosoftExcelConsumer(ExcelPathTextBox.Text)
+      Consumer = New MicrosoftExcelConsumer(ExcelPathTextBox.Text)
     ElseIf AccessRadioButton.Checked Then
       If Not File.Exists(AccessPathTextBox.Text) Then
         MsgBox("File " & AccessPathTextBox.Text & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New RemoteOpenSQLLib.MicrosoftAccessConsumer(AccessPathTextBox.Text)
+      Consumer = New MicrosoftAccessConsumer(AccessPathTextBox.Text)
     Else
-      Consumer = New RemoteOpenSQLLib.DelimitedTextFileConsumer(TextPathTextBox.Text)
-      CType(Consumer, RemoteOpenSQLLib.DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
+      Consumer = New DelimitedTextFileConsumer(TextPathTextBox.Text)
+      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
     End If
 
     If DestinationBindingSource.Current Is Nothing Then
@@ -576,7 +584,7 @@ Public Class MainForm
     QueryToolStripProgressBar.Style = ProgressBarStyle.Marquee
   End Sub
 
-  Private Sub RemoteOpenSQL_QueryExecuted(ByVal sender As RemoteOpenSQLLib.RemoteOpenSQL, ByVal e As RemoteOpenSQLLib.QueryExecutedEventArgs) Handles RemoteOpenSQL.QueryExecuted
+  Private Sub RemoteOpenSQL_QueryExecuted(ByVal sender As RemoteOpenSQLLib.RemoteOpenSQL, ByVal e As QueryExecutedEventArgs) Handles RemoteOpenSQL.QueryExecuted
     Me.UIThreadInvoke(Sub()
                         QueryStartToolStripButton.Enabled = True
                         QueryStopToolStripButton.Enabled = False
@@ -591,7 +599,7 @@ Public Class MainForm
                       End Sub)
   End Sub
 
-  Private Sub RemoteOpenSQL_QueryStatusChanged(ByVal sender As RemoteOpenSQLLib.RemoteOpenSQL, ByVal e As RemoteOpenSQLLib.QueryStatusChangedEventArgs) Handles RemoteOpenSQL.QueryStatusChanged
+  Private Sub RemoteOpenSQL_QueryStatusChanged(ByVal sender As RemoteOpenSQLLib.RemoteOpenSQL, ByVal e As QueryStatusChangedEventArgs) Handles RemoteOpenSQL.QueryStatusChanged
     Me.UIThreadInvoke(Sub()
                         OutputTextBox.AppendText(e.StatusText & vbCrLf)
                         OutputTextBox.ScrollToCaret()

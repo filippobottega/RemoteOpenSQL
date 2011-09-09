@@ -392,7 +392,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SapNetConnector2Proxy2010, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:SapNetConnector2Proxy2010, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_0DCBAA2526ED07747FF44210FB0FAC08"
@@ -556,7 +556,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RemoteOpenSQLLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:RemoteOpenSQLLib, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_800A33868F1646EE449000FAB8F4AF63"
@@ -733,7 +733,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RemoteOpenSQL"
         "ProductCode" = "8:{2BC55620-8395-400D-954D-C9E6D6528F65}"
-        "PackageCode" = "8:{C202BCB5-A804-4C41-AE88-0A02680E8272}"
+        "PackageCode" = "8:{41ECFA0D-F474-4818-A911-31A2ACBD08B7}"
         "UpgradeCode" = "8:{F77AF266-B57D-4951-964D-464F89D6CED6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

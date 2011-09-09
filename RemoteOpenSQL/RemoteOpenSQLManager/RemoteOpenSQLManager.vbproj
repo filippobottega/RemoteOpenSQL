@@ -8,8 +8,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B2736C7E-4D5B-4545-A70A-55067D16C48E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>RemoteOpenSQLManager.My.MyApplication</StartupObject>
-    <RootNamespace>RemoteOpenSQLManager</RootNamespace>
+    <StartupObject>RemoteOpenSQL.RemoteOpenSQLManager.My.MyApplication</StartupObject>
+    <RootNamespace>RemoteOpenSQL.RemoteOpenSQLManager</RootNamespace>
     <AssemblyName>RemoteOpenSQLManager</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
@@ -88,6 +88,9 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="RemoteOpenSQLLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -95,6 +98,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.DirectoryServices" />
@@ -176,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

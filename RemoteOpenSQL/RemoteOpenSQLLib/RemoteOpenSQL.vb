@@ -19,7 +19,6 @@
 ' Home Page: www.remoteopensql.com
 ' EMail of the author: filippo.bottega@gmail.com
 
-Imports SapNetConnector2Proxy2010
 Imports SAP.Connector
 Imports com.calitha.goldparser
 Imports System.IO
@@ -28,6 +27,7 @@ Imports System.Reflection
 Imports System.Threading
 Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
+Imports RemoteOpenSQL.SapNetConnector2Proxy2010
 
 Public Class QueryExecutedEventArgs
   Inherits EventArgs
@@ -629,7 +629,7 @@ Public Class RemoteOpenSQL
       If CurrentId = "*" Then
         If ColumnsIds.Count <> 1 Then
           Throw New RemoteOpenSQLException("Field names not allowed with wildchar *.")
-         End If
+        End If
         For Count2 = 0 To Ddif_FieldinfoOutput.Dfies_Tab.Count - 1
           Dim DfiesItem2 = Ddif_FieldinfoOutput.Dfies_Tab.Item(Count2)
           RosSelectedFields.Add(DfiesItem2.Fieldname, New RosFieldInfo(DfiesItem2.Fieldname, GetRollNameOrABAPType(DfiesItem2), Count2))
@@ -638,7 +638,7 @@ Public Class RemoteOpenSQL
       End If
 
       If Not DfiesTabIndex.ContainsKey(CurrentId) Then
-         Throw New RemoteOpenSQLException("Field " & CurrentId & " not found in table " & TableName)
+        Throw New RemoteOpenSQLException("Field " & CurrentId & " not found in table " & TableName)
       End If
       Dim DfiesIndex = DfiesTabIndex(CurrentId)
       Dim DfiesItem = Ddif_FieldinfoOutput.Dfies_Tab.Item(DfiesIndex)

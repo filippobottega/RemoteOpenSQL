@@ -29,22 +29,23 @@ Partial Class MainForm
     Me.DestinationsSplitContainer = New System.Windows.Forms.SplitContainer()
     Me.DestinationTreeView = New System.Windows.Forms.TreeView()
     Me.ImageList = New System.Windows.Forms.ImageList(Me.components)
-    Me.SapRouterStringLabel = New System.Windows.Forms.Label()
-    Me.PasswordLabel = New System.Windows.Forms.Label()
-    Me.UsernameLabel = New System.Windows.Forms.Label()
-    Me.ClientLabel = New System.Windows.Forms.Label()
-    Me.SystemNumberLabel = New System.Windows.Forms.Label()
-    Me.AppServerHostLabel = New System.Windows.Forms.Label()
+    Me.DestinationGroupBox = New System.Windows.Forms.GroupBox()
     Me.DescriptionLabel = New System.Windows.Forms.Label()
-    Me.DestinationSapRouterString = New System.Windows.Forms.TextBox()
-    Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLDestinations = New RemoteOpenSQLManager.RemoteOpenSQLDestinations()
-    Me.DestinationPassword = New System.Windows.Forms.TextBox()
-    Me.DestinationUsername = New System.Windows.Forms.TextBox()
-    Me.DestinationClient = New System.Windows.Forms.TextBox()
-    Me.DestinationSystemNumber = New System.Windows.Forms.TextBox()
-    Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
+    Me.SapRouterStringLabel = New System.Windows.Forms.Label()
     Me.DestinationDescription = New System.Windows.Forms.TextBox()
+    Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+    Me.RemoteOpenSQLDestinations = New RemoteOpenSQLDestinations()
+    Me.PasswordLabel = New System.Windows.Forms.Label()
+    Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
+    Me.UsernameLabel = New System.Windows.Forms.Label()
+    Me.DestinationSystemNumber = New System.Windows.Forms.TextBox()
+    Me.ClientLabel = New System.Windows.Forms.Label()
+    Me.DestinationClient = New System.Windows.Forms.TextBox()
+    Me.SystemNumberLabel = New System.Windows.Forms.Label()
+    Me.DestinationUsername = New System.Windows.Forms.TextBox()
+    Me.AppServerHostLabel = New System.Windows.Forms.Label()
+    Me.DestinationPassword = New System.Windows.Forms.TextBox()
+    Me.DestinationSapRouterString = New System.Windows.Forms.TextBox()
     Me.DestinationToolStrip = New System.Windows.Forms.ToolStrip()
     Me.DestinationNewFolderToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.DestinationNewToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -87,7 +88,7 @@ Partial Class MainForm
     Me.QueryGroupBox = New System.Windows.Forms.GroupBox()
     Me.QueryTextBox = New System.Windows.Forms.TextBox()
     Me.QueryBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLQueries = New RemoteOpenSQLManager.RemoteOpenSQLQueries()
+    Me.RemoteOpenSQLQueries = New RemoteOpenSQLQueries()
     Me.OutputGroupBox = New System.Windows.Forms.GroupBox()
     Me.OutputTextBox = New System.Windows.Forms.TextBox()
     Me.QueryDescriptionGroupBox = New System.Windows.Forms.GroupBox()
@@ -109,13 +110,13 @@ Partial Class MainForm
     Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
     Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
     Me.QueryTimer = New System.Windows.Forms.Timer(Me.components)
-    Me.DestinationGroupBox = New System.Windows.Forms.GroupBox()
     Me.MainTabControl.SuspendLayout()
     Me.LogonTabPage.SuspendLayout()
     CType(Me.DestinationsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.DestinationsSplitContainer.Panel1.SuspendLayout()
     Me.DestinationsSplitContainer.Panel2.SuspendLayout()
     Me.DestinationsSplitContainer.SuspendLayout()
+    Me.DestinationGroupBox.SuspendLayout()
     CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
     CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.DestinationToolStrip.SuspendLayout()
@@ -144,7 +145,6 @@ Partial Class MainForm
     Me.QueryDescriptionGroupBox.SuspendLayout()
     Me.QueryStatusStrip.SuspendLayout()
     Me.QueriesToolStrip.SuspendLayout()
-    Me.DestinationGroupBox.SuspendLayout()
     Me.SuspendLayout()
     '
     'MainTabControl
@@ -154,11 +154,11 @@ Partial Class MainForm
     Me.MainTabControl.Controls.Add(Me.OptionsTabPage)
     Me.MainTabControl.Controls.Add(Me.GrammarTabPage)
     Me.MainTabControl.Controls.Add(Me.QueriesTabPage)
-    Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", Global.RemoteOpenSQLManager.My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
     Me.MainTabControl.Location = New System.Drawing.Point(0, 0)
     Me.MainTabControl.Name = "MainTabControl"
-    Me.MainTabControl.SelectedIndex = Global.RemoteOpenSQLManager.My.MySettings.Default.MainTabControl
+    Me.MainTabControl.SelectedIndex = My.MySettings.Default.MainTabControl
     Me.MainTabControl.Size = New System.Drawing.Size(884, 389)
     Me.MainTabControl.TabIndex = 0
     '
@@ -210,59 +210,29 @@ Partial Class MainForm
     Me.ImageList.Images.SetKeyName(0, "folder-yellow.png")
     Me.ImageList.Images.SetKeyName(1, "kaddressbook-4.png")
     '
-    'SapRouterStringLabel
+    'DestinationGroupBox
     '
-    Me.SapRouterStringLabel.AutoSize = True
-    Me.SapRouterStringLabel.Location = New System.Drawing.Point(13, 186)
-    Me.SapRouterStringLabel.Name = "SapRouterStringLabel"
-    Me.SapRouterStringLabel.Size = New System.Drawing.Size(91, 13)
-    Me.SapRouterStringLabel.TabIndex = 13
-    Me.SapRouterStringLabel.Text = "Sap Router String"
-    '
-    'PasswordLabel
-    '
-    Me.PasswordLabel.AutoSize = True
-    Me.PasswordLabel.Location = New System.Drawing.Point(51, 160)
-    Me.PasswordLabel.Name = "PasswordLabel"
-    Me.PasswordLabel.Size = New System.Drawing.Size(53, 13)
-    Me.PasswordLabel.TabIndex = 12
-    Me.PasswordLabel.Text = "Password"
-    '
-    'UsernameLabel
-    '
-    Me.UsernameLabel.AutoSize = True
-    Me.UsernameLabel.Location = New System.Drawing.Point(49, 134)
-    Me.UsernameLabel.Name = "UsernameLabel"
-    Me.UsernameLabel.Size = New System.Drawing.Size(55, 13)
-    Me.UsernameLabel.TabIndex = 11
-    Me.UsernameLabel.Text = "Username"
-    '
-    'ClientLabel
-    '
-    Me.ClientLabel.AutoSize = True
-    Me.ClientLabel.Location = New System.Drawing.Point(71, 108)
-    Me.ClientLabel.Name = "ClientLabel"
-    Me.ClientLabel.Size = New System.Drawing.Size(33, 13)
-    Me.ClientLabel.TabIndex = 10
-    Me.ClientLabel.Text = "Client"
-    '
-    'SystemNumberLabel
-    '
-    Me.SystemNumberLabel.AutoSize = True
-    Me.SystemNumberLabel.Location = New System.Drawing.Point(23, 82)
-    Me.SystemNumberLabel.Name = "SystemNumberLabel"
-    Me.SystemNumberLabel.Size = New System.Drawing.Size(81, 13)
-    Me.SystemNumberLabel.TabIndex = 9
-    Me.SystemNumberLabel.Text = "System Number"
-    '
-    'AppServerHostLabel
-    '
-    Me.AppServerHostLabel.AutoSize = True
-    Me.AppServerHostLabel.Location = New System.Drawing.Point(41, 56)
-    Me.AppServerHostLabel.Name = "AppServerHostLabel"
-    Me.AppServerHostLabel.Size = New System.Drawing.Size(63, 13)
-    Me.AppServerHostLabel.TabIndex = 8
-    Me.AppServerHostLabel.Text = "Server Host"
+    Me.DestinationGroupBox.Controls.Add(Me.DescriptionLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.SapRouterStringLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationDescription)
+    Me.DestinationGroupBox.Controls.Add(Me.PasswordLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationAppServerHost)
+    Me.DestinationGroupBox.Controls.Add(Me.UsernameLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationSystemNumber)
+    Me.DestinationGroupBox.Controls.Add(Me.ClientLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationClient)
+    Me.DestinationGroupBox.Controls.Add(Me.SystemNumberLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationUsername)
+    Me.DestinationGroupBox.Controls.Add(Me.AppServerHostLabel)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationPassword)
+    Me.DestinationGroupBox.Controls.Add(Me.DestinationSapRouterString)
+    Me.DestinationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+    Me.DestinationGroupBox.Location = New System.Drawing.Point(0, 0)
+    Me.DestinationGroupBox.Name = "DestinationGroupBox"
+    Me.DestinationGroupBox.Size = New System.Drawing.Size(624, 318)
+    Me.DestinationGroupBox.TabIndex = 14
+    Me.DestinationGroupBox.TabStop = False
+    Me.DestinationGroupBox.Text = "Destination"
     '
     'DescriptionLabel
     '
@@ -273,13 +243,23 @@ Partial Class MainForm
     Me.DescriptionLabel.TabIndex = 7
     Me.DescriptionLabel.Text = "Description"
     '
-    'DestinationSapRouterString
+    'SapRouterStringLabel
     '
-    Me.DestinationSapRouterString.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "SAPRouterString", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationSapRouterString.Location = New System.Drawing.Point(110, 183)
-    Me.DestinationSapRouterString.Name = "DestinationSapRouterString"
-    Me.DestinationSapRouterString.Size = New System.Drawing.Size(338, 20)
-    Me.DestinationSapRouterString.TabIndex = 6
+    Me.SapRouterStringLabel.AutoSize = True
+    Me.SapRouterStringLabel.Location = New System.Drawing.Point(13, 186)
+    Me.SapRouterStringLabel.Name = "SapRouterStringLabel"
+    Me.SapRouterStringLabel.Size = New System.Drawing.Size(91, 13)
+    Me.SapRouterStringLabel.TabIndex = 13
+    Me.SapRouterStringLabel.Text = "Sap Router String"
+    '
+    'DestinationDescription
+    '
+    Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Tag", Me.DestinationBindingSource, "Description", True))
+    Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Description", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.DestinationDescription.Location = New System.Drawing.Point(110, 27)
+    Me.DestinationDescription.Name = "DestinationDescription"
+    Me.DestinationDescription.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationDescription.TabIndex = 0
     '
     'DestinationBindingSource
     '
@@ -291,31 +271,31 @@ Partial Class MainForm
     Me.RemoteOpenSQLDestinations.DataSetName = "RemoteOpenSQLDestinations"
     Me.RemoteOpenSQLDestinations.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
     '
-    'DestinationPassword
+    'PasswordLabel
     '
-    Me.DestinationPassword.Location = New System.Drawing.Point(110, 157)
-    Me.DestinationPassword.Name = "DestinationPassword"
-    Me.DestinationPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-    Me.DestinationPassword.Size = New System.Drawing.Size(100, 20)
-    Me.DestinationPassword.TabIndex = 5
-    Me.DestinationPassword.UseSystemPasswordChar = True
+    Me.PasswordLabel.AutoSize = True
+    Me.PasswordLabel.Location = New System.Drawing.Point(51, 160)
+    Me.PasswordLabel.Name = "PasswordLabel"
+    Me.PasswordLabel.Size = New System.Drawing.Size(53, 13)
+    Me.PasswordLabel.TabIndex = 12
+    Me.PasswordLabel.Text = "Password"
     '
-    'DestinationUsername
+    'DestinationAppServerHost
     '
-    Me.DestinationUsername.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Username", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationUsername.Location = New System.Drawing.Point(110, 131)
-    Me.DestinationUsername.Name = "DestinationUsername"
-    Me.DestinationUsername.Size = New System.Drawing.Size(100, 20)
-    Me.DestinationUsername.TabIndex = 4
+    Me.DestinationAppServerHost.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "AppServerHost", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.DestinationAppServerHost.Location = New System.Drawing.Point(110, 53)
+    Me.DestinationAppServerHost.Name = "DestinationAppServerHost"
+    Me.DestinationAppServerHost.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationAppServerHost.TabIndex = 1
     '
-    'DestinationClient
+    'UsernameLabel
     '
-    Me.DestinationClient.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Client", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, "0", "N0"))
-    Me.DestinationClient.Location = New System.Drawing.Point(110, 105)
-    Me.DestinationClient.MaxLength = 3
-    Me.DestinationClient.Name = "DestinationClient"
-    Me.DestinationClient.Size = New System.Drawing.Size(39, 20)
-    Me.DestinationClient.TabIndex = 3
+    Me.UsernameLabel.AutoSize = True
+    Me.UsernameLabel.Location = New System.Drawing.Point(49, 134)
+    Me.UsernameLabel.Name = "UsernameLabel"
+    Me.UsernameLabel.Size = New System.Drawing.Size(55, 13)
+    Me.UsernameLabel.TabIndex = 11
+    Me.UsernameLabel.Text = "Username"
     '
     'DestinationSystemNumber
     '
@@ -326,22 +306,66 @@ Partial Class MainForm
     Me.DestinationSystemNumber.Size = New System.Drawing.Size(39, 20)
     Me.DestinationSystemNumber.TabIndex = 2
     '
-    'DestinationAppServerHost
+    'ClientLabel
     '
-    Me.DestinationAppServerHost.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "AppServerHost", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationAppServerHost.Location = New System.Drawing.Point(110, 53)
-    Me.DestinationAppServerHost.Name = "DestinationAppServerHost"
-    Me.DestinationAppServerHost.Size = New System.Drawing.Size(338, 20)
-    Me.DestinationAppServerHost.TabIndex = 1
+    Me.ClientLabel.AutoSize = True
+    Me.ClientLabel.Location = New System.Drawing.Point(71, 108)
+    Me.ClientLabel.Name = "ClientLabel"
+    Me.ClientLabel.Size = New System.Drawing.Size(33, 13)
+    Me.ClientLabel.TabIndex = 10
+    Me.ClientLabel.Text = "Client"
     '
-    'DestinationDescription
+    'DestinationClient
     '
-    Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Tag", Me.DestinationBindingSource, "Description", True))
-    Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Description", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationDescription.Location = New System.Drawing.Point(110, 27)
-    Me.DestinationDescription.Name = "DestinationDescription"
-    Me.DestinationDescription.Size = New System.Drawing.Size(338, 20)
-    Me.DestinationDescription.TabIndex = 0
+    Me.DestinationClient.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Client", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, "0", "N0"))
+    Me.DestinationClient.Location = New System.Drawing.Point(110, 105)
+    Me.DestinationClient.MaxLength = 3
+    Me.DestinationClient.Name = "DestinationClient"
+    Me.DestinationClient.Size = New System.Drawing.Size(39, 20)
+    Me.DestinationClient.TabIndex = 3
+    '
+    'SystemNumberLabel
+    '
+    Me.SystemNumberLabel.AutoSize = True
+    Me.SystemNumberLabel.Location = New System.Drawing.Point(23, 82)
+    Me.SystemNumberLabel.Name = "SystemNumberLabel"
+    Me.SystemNumberLabel.Size = New System.Drawing.Size(81, 13)
+    Me.SystemNumberLabel.TabIndex = 9
+    Me.SystemNumberLabel.Text = "System Number"
+    '
+    'DestinationUsername
+    '
+    Me.DestinationUsername.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Username", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.DestinationUsername.Location = New System.Drawing.Point(110, 131)
+    Me.DestinationUsername.Name = "DestinationUsername"
+    Me.DestinationUsername.Size = New System.Drawing.Size(100, 20)
+    Me.DestinationUsername.TabIndex = 4
+    '
+    'AppServerHostLabel
+    '
+    Me.AppServerHostLabel.AutoSize = True
+    Me.AppServerHostLabel.Location = New System.Drawing.Point(41, 56)
+    Me.AppServerHostLabel.Name = "AppServerHostLabel"
+    Me.AppServerHostLabel.Size = New System.Drawing.Size(63, 13)
+    Me.AppServerHostLabel.TabIndex = 8
+    Me.AppServerHostLabel.Text = "Server Host"
+    '
+    'DestinationPassword
+    '
+    Me.DestinationPassword.Location = New System.Drawing.Point(110, 157)
+    Me.DestinationPassword.Name = "DestinationPassword"
+    Me.DestinationPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
+    Me.DestinationPassword.Size = New System.Drawing.Size(100, 20)
+    Me.DestinationPassword.TabIndex = 5
+    Me.DestinationPassword.UseSystemPasswordChar = True
+    '
+    'DestinationSapRouterString
+    '
+    Me.DestinationSapRouterString.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "SAPRouterString", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.DestinationSapRouterString.Location = New System.Drawing.Point(110, 183)
+    Me.DestinationSapRouterString.Name = "DestinationSapRouterString"
+    Me.DestinationSapRouterString.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationSapRouterString.TabIndex = 6
     '
     'DestinationToolStrip
     '
@@ -356,7 +380,7 @@ Partial Class MainForm
     'DestinationNewFolderToolStripButton
     '
     Me.DestinationNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationNewFolderToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
+    Me.DestinationNewFolderToolStripButton.Image = My.Resources.Resources.folder_new_8
     Me.DestinationNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewFolderToolStripButton.Name = "DestinationNewFolderToolStripButton"
     Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -365,7 +389,7 @@ Partial Class MainForm
     'DestinationNewToolStripButton
     '
     Me.DestinationNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationNewToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
+    Me.DestinationNewToolStripButton.Image = My.Resources.Resources.address_book_new_4
     Me.DestinationNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewToolStripButton.Name = "DestinationNewToolStripButton"
     Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -374,7 +398,7 @@ Partial Class MainForm
     'DestinationDeleteToolStripButton
     '
     Me.DestinationDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationDeleteToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
+    Me.DestinationDeleteToolStripButton.Image = My.Resources.Resources.edit_delete_6
     Me.DestinationDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationDeleteToolStripButton.Name = "DestinationDeleteToolStripButton"
     Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -450,7 +474,7 @@ Partial Class MainForm
     'AccessPathButton
     '
     Me.AccessPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.application_vnd_ms_access_small
+    Me.AccessPathButton.Image = My.Resources.Resources.application_vnd_ms_access_small
     Me.AccessPathButton.Location = New System.Drawing.Point(829, 30)
     Me.AccessPathButton.Name = "AccessPathButton"
     Me.AccessPathButton.Size = New System.Drawing.Size(29, 23)
@@ -469,13 +493,13 @@ Partial Class MainForm
     'AccessPathTextBox
     '
     Me.AccessPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "AccessPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+    Me.AccessPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "AccessPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.AccessPathTextBox.Location = New System.Drawing.Point(176, 33)
     Me.AccessPathTextBox.Name = "AccessPathTextBox"
     Me.AccessPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.AccessPathTextBox.TabIndex = 10
-    Me.AccessPathTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.AccessPathTextBox
+    Me.AccessPathTextBox.Text = My.MySettings.Default.AccessPathTextBox
     '
     'AccessRadioButton
     '
@@ -525,13 +549,13 @@ Partial Class MainForm
     'ExcelPathTextBox
     '
     Me.ExcelPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.ExcelPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "ExcelPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+    Me.ExcelPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "ExcelPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.ExcelPathTextBox.Location = New System.Drawing.Point(176, 28)
     Me.ExcelPathTextBox.Name = "ExcelPathTextBox"
     Me.ExcelPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.ExcelPathTextBox.TabIndex = 7
-    Me.ExcelPathTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.ExcelPathTextBox
+    Me.ExcelPathTextBox.Text = My.MySettings.Default.ExcelPathTextBox
     '
     'ExcelRadioButton
     '
@@ -578,7 +602,7 @@ Partial Class MainForm
     'TextApplicationButton
     '
     Me.TextApplicationButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.TextEdit_app_small
+    Me.TextApplicationButton.Image = My.Resources.Resources.TextEdit_app_small
     Me.TextApplicationButton.Location = New System.Drawing.Point(829, 42)
     Me.TextApplicationButton.Name = "TextApplicationButton"
     Me.TextApplicationButton.Size = New System.Drawing.Size(29, 23)
@@ -598,13 +622,13 @@ Partial Class MainForm
     'TextApplicationTextBox
     '
     Me.TextApplicationTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "TextApplicationTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+    Me.TextApplicationTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "TextApplicationTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.TextApplicationTextBox.Location = New System.Drawing.Point(176, 45)
     Me.TextApplicationTextBox.Name = "TextApplicationTextBox"
     Me.TextApplicationTextBox.Size = New System.Drawing.Size(647, 20)
     Me.TextApplicationTextBox.TabIndex = 13
-    Me.TextApplicationTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.TextApplicationTextBox
+    Me.TextApplicationTextBox.Text = My.MySettings.Default.TextApplicationTextBox
     '
     'TextApplicationLabel
     '
@@ -627,13 +651,13 @@ Partial Class MainForm
     'TextPathTextBox
     '
     Me.TextPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "TextPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+    Me.TextPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "TextPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.TextPathTextBox.Location = New System.Drawing.Point(176, 19)
     Me.TextPathTextBox.Name = "TextPathTextBox"
     Me.TextPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.TextPathTextBox.TabIndex = 10
-    Me.TextPathTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.TextPathTextBox
+    Me.TextPathTextBox.Text = My.MySettings.Default.TextPathTextBox
     '
     'QueryOptionsGroupBox
     '
@@ -651,12 +675,12 @@ Partial Class MainForm
     '
     'BufferTextBox
     '
-    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.BufferTextBox.Location = New System.Drawing.Point(555, 23)
     Me.BufferTextBox.Name = "BufferTextBox"
     Me.BufferTextBox.Size = New System.Drawing.Size(45, 20)
     Me.BufferTextBox.TabIndex = 3
-    Me.BufferTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.BufferTextBox
+    Me.BufferTextBox.Text = My.MySettings.Default.BufferTextBox
     '
     'BufferLabel
     '
@@ -669,12 +693,12 @@ Partial Class MainForm
     '
     'PartitionSizeTextBox
     '
-    Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQLManager.My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.PartitionSizeTextBox.Location = New System.Drawing.Point(232, 23)
     Me.PartitionSizeTextBox.Name = "PartitionSizeTextBox"
     Me.PartitionSizeTextBox.Size = New System.Drawing.Size(100, 20)
     Me.PartitionSizeTextBox.TabIndex = 1
-    Me.PartitionSizeTextBox.Text = Global.RemoteOpenSQLManager.My.MySettings.Default.PartitionSizeTextBox
+    Me.PartitionSizeTextBox.Text = My.MySettings.Default.PartitionSizeTextBox
     '
     'PartitionSizeLabel
     '
@@ -890,7 +914,7 @@ Partial Class MainForm
     'QueryNewFolderToolStripButton
     '
     Me.QueryNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryNewFolderToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
+    Me.QueryNewFolderToolStripButton.Image = My.Resources.Resources.folder_new_8
     Me.QueryNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewFolderToolStripButton.Name = "QueryNewFolderToolStripButton"
     Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -899,7 +923,7 @@ Partial Class MainForm
     'QueryNewToolStripButton
     '
     Me.QueryNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryNewToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
+    Me.QueryNewToolStripButton.Image = My.Resources.Resources.address_book_new_4
     Me.QueryNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewToolStripButton.Name = "QueryNewToolStripButton"
     Me.QueryNewToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -908,7 +932,7 @@ Partial Class MainForm
     'QueryDeleteToolStripButton
     '
     Me.QueryDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryDeleteToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
+    Me.QueryDeleteToolStripButton.Image = My.Resources.Resources.edit_delete_6
     Me.QueryDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryDeleteToolStripButton.Name = "QueryDeleteToolStripButton"
     Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -948,7 +972,7 @@ Partial Class MainForm
     '
     Me.QueryQuickOpenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
     Me.QueryQuickOpenToolStripButton.Enabled = False
-    Me.QueryQuickOpenToolStripButton.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.quickopen
+    Me.QueryQuickOpenToolStripButton.Image = My.Resources.Resources.quickopen
     Me.QueryQuickOpenToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryQuickOpenToolStripButton.Name = "QueryQuickOpenToolStripButton"
     Me.QueryQuickOpenToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -962,7 +986,7 @@ Partial Class MainForm
     'ToolStripButton1
     '
     Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.ToolStripButton1.Image = Global.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
+    Me.ToolStripButton1.Image = My.Resources.Resources.address_book_new_4
     Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.ToolStripButton1.Name = "ToolStripButton1"
     Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
@@ -971,30 +995,6 @@ Partial Class MainForm
     'QueryTimer
     '
     Me.QueryTimer.Interval = 1000
-    '
-    'DestinationGroupBox
-    '
-    Me.DestinationGroupBox.Controls.Add(Me.DescriptionLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.SapRouterStringLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationDescription)
-    Me.DestinationGroupBox.Controls.Add(Me.PasswordLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationAppServerHost)
-    Me.DestinationGroupBox.Controls.Add(Me.UsernameLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationSystemNumber)
-    Me.DestinationGroupBox.Controls.Add(Me.ClientLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationClient)
-    Me.DestinationGroupBox.Controls.Add(Me.SystemNumberLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationUsername)
-    Me.DestinationGroupBox.Controls.Add(Me.AppServerHostLabel)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationPassword)
-    Me.DestinationGroupBox.Controls.Add(Me.DestinationSapRouterString)
-    Me.DestinationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.DestinationGroupBox.Location = New System.Drawing.Point(0, 0)
-    Me.DestinationGroupBox.Name = "DestinationGroupBox"
-    Me.DestinationGroupBox.Size = New System.Drawing.Size(624, 318)
-    Me.DestinationGroupBox.TabIndex = 14
-    Me.DestinationGroupBox.TabStop = False
-    Me.DestinationGroupBox.Text = "Destination"
     '
     'MainForm
     '
@@ -1013,6 +1013,8 @@ Partial Class MainForm
     Me.DestinationsSplitContainer.Panel2.ResumeLayout(False)
     CType(Me.DestinationsSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
     Me.DestinationsSplitContainer.ResumeLayout(False)
+    Me.DestinationGroupBox.ResumeLayout(False)
+    Me.DestinationGroupBox.PerformLayout()
     CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
     CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
     Me.DestinationToolStrip.ResumeLayout(False)
@@ -1055,8 +1057,6 @@ Partial Class MainForm
     Me.QueryStatusStrip.PerformLayout()
     Me.QueriesToolStrip.ResumeLayout(False)
     Me.QueriesToolStrip.PerformLayout()
-    Me.DestinationGroupBox.ResumeLayout(False)
-    Me.DestinationGroupBox.PerformLayout()
     Me.ResumeLayout(False)
 
   End Sub
@@ -1069,12 +1069,12 @@ Partial Class MainForm
   Friend WithEvents DestinationPassword As System.Windows.Forms.TextBox
   Friend WithEvents DestinationUsername As System.Windows.Forms.TextBox
   Friend WithEvents DestinationBindingSource As System.Windows.Forms.BindingSource
-  Friend WithEvents RemoteOpenSQLDestinations As RemoteOpenSQLManager.RemoteOpenSQLDestinations
+  Friend WithEvents RemoteOpenSQLDestinations As RemoteOpenSQLDestinations
   Friend WithEvents DestinationClient As System.Windows.Forms.TextBox
   Friend WithEvents DestinationSystemNumber As System.Windows.Forms.TextBox
   Friend WithEvents DestinationAppServerHost As System.Windows.Forms.TextBox
   Friend WithEvents DestinationDescription As System.Windows.Forms.TextBox
-  Friend WithEvents RemoteOpenSQLQueries As RemoteOpenSQLManager.RemoteOpenSQLQueries
+  Friend WithEvents RemoteOpenSQLQueries As RemoteOpenSQLQueries
   Friend WithEvents SapRouterStringLabel As System.Windows.Forms.Label
   Friend WithEvents PasswordLabel As System.Windows.Forms.Label
   Friend WithEvents UsernameLabel As System.Windows.Forms.Label
