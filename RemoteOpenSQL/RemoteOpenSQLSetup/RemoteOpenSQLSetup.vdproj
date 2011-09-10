@@ -112,6 +112,12 @@
         "Entry"
         {
         "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
+        "OwnerKey" = "8:_E84E0F30A69145C88B767301E55A3D9E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_618B65274538D4F963F21F893C84F85F"
         "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -148,6 +154,12 @@
         "Entry"
         {
         "MsmKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
+        "OwnerKey" = "8:_E84E0F30A69145C88B767301E55A3D9E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8BDC6F78316730A9328BA6F35EA0C4DB"
         "OwnerKey" = "8:_C2094E1F3F134DEE9097F2FB1D38050C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -177,8 +189,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E84E0F30A69145C88B767301E55A3D9E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_177F60E0731046E785C27AC8729A6C06"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E84E0F30A69145C88B767301E55A3D9E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -415,7 +439,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -733,7 +757,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RemoteOpenSQL"
         "ProductCode" = "8:{2BC55620-8395-400D-954D-C9E6D6528F65}"
-        "PackageCode" = "8:{41ECFA0D-F474-4818-A911-31A2ACBD08B7}"
+        "PackageCode" = "8:{A3266126-667C-4CED-B548-3850D86FB72D}"
         "UpgradeCode" = "8:{F77AF266-B57D-4951-964D-464F89D6CED6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1341,6 +1365,62 @@
                 {
                 }
             }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_708A509ED6FE4D329A298D51E87FAE13"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Symbols"
+            "OutputProjectGuid" = "8:{794ACEC6-5237-4307-BF25-D0B06B8E40F5}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_7375677740C74B1B8F4DC0F169F77D43"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Symbols"
+            "OutputProjectGuid" = "8:{714963AD-ABBA-4083-A68F-5893AEE90E5C}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C2094E1F3F134DEE9097F2FB1D38050C"
             {
             "SourcePath" = "8:..\\RemoteOpenSQLManager\\obj\\x86\\Release\\RemoteOpenSQLManager.exe"
@@ -1364,6 +1444,62 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{B2736C7E-4D5B-4545-A70A-55067D16C48E}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C3F4FAB3F3514FAD88C5472287EDBA31"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Symbols"
+            "OutputProjectGuid" = "8:{B2736C7E-4D5B-4545-A70A-55067D16C48E}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E84E0F30A69145C88B767301E55A3D9E"
+            {
+            "SourcePath" = "8:..\\SapNetConnector2Proxy2010\\obj\\x86\\Release\\SapNetConnector2Proxy2010.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_80F050400F62419288514B97F6E127CE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{714963AD-ABBA-4083-A68F-5893AEE90E5C}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

@@ -534,6 +534,15 @@ Public Class MainForm
     QueryTimer.Enabled = True
 
     With CType(DestinationBindingSource.Current.row, RemoteOpenSQLDestinations.DestinationRow)
+#If DEBUG Then
+      RemoteOpenSQL.SetLogonParameters(
+        .AppServerHost,
+        .SystemNumber,
+        .Client,
+        .Username,
+        DestinationPassword.Text,
+        .SAPRouterString)
+#Else
       Try
         RemoteOpenSQL.SetLogonParameters(
           .AppServerHost,
@@ -546,6 +555,7 @@ Public Class MainForm
         OutputTextBox.Text += ex.ToString & vbCrLf
         Exit Sub
       End Try
+#End If
     End With
 
     Dim PartitionSize As Integer
