@@ -496,24 +496,25 @@ Public Class MainForm
   Private Sub QueryStartToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStartToolStripButton.Click
 
     OutputTextBox.Text = String.Empty
+    Dim QueryName = Replace(CType(QueryBindingSource.Current.row, RemoteOpenSQLQueries.QueryTreeRow).Name, " ", "")
 
     If TextRadioButton.Checked Then
       If TextApplicationTextBox.Text <> String.Empty AndAlso Not File.Exists(TextApplicationTextBox.Text) Then
         MsgBox("File " & TextApplicationTextBox.Text & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New DelimitedTextFileConsumer(TextPathTextBox.Text)
+      Consumer = New DelimitedTextFileConsumer(QueryName, TextPathTextBox.Text)
       CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
     ElseIf ExcelRadioButton.Checked Then
-      Consumer = New MicrosoftExcelConsumer(ExcelPathTextBox.Text)
+      Consumer = New MicrosoftExcelConsumer(QueryName, ExcelPathTextBox.Text)
     ElseIf AccessRadioButton.Checked Then
       If Not File.Exists(AccessPathTextBox.Text) Then
         MsgBox("File " & AccessPathTextBox.Text & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New MicrosoftAccessConsumer(AccessPathTextBox.Text)
+      Consumer = New MicrosoftAccessConsumer(QueryName, AccessPathTextBox.Text)
     Else
-      Consumer = New DelimitedTextFileConsumer(TextPathTextBox.Text)
+      Consumer = New DelimitedTextFileConsumer(QueryName, TextPathTextBox.Text)
       CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
     End If
 

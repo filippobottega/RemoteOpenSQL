@@ -103,6 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilerServices.vb" />
+    <Compile Include="RemoteOpenSQLGoldLayer.vb" />
+    <Compile Include="RemoteOpenSQLRFCServerLayer.vb" />
     <Compile Include="RosSAPStructure.vb" />
     <Compile Include="DataConsumer.vb" />
     <Compile Include="RemoteOpenSQL.vb" />

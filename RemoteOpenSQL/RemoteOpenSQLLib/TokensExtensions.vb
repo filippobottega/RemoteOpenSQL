@@ -24,19 +24,27 @@ Imports com.calitha.goldparser
 
 Module TokenExtensions
   <Extension()>
-  Public Function Childs(ByVal Token As NonterminalToken, ByVal SymbolName As String, Optional ByVal Recursive As Boolean = False) As List(Of Token)
+  Public Function Childs(ByVal Token As NonterminalToken, Optional ByVal SymbolName As String = "", Optional ByVal Recursive As Boolean = False) As List(Of Token)
     Dim Result = New List(Of Token)
     For Each ChildToken In Token.Tokens
       If TypeOf ChildToken Is NonterminalToken Then
-        If CType(ChildToken, NonterminalToken).Symbol.Name = SymbolName Then
+        If SymbolName = String.Empty Then
           Result.Add(ChildToken)
+        Else
+          If CType(ChildToken, NonterminalToken).Symbol.Name = SymbolName Then
+            Result.Add(ChildToken)
+          End If
         End If
         If Recursive Then
           Result.AddRange(CType(ChildToken, NonterminalToken).Childs(SymbolName, Recursive))
         End If
       ElseIf TypeOf ChildToken Is TerminalToken Then
-        If CType(ChildToken, TerminalToken).Symbol.Name = SymbolName Then
+        If SymbolName = String.Empty Then
           Result.Add(ChildToken)
+        Else
+          If CType(ChildToken, TerminalToken).Symbol.Name = SymbolName Then
+            Result.Add(ChildToken)
+          End If
         End If
       End If
     Next
@@ -44,12 +52,16 @@ Module TokenExtensions
   End Function
 
   <Extension()>
-  Public Function NonTerminalChilds(ByVal Token As NonterminalToken, ByVal SymbolName As String, Optional ByVal Recursive As Boolean = False) As List(Of NonterminalToken)
+  Public Function NonTerminalChilds(ByVal Token As NonterminalToken, Optional ByVal SymbolName As String = "", Optional ByVal Recursive As Boolean = False) As List(Of NonterminalToken)
     Dim Result = New List(Of NonterminalToken)
     For Each ChildToken In Token.Tokens
       If TypeOf ChildToken Is NonterminalToken Then
-        If CType(ChildToken, NonterminalToken).Symbol.Name = SymbolName Then
+        If SymbolName = String.Empty Then
           Result.Add(ChildToken)
+        Else
+          If CType(ChildToken, NonterminalToken).Symbol.Name = SymbolName Then
+            Result.Add(ChildToken)
+          End If
         End If
         If Recursive Then
           Result.AddRange(CType(ChildToken, NonterminalToken).NonTerminalChilds(SymbolName, Recursive))
@@ -60,7 +72,7 @@ Module TokenExtensions
   End Function
 
   <Extension()>
-  Public Function TerminalChilds(ByVal Token As NonterminalToken, ByVal SymbolName As String, Optional ByVal Recursive As Boolean = False) As List(Of TerminalToken)
+  Public Function TerminalChilds(ByVal Token As NonterminalToken, Optional ByVal SymbolName As String = "", Optional ByVal Recursive As Boolean = False) As List(Of TerminalToken)
     Dim Result = New List(Of TerminalToken)
     For Each ChildToken In Token.Tokens
       If TypeOf ChildToken Is NonterminalToken Then
@@ -68,8 +80,12 @@ Module TokenExtensions
           Result.AddRange(CType(ChildToken, NonterminalToken).TerminalChilds(SymbolName, Recursive))
         End If
       ElseIf TypeOf ChildToken Is TerminalToken Then
-        If CType(ChildToken, TerminalToken).Symbol.Name = SymbolName Then
+        If SymbolName = String.Empty Then
           Result.Add(ChildToken)
+        Else
+          If CType(ChildToken, TerminalToken).Symbol.Name = SymbolName Then
+            Result.Add(ChildToken)
+          End If
         End If
       End If
     Next

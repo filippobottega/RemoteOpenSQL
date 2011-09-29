@@ -29,6 +29,7 @@ Imports System.Threading.Tasks
 Imports System.Runtime
 
 Public MustInherit Class DataConsumer
+  Protected OutputNameValue As String
   Protected RosRfcFieldAttributesValue As List(Of RfcFieldAttribute)
   Protected LengthArray() As Integer
   Protected ColumnsUBound As Integer
@@ -36,9 +37,17 @@ Public MustInherit Class DataConsumer
 
   Public Property Records As Integer
 
-  Public Sub New()
+  Public Sub New(OutputName As String)
     MyBase.New()
+
+    OutputNameValue = Replace(OutputName, " ", "")
   End Sub
+
+  Public ReadOnly Property OutputName As String
+    Get
+      Return OutputNameValue
+    End Get
+  End Property
 
   Friend Sub TryReleaseComObject(ByVal ComObject As Object)
     Try
@@ -61,32 +70,6 @@ Public MustInherit Class DataConsumer
 
       ReDim LengthArray(ColumnsUBound)
       For Count = 0 To ColumnsUBound
-
-        'Dim Length = 0
-        'Select Case RfcFieldsValue(Count).RfcType
-        '  Case RFCTYPE.RFCTYPE_CHAR
-        '    Length = RfcFieldsValue(Count).Length
-        '  Case RFCTYPE.RFCTYPE_DATE
-        '    Return "String"
-        '  Case RFCTYPE.RFCTYPE_BCD
-        '    Return "Decimal"
-        '  Case RFCTYPE.RFCTYPE_TIME
-        '    Return "String"
-        '  Case RFCTYPE.RFCTYPE_BYTE
-        '    Return "Byte()"
-        '  Case RFCTYPE.RFCTYPE_NUM
-        '    Return "String"
-        '  Case RFCTYPE.RFCTYPE_FLOAT
-        '    Return "Double"
-        '  Case RFCTYPE.RFCTYPE_INT
-        '    Return "Integer"
-        '  Case RFCTYPE.RFCTYPE_INT2
-        '    Return "Short"
-        '  Case RFCTYPE.RFCTYPE_INT1
-        '    Return "Byte"
-        '  Case Else
-        'End Select
-
         LengthArray(Count) = RosRfcFieldAttributesValue(Count).Length
       Next
     End Set
@@ -98,78 +81,6 @@ Public MustInherit Class DataConsumer
   Public MustOverride Sub ViewData()
 
 End Class
-
-'Public Class FixedLenghtTextFileConsumer
-'  Inherits DataConsumer
-
-'  Private FullPathValue As String
-'  Private WriteHeaderValue As Boolean
-'  Private TextStreamWriter As StreamWriter
-'  Private RowsSeparatorValue As String = vbCrLf
-
-'  Public Sub New(ByVal FullPath As String, Optional ByVal WriteHeader As Boolean = True, Optional ByVal RowsSeparator As String = vbCrLf)
-'    MyBase.New()
-
-'    FullPathValue = FullPath
-'    WriteHeaderValue = WriteHeader
-'    RowsSeparatorValue = RowsSeparator
-'  End Sub
-
-'  Public Property RowsSeparator As String
-'    Get
-'      Return RowsSeparatorValue
-'    End Get
-'    Set(ByVal value As String)
-'      RowsSeparatorValue = value
-'    End Set
-'  End Property
-
-'  Public Property FullPath As String
-'    Get
-'      Return FullPathValue
-'    End Get
-'    Set(ByVal value As String)
-'      FullPathValue = value
-'    End Set
-'  End Property
-
-'  Public Overrides Sub BeginConsume()
-
-'    ' Todo: gestire l'eccezione se il file è bloccato
-'    File.Delete(FullPathValue)
-
-'    TextStreamWriter = New StreamWriter(FullPath, True, Encoding.Unicode)
-
-'    If WriteHeaderValue Then
-'      For Count = 0 To ColumnsUBound
-'        TextStreamWriter.Write(Left(RfcFieldsValue(Count).AbapName.PadRight(LengthArray(Count)), LengthArray(Count)))
-'      Next
-'      TextStreamWriter.Write(RowsSeparatorValue)
-'    End If
-'  End Sub
-
-'  Public Overrides Sub Consume(ByVal Row As RosSAPStructure)
-
-'    'Dim Stopwatch = New Stopwatch
-'    'Stopwatch.Start()
-
-'    With TextStreamWriter
-'      Dim ItemsArray = Row.GetItemsArray
-'      For Index = 0 To ColumnsUBound
-'        .Write(ItemsArray(Index).ToString.PadRight(LengthArray(Index)))
-'      Next
-'      .Write(RowsSeparatorValue)
-'    End With
-
-'    'Stopwatch.Stop()
-'    'Console.WriteLine("Consume time: " & Stopwatch.ElapsedMilliseconds)
-
-'  End Sub
-
-'  Public Overrides Sub EndConsume()
-'    TextStreamWriter.Close()
-'  End Sub
-'End Class
 
 Public Class DelimitedTextFileConsumer
   Inherits DataConsumer
@@ -183,12 +94,13 @@ Public Class DelimitedTextFileConsumer
   Private ViewerPathValue As String
 
   Public Sub New(
+                OutputName As String,
                 Optional ByVal PathName As String = "",
-                Optional ByVal FileName As String = "",
                 Optional ByVal WriteHeader As Boolean = True,
                 Optional ByVal RowsSeparator As String = vbCrLf,
                 Optional ByVal FieldsSeparator As String = vbTab)
-    MyBase.New()
+
+    MyBase.New(OutputName)
 
     If PathName = String.Empty Then
       PathNameValue = Path.GetTempPath
@@ -196,7 +108,7 @@ Public Class DelimitedTextFileConsumer
       PathNameValue = PathName
     End If
 
-    FileNameValue = FileName
+    FileNameValue = OutputName & ".txt"
     WriteHeaderValue = WriteHeader
     RowsSeparatorValue = RowsSeparator
     FieldsSeparatorValue = FieldsSeparator
@@ -314,12 +226,13 @@ Public Class MicrosoftAccessConsumer
   Private SessionTempFolder As String
 
   Public Sub New(
+                TableName As String,
                 ByVal DatabaseFullPath As String,
-                Optional ByVal TableName As String = "",
                 Optional ByVal RowsSeparator As String = vbCrLf,
                 Optional ByVal FieldsSeparator As String = vbTab,
                 Optional ByVal TextDelimiter As String = "none")
-    MyBase.New()
+
+    MyBase.New(TableName)
 
     DatabaseFullPathValue = DatabaseFullPath
     RowsSeparatorValue = RowsSeparator
@@ -606,32 +519,21 @@ End Class
 Public Class MicrosoftExcelConsumer
   Inherits DelimitedTextFileConsumer
 
-  Private ExcelFileNameValue As String
-
   Public Sub New(
-              Optional ByVal PathName As String = "",
-              Optional ByVal ExcelFileName As String = "")
-    MyBase.New(PathName)
-
-    ExcelFileNameValue = ExcelFileName
-    If ExcelFileNameValue <> String.Empty Then
-      FileName = Path.GetFileNameWithoutExtension(ExcelFileNameValue) & ".txt"
-    End If
+                OutputName As String,
+                Optional ByVal PathName As String = "")
+    MyBase.New(OutputName, PathName)
   End Sub
 
-  Public Overloads Property ExcelFileName As String
+  Public ReadOnly Property ExcelFileName As String
     Get
-      Return ExcelFileNameValue
+      Return OutputName & ".xlsx"
     End Get
-    Set(ByVal value As String)
-      ExcelFileNameValue = value
-      MyBase.FileName = Path.GetFileNameWithoutExtension(value) & ".txt"
-    End Set
   End Property
 
   Public Overloads ReadOnly Property ExcelFullPath As String
     Get
-      Return Path.Combine(PathName, ExcelFileNameValue)
+      Return Path.Combine(PathName, ExcelFileName)
     End Get
   End Property
 

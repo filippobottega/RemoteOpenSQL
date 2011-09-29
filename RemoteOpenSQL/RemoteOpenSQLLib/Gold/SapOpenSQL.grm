@@ -22,23 +22,31 @@ Comment End   = '*/'
 Comment Line  = '--'
 
 ! =============================================================================
+! Sets
+! =============================================================================
+
+{Quote}                    = ['']
+{PrintableMinusQuote}      = {Printable} - {Quote} 
+{AlphanumericAndUndescore} = {Alphanumeric} + [_] 
+{LetterAndUndescore}       = {Letter} + [_] 
+
+! =============================================================================
 ! Terminals
 ! =============================================================================
 
-{String Ch 1}      = {Printable} - ["]
-{String Ch 2}      = {Printable} - ['']
-{Id Ch Standard}   = {Alphanumeric} + [_] + [/]
-{Id Ch Extended}   = {Printable} - ['['] - [']']
-{Letter Standard}  = {Letter} + [/]     
 
-StringLiteral   = '"'{String Ch 1}*'"' | ''{String Ch 2}*''
-IntegerLiteral  = {Digit}+
-RealLiteral     = {Digit}+'.'{Digit}+
+
+StringLiteral   = ''{PrintableMinusQuote}*''
+IntegerLiteral  = {Number}+
+RealLiteral     = {Number}+'.'{Number}+
 
 !----- Identifiers in SQL are very complex. 
 
-Id             = ({Letter Standard}{Id Ch Standard}* | '['{Id Ch Extended}+']')  ('.'({Letter Standard}{Id Ch Standard}* | '['{Id Ch Extended}+']'))?
-Component      = {Letter Standard}{Id Ch Standard}+'-'{Letter Standard}{Id Ch Standard}+
+Id                   = {Letter}{AlphanumericAndUndescore}*
+ExtendedId           = _{AlphanumericAndUndescore}*
+NamespaceId          = '/'{Alphanumeric}+'/'{AlphanumericAndUndescore}+
+ColumnSelectionId    = (({Letter}{AlphanumericAndUndescore}*) | ('/'{Alphanumeric}+'/'{AlphanumericAndUndescore}+))'~'(({Letter}{AlphanumericAndUndescore}*) | ('/'{Alphanumeric}+'/'{AlphanumericAndUndescore}+))
+ComponentSelectionId = (({LetterAndUndescore}{AlphanumericAndUndescore}*) | ('/'{Alphanumeric}+'/'{AlphanumericAndUndescore}+))'-'(({LetterAndUndescore}{AlphanumericAndUndescore}*) | ('/'{Alphanumeric}+'/'{AlphanumericAndUndescore}+))
 
 ! =============================================================================
 ! Rules
@@ -58,17 +66,64 @@ Component      = {Letter Standard}{Id Ch Standard}+'-'{Letter Standard}{Id Ch St
 <Column List>   ::= <Column Item> <Column List>
                   | <Column Item>
 
-<Column Item>   ::= <Column Source>
-                  | <Column Source> AS Id      !ALIAS   
+<Column Item>   ::= <Column Name>
+                  | <Column Name> AS <Column Alias>
+
+<Column Name>   ::= Id
+                  | NamespaceId
+                  | ColumnSelectionId
+
+<Column Alias>  ::= Id
                   
-<Column Source> ::= Id               
+<From Clause>   ::= FROM <Source> <Client Specified Clause> <Up To Clause> 
 
-<From Clause>   ::= FROM <Id List> <Client Specified Clause> <Up To Clause> 
+<Source>        ::= <Table Item>
+                  | <Enclosed Table Item>
+                  | <Join Expression>
+                  | <Enclosed Join>
 
-<Up To Clause>  ::= 'UP TO uptorows ROWS'
-                  | 
+<Table Item>   ::= <Table Name>
+                  | <Table Name> AS <Table Alias>
+
+<Table Name>   ::= Id
+                  | NamespaceId
+
+<Table Alias>  ::= Id
+
+<Enclosed Table Item> ::= '(' <Table Item> ')' 
+
+<Join Expression> ::= <Table Item> <Join Clause> <Table Item> ON <Join Condition>
+                    | <Enclosed Join> <Join Clause> <Table Item> ON <Join Condition>
+
+<Enclosed Join>     ::= '(' <Join Expression> ')'
+
+<Join Clause>     ::= JOIN
+                    | INNER JOIN
+                    | LEFT JOIN
+                    | LEFT OUTER JOIN
+
+<Join Condition>  ::= <Join Comparison> AND <Join Condition>
+                    | <Join Comparison>
+
+<Join Comparison> ::= ColumnSelectionId <Comparison Operator> ColumnSelectionId
+
+<Comparison Operator> ::= ' ='
+                        | EQ
+                        | ' <>'
+                        | NE
+                        | ' <'
+                        | LT
+                        | ' >'
+                        | GT
+                        | ' <='
+                        | LE
+                        | ' >='
+                        | GE
 
 <Client Specified Clause> ::= 'CLIENT SPECIFIED'
+                  | 
+
+<Up To Clause>  ::= 'UP TO uptorows ROWS'
                   | 
 
 <Into Clause>   ::= 'INTO CORRESPONDING FIELDS OF TABLE ta_lines'
@@ -79,8 +134,12 @@ Component      = {Letter Standard}{Id Ch Standard}+'-'{Letter Standard}{Id Ch St
 <Order Clause>  ::= 'ORDER BY' <Order List>
                   | 'ORDER BY PRIMARY KEY'
 
-<Order List>    ::= ID <Order List>
-                  | ID
+<Order List>    ::= <Order Name> <Order List>
+                  | <Order Name>
+
+<Order Name>    ::= Id
+                  | NamespaceId
+                  | ColumnSelectionId
 
 ! ============================================================================= 
 ! Expressions
@@ -100,25 +159,22 @@ Component      = {Letter Standard}{Id Ch Standard}+'-'{Letter Standard}{Id Ch St
                 | <Col> 'IS NOT NULL'
                 | <Col> 'IS NULL'
                 | <Col> LIKE StringLiteral
-                | <Col> ' ='  <Dobj>
-                | <Col> ' <>' <Dobj>
-                | <Col> ' !=' <Dobj>
-                | <Col> ' >'  <Dobj>
-                | <Col> ' >=' <Dobj>
-                | <Col> ' <'  <Dobj>
-                | <Col> ' <=' <Dobj>
+                | <Col> <Comparison Operator> <Dobj>
                 | <Col>
                 | '(' <Expression> ')'
 
-<Col>         ::= ID
+<Col>         ::= Id
+                | NamespaceId
+                | ColumnSelectionId
 
 <Dobj>        ::= IntegerLiteral
                 | RealLiteral
                 | StringLiteral
                 | NULL
-                | Component
+                | Id
+                | ExtendedId
+                | NamespaceId
+                | ColumnSelectionId
+                | ComponentSelectionId
 
-<Id List>     ::= <Id Member> ' ,' <Id List> 
-                | <Id Member>
 
-<Id Member>   ::= Id
