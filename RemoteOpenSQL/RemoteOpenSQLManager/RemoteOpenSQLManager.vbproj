@@ -49,7 +49,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>utilities-remote.ico</ApplicationIcon>
+    <ApplicationIcon>RemoteOpenSQL.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -241,7 +241,6 @@
     <None Include="Resources\folder-open-5.png" />
     <None Include="Resources\quickopen.png" />
     <None Include="Resources\utilities-remote.ico" />
-    <Content Include="utilities-remote.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -271,6 +270,9 @@
       <Name>RemoteOpenSQLLib</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RemoteOpenSQL.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

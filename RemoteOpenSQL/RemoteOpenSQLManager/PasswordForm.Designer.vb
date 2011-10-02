@@ -31,7 +31,7 @@ Partial Class PasswordForm
     'PasswordTextBox
     '
     Me.PasswordTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
     Me.PasswordTextBox.Location = New System.Drawing.Point(12, 12)
     Me.PasswordTextBox.Name = "PasswordTextBox"
     Me.PasswordTextBox.Size = New System.Drawing.Size(285, 20)

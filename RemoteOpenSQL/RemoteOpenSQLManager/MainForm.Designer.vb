@@ -34,7 +34,7 @@ Partial Class MainForm
     Me.SapRouterStringLabel = New System.Windows.Forms.Label()
     Me.DestinationDescription = New System.Windows.Forms.TextBox()
     Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLDestinations = New RemoteOpenSQLDestinations()
+    Me.RemoteOpenSQLDestinations = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLDestinations()
     Me.PasswordLabel = New System.Windows.Forms.Label()
     Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
     Me.UsernameLabel = New System.Windows.Forms.Label()
@@ -88,7 +88,7 @@ Partial Class MainForm
     Me.QueryGroupBox = New System.Windows.Forms.GroupBox()
     Me.QueryTextBox = New System.Windows.Forms.TextBox()
     Me.QueryBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLQueries = New RemoteOpenSQLQueries()
+    Me.RemoteOpenSQLQueries = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLQueries()
     Me.OutputGroupBox = New System.Windows.Forms.GroupBox()
     Me.OutputTextBox = New System.Windows.Forms.TextBox()
     Me.QueryDescriptionGroupBox = New System.Windows.Forms.GroupBox()
@@ -154,11 +154,11 @@ Partial Class MainForm
     Me.MainTabControl.Controls.Add(Me.OptionsTabPage)
     Me.MainTabControl.Controls.Add(Me.GrammarTabPage)
     Me.MainTabControl.Controls.Add(Me.QueriesTabPage)
-    Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
     Me.MainTabControl.Location = New System.Drawing.Point(0, 0)
     Me.MainTabControl.Name = "MainTabControl"
-    Me.MainTabControl.SelectedIndex = My.MySettings.Default.MainTabControl
+    Me.MainTabControl.SelectedIndex = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.MainTabControl
     Me.MainTabControl.Size = New System.Drawing.Size(884, 389)
     Me.MainTabControl.TabIndex = 0
     '
@@ -380,7 +380,7 @@ Partial Class MainForm
     'DestinationNewFolderToolStripButton
     '
     Me.DestinationNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationNewFolderToolStripButton.Image = My.Resources.Resources.folder_new_8
+    Me.DestinationNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.DestinationNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewFolderToolStripButton.Name = "DestinationNewFolderToolStripButton"
     Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -389,7 +389,7 @@ Partial Class MainForm
     'DestinationNewToolStripButton
     '
     Me.DestinationNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationNewToolStripButton.Image = My.Resources.Resources.address_book_new_4
+    Me.DestinationNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.DestinationNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewToolStripButton.Name = "DestinationNewToolStripButton"
     Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -398,7 +398,7 @@ Partial Class MainForm
     'DestinationDeleteToolStripButton
     '
     Me.DestinationDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.DestinationDeleteToolStripButton.Image = My.Resources.Resources.edit_delete_6
+    Me.DestinationDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.DestinationDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationDeleteToolStripButton.Name = "DestinationDeleteToolStripButton"
     Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -474,7 +474,7 @@ Partial Class MainForm
     'AccessPathButton
     '
     Me.AccessPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathButton.Image = My.Resources.Resources.application_vnd_ms_access_small
+    Me.AccessPathButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.application_vnd_ms_access_small
     Me.AccessPathButton.Location = New System.Drawing.Point(829, 30)
     Me.AccessPathButton.Name = "AccessPathButton"
     Me.AccessPathButton.Size = New System.Drawing.Size(29, 23)
@@ -494,12 +494,12 @@ Partial Class MainForm
     '
     Me.AccessPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "AccessPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.AccessPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "AccessPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.AccessPathTextBox.Location = New System.Drawing.Point(176, 33)
     Me.AccessPathTextBox.Name = "AccessPathTextBox"
     Me.AccessPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.AccessPathTextBox.TabIndex = 10
-    Me.AccessPathTextBox.Text = My.MySettings.Default.AccessPathTextBox
+    Me.AccessPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.AccessPathTextBox
     '
     'AccessRadioButton
     '
@@ -550,12 +550,12 @@ Partial Class MainForm
     '
     Me.ExcelPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.ExcelPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "ExcelPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.ExcelPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "ExcelPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.ExcelPathTextBox.Location = New System.Drawing.Point(176, 28)
     Me.ExcelPathTextBox.Name = "ExcelPathTextBox"
     Me.ExcelPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.ExcelPathTextBox.TabIndex = 7
-    Me.ExcelPathTextBox.Text = My.MySettings.Default.ExcelPathTextBox
+    Me.ExcelPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.ExcelPathTextBox
     '
     'ExcelRadioButton
     '
@@ -602,7 +602,7 @@ Partial Class MainForm
     'TextApplicationButton
     '
     Me.TextApplicationButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationButton.Image = My.Resources.Resources.TextEdit_app_small
+    Me.TextApplicationButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.TextEdit_app_small
     Me.TextApplicationButton.Location = New System.Drawing.Point(829, 42)
     Me.TextApplicationButton.Name = "TextApplicationButton"
     Me.TextApplicationButton.Size = New System.Drawing.Size(29, 23)
@@ -623,12 +623,12 @@ Partial Class MainForm
     '
     Me.TextApplicationTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "TextApplicationTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.TextApplicationTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "TextApplicationTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.TextApplicationTextBox.Location = New System.Drawing.Point(176, 45)
     Me.TextApplicationTextBox.Name = "TextApplicationTextBox"
     Me.TextApplicationTextBox.Size = New System.Drawing.Size(647, 20)
     Me.TextApplicationTextBox.TabIndex = 13
-    Me.TextApplicationTextBox.Text = My.MySettings.Default.TextApplicationTextBox
+    Me.TextApplicationTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.TextApplicationTextBox
     '
     'TextApplicationLabel
     '
@@ -652,12 +652,12 @@ Partial Class MainForm
     '
     Me.TextPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "TextPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.TextPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "TextPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.TextPathTextBox.Location = New System.Drawing.Point(176, 19)
     Me.TextPathTextBox.Name = "TextPathTextBox"
     Me.TextPathTextBox.Size = New System.Drawing.Size(647, 20)
     Me.TextPathTextBox.TabIndex = 10
-    Me.TextPathTextBox.Text = My.MySettings.Default.TextPathTextBox
+    Me.TextPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.TextPathTextBox
     '
     'QueryOptionsGroupBox
     '
@@ -675,12 +675,12 @@ Partial Class MainForm
     '
     'BufferTextBox
     '
-    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.BufferTextBox.Location = New System.Drawing.Point(555, 23)
     Me.BufferTextBox.Name = "BufferTextBox"
     Me.BufferTextBox.Size = New System.Drawing.Size(45, 20)
     Me.BufferTextBox.TabIndex = 3
-    Me.BufferTextBox.Text = My.MySettings.Default.BufferTextBox
+    Me.BufferTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.BufferTextBox
     '
     'BufferLabel
     '
@@ -693,12 +693,12 @@ Partial Class MainForm
     '
     'PartitionSizeTextBox
     '
-    Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+    Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.PartitionSizeTextBox.Location = New System.Drawing.Point(232, 23)
     Me.PartitionSizeTextBox.Name = "PartitionSizeTextBox"
     Me.PartitionSizeTextBox.Size = New System.Drawing.Size(100, 20)
     Me.PartitionSizeTextBox.TabIndex = 1
-    Me.PartitionSizeTextBox.Text = My.MySettings.Default.PartitionSizeTextBox
+    Me.PartitionSizeTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.PartitionSizeTextBox
     '
     'PartitionSizeLabel
     '
@@ -914,7 +914,7 @@ Partial Class MainForm
     'QueryNewFolderToolStripButton
     '
     Me.QueryNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryNewFolderToolStripButton.Image = My.Resources.Resources.folder_new_8
+    Me.QueryNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.QueryNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewFolderToolStripButton.Name = "QueryNewFolderToolStripButton"
     Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -923,7 +923,7 @@ Partial Class MainForm
     'QueryNewToolStripButton
     '
     Me.QueryNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryNewToolStripButton.Image = My.Resources.Resources.address_book_new_4
+    Me.QueryNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.QueryNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewToolStripButton.Name = "QueryNewToolStripButton"
     Me.QueryNewToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -932,7 +932,7 @@ Partial Class MainForm
     'QueryDeleteToolStripButton
     '
     Me.QueryDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryDeleteToolStripButton.Image = My.Resources.Resources.edit_delete_6
+    Me.QueryDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.QueryDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryDeleteToolStripButton.Name = "QueryDeleteToolStripButton"
     Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -972,7 +972,7 @@ Partial Class MainForm
     '
     Me.QueryQuickOpenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
     Me.QueryQuickOpenToolStripButton.Enabled = False
-    Me.QueryQuickOpenToolStripButton.Image = My.Resources.Resources.quickopen
+    Me.QueryQuickOpenToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.quickopen
     Me.QueryQuickOpenToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryQuickOpenToolStripButton.Name = "QueryQuickOpenToolStripButton"
     Me.QueryQuickOpenToolStripButton.Size = New System.Drawing.Size(36, 36)
@@ -986,7 +986,7 @@ Partial Class MainForm
     'ToolStripButton1
     '
     Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.ToolStripButton1.Image = My.Resources.Resources.address_book_new_4
+    Me.ToolStripButton1.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.ToolStripButton1.Name = "ToolStripButton1"
     Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
