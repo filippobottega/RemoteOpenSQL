@@ -41,7 +41,7 @@
   TYPES: ros_production_table TYPE STANDARD TABLE OF ros_production.
 
   TYPES: BEGIN OF ros_field_info,
-    fieldname TYPE char30,
+    abapname TYPE char30,
     rollname_or_abaptype TYPE char30,
     dfiesindex TYPE i,
     END OF ros_field_info.
@@ -54,7 +54,7 @@
 
   FUNCTION z_remote_open_sql.
 *"----------------------------------------------------------------------
-*"*"Interfaccia locale:
+*"*"Local Interface:
 *"----------------------------------------------------------------------
 
     DATA: callcount TYPE i.
@@ -74,7 +74,7 @@
       CALL FUNCTION 'SEND_CALL_CONTEXT'
         DESTINATION 'BACK'
         EXPORTING
-          abap_code_version     = '1.0.0.0'
+          abap_code_version     = '2.0.0.0'
         IMPORTING
           context_index         = context_index
           max_rows              = max_rows
@@ -411,6 +411,7 @@
   FORM get_filtered_parse_nodes
     USING parse_nodes TYPE ros_parse_node_table
           path TYPE ros_symbol_node_table
+          path_id TYPE i
           symbol_filter TYPE char255
           get_terminals TYPE c
           get_nonterminals TYPE c
@@ -423,7 +424,11 @@
 
 *   Search root id
     IF path IS INITIAL.
-      root_id = 1.
+      IF path_id <= 0.
+        root_id = 1.
+      ELSE.
+        root_id = path_id.
+      ENDIF.
     ELSE.
       DATA: wa_path TYPE ros_symbol_node.
       DATA: parent_id TYPE i.
@@ -435,7 +440,7 @@
           symbol = wa_path-symbol.
 
         IF sy-subrc <> 0.
-          CONCATENATE 'Symbol' wa_path-symbol ' not found.'
+          CONCATENATE 'Symbol' wa_path-symbol 'not found.'
            INTO message
            SEPARATED BY space.
           RETURN.
@@ -465,13 +470,40 @@
         CONTINUE.
       ENDIF.
 
-      IF symbol_filter <> wa_parse_node-symbol.
+      IF NOT symbol_filter IS INITIAL AND symbol_filter <> wa_parse_node-symbol.
         CONTINUE.
       ENDIF.
 
       APPEND wa_parse_node TO filtered_parse_nodes.
     ENDLOOP.
   ENDFORM.                    "get_filtered_parse_nodes
+
+
+*&---------------------------------------------------------------------*
+*&      Form  get_table_name
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PARSE_NODES    text
+*      -->TABLE_NAME_ID  text
+*      -->TABLE_NAME     text
+*----------------------------------------------------------------------*
+  FORM get_table_name
+     USING parse_nodes TYPE ros_parse_node_table
+          table_name_id TYPE i
+     CHANGING table_name TYPE char255.
+
+    DATA: wa_parse_node TYPE ros_parse_node.
+    LOOP AT parse_nodes INTO wa_parse_node WHERE parent = table_name_id.
+      IF   wa_parse_node-terminal = 'X' AND
+        ( wa_parse_node-symbol = 'Id' OR wa_parse_node-symbol = 'NamespaceId' ).
+        table_name = wa_parse_node-text_or_rule.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+
+  ENDFORM.                    "get_table_name
+
 
 *&---------------------------------------------------------------------*
 *&      Form  VIEW_AUTHORITY_CHECK
@@ -486,7 +518,7 @@
     CHANGING message TYPE char255.
 
     DATA: path TYPE ros_symbol_node_table WITH HEADER LINE.
-    DATA: filtered_parse_nodes TYPE ros_parse_node_table WITH HEADER LINE.
+    DATA: tablename_parse_nodes TYPE ros_parse_node_table WITH HEADER LINE.
 
     path = '<Query>'.
     APPEND path.
@@ -495,30 +527,41 @@
     path = '<From Clause>'.
     APPEND path.
 
+*   Search of <Table Name> non terminals.
     PERFORM get_filtered_parse_nodes
                 USING
                    parse_nodes
                    path[]
-                   'Id'
-                   'X'
+                   0
+                   'Table Name'
                    ''
                    'X'
+                   'X'
                 CHANGING
-                   filtered_parse_nodes[]
+                   tablename_parse_nodes[]
                    message.
 
     IF NOT message IS INITIAL.
       RETURN.
     ENDIF.
 
-    IF filtered_parse_nodes[] IS INITIAL.
+    IF tablename_parse_nodes[] IS INITIAL.
       message = 'No tables found into FROM clause.'.
       RETURN.
     ENDIF.
 
-    LOOP AT filtered_parse_nodes.
+    LOOP AT tablename_parse_nodes.
+
+      DATA: table_name TYPE char255.
+      PERFORM get_table_name
+                  USING
+                     parse_nodes
+                     tablename_parse_nodes-id
+                  CHANGING
+                     table_name.
+
       DATA: view_name LIKE dd25v-viewname.
-      view_name = filtered_parse_nodes-text_or_rule.
+      view_name = table_name.
       CALL FUNCTION 'VIEW_AUTHORITY_CHECK'
         EXPORTING
           view_action                    = 'S'
@@ -530,11 +573,11 @@
           OTHERS                         = 1.
 
       IF sy-subrc = 2.
-        CONCATENATE 'Not uthorized to read table' filtered_parse_nodes-text_or_rule
+        CONCATENATE 'Not uthorized to read table' tablename_parse_nodes-text_or_rule
           INTO message SEPARATED BY space.
         RETURN.
       ELSEIF sy-subrc = 1.
-        CONCATENATE 'Table' filtered_parse_nodes-text_or_rule ' not available.'
+        CONCATENATE 'Table' tablename_parse_nodes-text_or_rule ' not available.'
           INTO message SEPARATED BY space.
         RETURN.
       ENDIF.
@@ -614,13 +657,13 @@
     APPEND `  PROGRAM z_remote_open_sql_reader.`                                        TO subpoollines.
     APPEND `  TYPES: BEGIN OF linestruct,`                                              TO subpoollines.
     LOOP AT selected_fields INTO wa_selected_field.
-      CONCATENATE `    ` wa_selected_field-fieldname ` TYPE` ` ` wa_selected_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
+      CONCATENATE `    ` wa_selected_field-abapname ` TYPE` ` ` wa_selected_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     APPEND `  END OF linestruct.`                                                       TO subpoollines.
     APPEND `  TYPES: BEGIN OF orderbystruct,`                                           TO subpoollines.
     LOOP AT orderby_fields INTO wa_orderby_field.
-      CONCATENATE `    ` wa_orderby_field-fieldname ` TYPE` ` ` wa_orderby_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
+      CONCATENATE `    ` wa_orderby_field-abapname ` TYPE` ` ` wa_orderby_field-rollname_or_abaptype `,`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     APPEND `  END OF orderbystruct.`                                                    TO subpoollines.
@@ -730,25 +773,25 @@
     APPEND `        READ TABLE ta_lines INDEX linescount INTO wa_line.`                 TO subpoollines.
     APPEND `        READ TABLE ta_lines INDEX 1 INTO wa_first_line.`                    TO subpoollines.
     LOOP AT orderby_fields INTO wa_orderby_field.
-      CONCATENATE `        wa_orderby-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      CONCATENATE `        wa_orderby-` wa_orderby_field-abapname ` = wa_line-`  wa_orderby_field-abapname `.`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     APPEND `        message = 'LAST SELECTED RECORD:'.`                                 TO subpoollines.
     LOOP AT orderby_fields INTO wa_orderby_field.
       APPEND `        token1 = message.` TO subpoollines.
-      CONCATENATE `        token2 = wa_orderby-` wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      CONCATENATE `        token2 = wa_orderby-` wa_orderby_field-abapname `.`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
-      CONCATENATE `        CONCATENATE token1 '` wa_orderby_field-fieldname `' token2`  INTO wa_subpoolline.
+      CONCATENATE `        CONCATENATE token1 '` wa_orderby_field-abapname `' token2`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
       APPEND `          INTO message SEPARATED BY space.` TO subpoollines.
     ENDLOOP.
     APPEND ``                                                                           TO subpoollines.
     LOOP AT orderby_fields INTO wa_orderby_field.
-      CONCATENATE `        wa_orderby_last-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      CONCATENATE `        wa_orderby_last-` wa_orderby_field-abapname ` = wa_line-`  wa_orderby_field-abapname `.`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     LOOP AT orderby_fields INTO wa_orderby_field.
-      CONCATENATE `        wa_orderby_first-` wa_orderby_field-fieldname ` = wa_first_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      CONCATENATE `        wa_orderby_first-` wa_orderby_field-abapname ` = wa_first_line-`  wa_orderby_field-abapname `.`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     APPEND `        IF wa_orderby_first EQ wa_orderby.`                                 TO subpoollines.
@@ -768,7 +811,7 @@
     APPEND `          DESCRIBE TABLE ta_lines LINES linescount.`                        TO subpoollines.
     APPEND `          READ TABLE ta_lines INDEX linescount INTO wa_line.`               TO subpoollines.
     LOOP AT orderby_fields INTO wa_orderby_field.
-      CONCATENATE `          wa_orderby_last-` wa_orderby_field-fieldname ` = wa_line-`  wa_orderby_field-fieldname `.`  INTO wa_subpoolline.
+      CONCATENATE `          wa_orderby_last-` wa_orderby_field-abapname ` = wa_line-`  wa_orderby_field-abapname `.`  INTO wa_subpoolline.
       APPEND wa_subpoolline TO  subpoollines.
     ENDLOOP.
     APPEND `          IF wa_orderby_last NE wa_orderby.`                                TO subpoollines.
@@ -920,6 +963,7 @@
 
 
 
+
 *&---------------------------------------------------------------------*
 *&      Form  get_productions
 *&---------------------------------------------------------------------*
@@ -962,178 +1006,318 @@
     APPEND wa_production TO productions.
     wa_production-index = 6.
     wa_production-head = '<Column Item>'.
-    wa_production-handle = '<Column Source>'.
+    wa_production-handle = '<Column Name>'.
     APPEND wa_production TO productions.
     wa_production-index = 7.
     wa_production-head = '<Column Item>'.
-    wa_production-handle = '<Column Source> AS Id'.
+    wa_production-handle = '<Column Name> AS <Column Alias>'.
     APPEND wa_production TO productions.
     wa_production-index = 8.
-    wa_production-head = '<Column Source>'.
+    wa_production-head = '<Column Name>'.
     wa_production-handle = 'Id'.
     APPEND wa_production TO productions.
     wa_production-index = 9.
-    wa_production-head = '<From Clause>'.
-    wa_production-handle = 'FROM <Id List> <Client Specified Clause> <Up To Clause>'.
+    wa_production-head = '<Column Name>'.
+    wa_production-handle = 'NamespaceId'.
     APPEND wa_production TO productions.
     wa_production-index = 10.
-    wa_production-head = '<Up To Clause>'.
-    wa_production-handle = 'UP TO uptorows ROWS'.
+    wa_production-head = '<Column Name>'.
+    wa_production-handle = 'ColumnSelectionId'.
     APPEND wa_production TO productions.
     wa_production-index = 11.
-    wa_production-head = '<Up To Clause>'.
-    wa_production-handle = ''.
+    wa_production-head = '<Column Alias>'.
+    wa_production-handle = 'Id'.
     APPEND wa_production TO productions.
     wa_production-index = 12.
+    wa_production-head = '<From Clause>'.
+    wa_production-handle = 'FROM <Source> <Client Specified Clause> <Up To Clause>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 13.
+    wa_production-head = '<Source>'.
+    wa_production-handle = '<Table Item>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 14.
+    wa_production-head = '<Source>'.
+    wa_production-handle = '<Enclosed Table Item>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 15.
+    wa_production-head = '<Source>'.
+    wa_production-handle = '<Join Expression>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 16.
+    wa_production-head = '<Source>'.
+    wa_production-handle = '<Enclosed Join>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 17.
+    wa_production-head = '<Table Item>'.
+    wa_production-handle = '<Table Name>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 18.
+    wa_production-head = '<Table Item>'.
+    wa_production-handle = '<Table Name> AS <Table Alias>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 19.
+    wa_production-head = '<Table Name>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 20.
+    wa_production-head = '<Table Name>'.
+    wa_production-handle = 'NamespaceId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 21.
+    wa_production-head = '<Table Alias>'.
+    wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 22.
+    wa_production-head = '<Enclosed Table Item>'.
+    wa_production-handle = '( <Table Item> )'.
+    APPEND wa_production TO productions.
+    wa_production-index = 23.
+    wa_production-head = '<Join Expression>'.
+    wa_production-handle = '<Table Item> <Join Clause> <Table Item> ON <Join Condition>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 24.
+    wa_production-head = '<Join Expression>'.
+    wa_production-handle = '<Enclosed Join> <Join Clause> <Table Item> ON <Join Condition>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 25.
+    wa_production-head = '<Enclosed Join>'.
+    wa_production-handle = '( <Join Expression> )'.
+    APPEND wa_production TO productions.
+    wa_production-index = 26.
+    wa_production-head = '<Join Clause>'.
+    wa_production-handle = 'JOIN'.
+    APPEND wa_production TO productions.
+    wa_production-index = 27.
+    wa_production-head = '<Join Clause>'.
+    wa_production-handle = 'INNER JOIN'.
+    APPEND wa_production TO productions.
+    wa_production-index = 28.
+    wa_production-head = '<Join Clause>'.
+    wa_production-handle = 'LEFT JOIN'.
+    APPEND wa_production TO productions.
+    wa_production-index = 29.
+    wa_production-head = '<Join Clause>'.
+    wa_production-handle = 'LEFT OUTER JOIN'.
+    APPEND wa_production TO productions.
+    wa_production-index = 30.
+    wa_production-head = '<Join Condition>'.
+    wa_production-handle = '<Join Comparison> AND <Join Condition>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 31.
+    wa_production-head = '<Join Condition>'.
+    wa_production-handle = '<Join Comparison>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 32.
+    wa_production-head = '<Join Comparison>'.
+    wa_production-handle = 'ColumnSelectionId <Comparison Operator> ColumnSelectionId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 33.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' ='.
+    APPEND wa_production TO productions.
+    wa_production-index = 34.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'EQ'.
+    APPEND wa_production TO productions.
+    wa_production-index = 35.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' <>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 36.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'NE'.
+    APPEND wa_production TO productions.
+    wa_production-index = 37.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' <'.
+    APPEND wa_production TO productions.
+    wa_production-index = 38.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'LT'.
+    APPEND wa_production TO productions.
+    wa_production-index = 39.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' >'.
+    APPEND wa_production TO productions.
+    wa_production-index = 40.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'GT'.
+    APPEND wa_production TO productions.
+    wa_production-index = 41.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' <='.
+    APPEND wa_production TO productions.
+    wa_production-index = 42.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'LE'.
+    APPEND wa_production TO productions.
+    wa_production-index = 43.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = ' >='.
+    APPEND wa_production TO productions.
+    wa_production-index = 44.
+    wa_production-head = '<Comparison Operator>'.
+    wa_production-handle = 'GE'.
+    APPEND wa_production TO productions.
+    wa_production-index = 45.
     wa_production-head = '<Client Specified Clause>'.
     wa_production-handle = 'CLIENT SPECIFIED'.
     APPEND wa_production TO productions.
-    wa_production-index = 13.
+    wa_production-index = 46.
     wa_production-head = '<Client Specified Clause>'.
     wa_production-handle = ''.
     APPEND wa_production TO productions.
-    wa_production-index = 14.
+    wa_production-index = 47.
+    wa_production-head = '<Up To Clause>'.
+    wa_production-handle = 'UP TO uptorows ROWS'.
+    APPEND wa_production TO productions.
+    wa_production-index = 48.
+    wa_production-head = '<Up To Clause>'.
+    wa_production-handle = ''.
+    APPEND wa_production TO productions.
+    wa_production-index = 49.
     wa_production-head = '<Into Clause>'.
     wa_production-handle = 'INTO CORRESPONDING FIELDS OF TABLE ta_lines'.
     APPEND wa_production TO productions.
-    wa_production-index = 15.
+    wa_production-index = 50.
     wa_production-head = '<Where Clause>'.
     wa_production-handle = 'WHERE <Expression>'.
     APPEND wa_production TO productions.
-    wa_production-index = 16.
+    wa_production-index = 51.
     wa_production-head = '<Where Clause>'.
     wa_production-handle = ''.
     APPEND wa_production TO productions.
-    wa_production-index = 17.
+    wa_production-index = 52.
     wa_production-head = '<Order Clause>'.
     wa_production-handle = 'ORDER BY <Order List>'.
     APPEND wa_production TO productions.
-    wa_production-index = 18.
+    wa_production-index = 53.
     wa_production-head = '<Order Clause>'.
     wa_production-handle = 'ORDER BY PRIMARY KEY'.
     APPEND wa_production TO productions.
-    wa_production-index = 19.
+    wa_production-index = 54.
     wa_production-head = '<Order List>'.
-    wa_production-handle = 'Id <Order List>'.
+    wa_production-handle = '<Order Name> <Order List>'.
     APPEND wa_production TO productions.
-    wa_production-index = 20.
+    wa_production-index = 55.
     wa_production-head = '<Order List>'.
+    wa_production-handle = '<Order Name>'.
+    APPEND wa_production TO productions.
+    wa_production-index = 56.
+    wa_production-head = '<Order Name>'.
     wa_production-handle = 'Id'.
     APPEND wa_production TO productions.
-    wa_production-index = 21.
+    wa_production-index = 57.
+    wa_production-head = '<Order Name>'.
+    wa_production-handle = 'NamespaceId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 58.
+    wa_production-head = '<Order Name>'.
+    wa_production-handle = 'ColumnSelectionId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 59.
     wa_production-head = '<Expression>'.
     wa_production-handle = '<And Exp> OR <Expression>'.
     APPEND wa_production TO productions.
-    wa_production-index = 22.
+    wa_production-index = 60.
     wa_production-head = '<Expression>'.
     wa_production-handle = '<And Exp>'.
     APPEND wa_production TO productions.
-    wa_production-index = 23.
+    wa_production-index = 61.
     wa_production-head = '<And Exp>'.
     wa_production-handle = '<Not Exp> AND <And Exp>'.
     APPEND wa_production TO productions.
-    wa_production-index = 24.
+    wa_production-index = 62.
     wa_production-head = '<And Exp>'.
     wa_production-handle = '<Not Exp>'.
     APPEND wa_production TO productions.
-    wa_production-index = 25.
+    wa_production-index = 63.
     wa_production-head = '<Not Exp>'.
     wa_production-handle = 'NOT <Pred Exp>'.
     APPEND wa_production TO productions.
-    wa_production-index = 26.
+    wa_production-index = 64.
     wa_production-head = '<Not Exp>'.
     wa_production-handle = '<Pred Exp>'.
     APPEND wa_production TO productions.
-    wa_production-index = 27.
+    wa_production-index = 65.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col> BETWEEN <Dobj> AND <Dobj>'.
     APPEND wa_production TO productions.
-    wa_production-index = 28.
+    wa_production-index = 66.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col> NOT BETWEEN <Dobj> AND <Dobj>'.
     APPEND wa_production TO productions.
-    wa_production-index = 29.
+    wa_production-index = 67.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col> IS NOT NULL'.
     APPEND wa_production TO productions.
-    wa_production-index = 30.
+    wa_production-index = 68.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col> IS NULL'.
     APPEND wa_production TO productions.
-    wa_production-index = 31.
+    wa_production-index = 69.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col> LIKE StringLiteral'.
     APPEND wa_production TO productions.
-    wa_production-index = 32.
+    wa_production-index = 70.
     wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  = <Dobj>'.
+    wa_production-handle = '<Col> <Comparison Operator> <Dobj>'.
     APPEND wa_production TO productions.
-    wa_production-index = 33.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  <> <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 34.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  != <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 35.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  > <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 36.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  >= <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 37.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  < <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 38.
-    wa_production-head = '<Pred Exp>'.
-    wa_production-handle = '<Col>  <= <Dobj>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 39.
+    wa_production-index = 71.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '<Col>'.
     APPEND wa_production TO productions.
-    wa_production-index = 40.
+    wa_production-index = 72.
     wa_production-head = '<Pred Exp>'.
     wa_production-handle = '( <Expression> )'.
     APPEND wa_production TO productions.
-    wa_production-index = 41.
+    wa_production-index = 73.
     wa_production-head = '<Col>'.
     wa_production-handle = 'Id'.
     APPEND wa_production TO productions.
-    wa_production-index = 42.
+    wa_production-index = 74.
+    wa_production-head = '<Col>'.
+    wa_production-handle = 'NamespaceId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 75.
+    wa_production-head = '<Col>'.
+    wa_production-handle = 'ColumnSelectionId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 76.
     wa_production-head = '<Dobj>'.
     wa_production-handle = 'IntegerLiteral'.
     APPEND wa_production TO productions.
-    wa_production-index = 43.
+    wa_production-index = 77.
     wa_production-head = '<Dobj>'.
     wa_production-handle = 'RealLiteral'.
     APPEND wa_production TO productions.
-    wa_production-index = 44.
+    wa_production-index = 78.
     wa_production-head = '<Dobj>'.
     wa_production-handle = 'StringLiteral'.
     APPEND wa_production TO productions.
-    wa_production-index = 45.
+    wa_production-index = 79.
     wa_production-head = '<Dobj>'.
     wa_production-handle = 'NULL'.
     APPEND wa_production TO productions.
-    wa_production-index = 46.
+    wa_production-index = 80.
     wa_production-head = '<Dobj>'.
-    wa_production-handle = 'Component'.
-    APPEND wa_production TO productions.
-    wa_production-index = 47.
-    wa_production-head = '<Id List>'.
-    wa_production-handle = '<Id Member>  , <Id List>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 48.
-    wa_production-head = '<Id List>'.
-    wa_production-handle = '<Id Member>'.
-    APPEND wa_production TO productions.
-    wa_production-index = 49.
-    wa_production-head = '<Id Member>'.
     wa_production-handle = 'Id'.
+    APPEND wa_production TO productions.
+    wa_production-index = 81.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'ExtendedId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 82.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'NamespaceId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 83.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'ColumnSelectionId'.
+    APPEND wa_production TO productions.
+    wa_production-index = 84.
+    wa_production-head = '<Dobj>'.
+    wa_production-handle = 'ComponentSelectionId'.
     APPEND wa_production TO productions.
   ENDFORM.                    "get_productions
