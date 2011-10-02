@@ -424,9 +424,6 @@ Partial Public Class RemoteOpenSQL
       Dim Result As New ROS_FIELD_INFOTable
 
       For Each FieldItem In AsEnumerable
-        If Not FieldItem.TransferData Then
-          Continue For
-        End If
 
         Dim FieldTableLine = New ROS_FIELD_INFO
         With FieldTableLine
@@ -900,13 +897,10 @@ Partial Public Class RemoteOpenSQL
     Dim DfiesItem As DFIES = Nothing
     Dim PrevDfiesItem As DFIES = Nothing
 
-    ' Determino l'elenco degli attributi RFC corrispondenti alle colonne della query Ros 
+    ' Determino l'elenco degli attributi RFC per tutti i campi di selezione 
     Dim LineRfcFieldAttributes = New List(Of RfcFieldAttribute)
 
     For Each FieldItem In FieldItems.AsEnumerable
-      If Not FieldItem.TransferData Then
-        Continue For
-      End If
       PrevDfiesItem = DfiesItem
       DfiesItem = FieldItem.DfiesItem
       LineRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
@@ -925,8 +919,28 @@ Partial Public Class RemoteOpenSQL
       PartitionSize = CInt((Buffer) * CLng(1000000) / CLng(LineRfcStructure.Length2))
     End If
 
-    ' Assegno l'elenco degli attributi dei campi letti all'oggetto Consumer
-    Consumer.LineRfcFieldAttributes = LineRfcFieldAttributes
+    ' Determino i parametri della struttura orderbystruct 
+    Offset = 0
+    Offset2 = 0
+    PrevDfiesItem = Nothing
+    DfiesItem = Nothing
+
+    Dim SelectedRfcFieldAttributes = New List(Of RfcFieldAttribute)
+
+    For Each FieldItem In FieldItems.AsEnumerable
+      If Not FieldItem.TransferData Then
+        Continue For
+      End If
+      PrevDfiesItem = DfiesItem
+      DfiesItem = FieldItem.DfiesItem
+      SelectedRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
+    Next
+
+    PrevDfiesItem = DfiesItem
+    GetRfcFieldAttribute(Nothing, PrevDfiesItem, Offset, Offset2)
+
+    ' Assegno l'elenco dei campi selezionati dall'utente all'oggetto Consumer
+    Consumer.SelectedRfcFieldAttributes = SelectedRfcFieldAttributes
 
     ' Determino i parametri della struttura orderbystruct 
     Offset = 0
@@ -934,7 +948,6 @@ Partial Public Class RemoteOpenSQL
     PrevDfiesItem = Nothing
     DfiesItem = Nothing
 
-    Dim OrderByRfcStructure = New RfcStructureAttribute
     Dim OrderByRfcFieldAttributes = New List(Of RfcFieldAttribute)
 
     For Each FieldItem In FieldItems.AsEnumerable
@@ -949,6 +962,7 @@ Partial Public Class RemoteOpenSQL
     PrevDfiesItem = DfiesItem
     GetRfcFieldAttribute(Nothing, PrevDfiesItem, Offset, Offset2)
 
+    Dim OrderByRfcStructure = New RfcStructureAttribute
     OrderByRfcStructure.AbapName = "orderbystruct"
     OrderByRfcStructure.Length = Offset
     OrderByRfcStructure.Length2 = Offset2
@@ -990,12 +1004,24 @@ Partial Public Class RemoteOpenSQL
 
     Dim TaskFactoryValue As New TaskFactory
 
-    Dim CallbackServer1 = GetSAPProxyCallbackServer(CallContext1.ContextGUID, LineRfcStructure, LineRfcFieldAttributes, OrderByRfcStructure, OrderByRfcFieldAttributes)
+    Dim CallbackServer1 = GetSAPProxyCallbackServer(
+                                                    CallContext1.ContextGUID,
+                                                    LineRfcStructure,
+                                                    LineRfcFieldAttributes,
+                                                    OrderByRfcStructure,
+                                                    OrderByRfcFieldAttributes,
+                                                    SelectedRfcFieldAttributes)
     If CallbackServer1 Is Nothing Then
       Exit Sub
     End If
 
-    Dim CallbackServer2 = GetSAPProxyCallbackServer(CallContext2.ContextGUID, LineRfcStructure, LineRfcFieldAttributes, OrderByRfcStructure, OrderByRfcFieldAttributes)
+    Dim CallbackServer2 = GetSAPProxyCallbackServer(
+                                                    CallContext2.ContextGUID,
+                                                    LineRfcStructure,
+                                                    LineRfcFieldAttributes,
+                                                    OrderByRfcStructure,
+                                                    OrderByRfcFieldAttributes,
+                                                    SelectedRfcFieldAttributes)
     If CallbackServer2 Is Nothing Then
       Exit Sub
     End If

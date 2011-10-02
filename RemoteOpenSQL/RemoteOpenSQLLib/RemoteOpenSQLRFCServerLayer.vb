@@ -33,7 +33,8 @@ Partial Public Class RemoteOpenSQL
       ByVal LineRfcStructure As RfcStructureAttribute,
       ByVal LineRfcFields As List(Of RfcFieldAttribute),
       ByVal OrderByRfcStructure As RfcStructureAttribute,
-      ByVal OrderByRfcFields As List(Of RfcFieldAttribute)) As SAPServer
+      ByVal OrderByRfcFields As List(Of RfcFieldAttribute),
+      ByVal SelectedRfcFields As List(Of RfcFieldAttribute)) As SAPServer
 
     Dim SourceCode = New StringBuilder()
     Dim MixedAbapName = MixedCase(LineRfcStructure.AbapName, "_")
@@ -62,7 +63,7 @@ Partial Public Class RemoteOpenSQL
     ' Sezione per la definizione delle strutture
 
     ' Struttura linestruct
-    AddSapStructureCode(SourceCode, LineRfcStructure, LineRfcFields)
+    AddSapStructureCode(SourceCode, LineRfcStructure, LineRfcFields, SelectedRfcFields)
     ' Struttura orderbystruct
     AddSapStructureCode(SourceCode, OrderByRfcStructure, OrderByRfcFields)
 
@@ -351,7 +352,7 @@ Partial Public Class RemoteOpenSQL
                              ByVal SourceCode As StringBuilder,
                              ByVal RfcStructureAttribute As RfcStructureAttribute,
                              ByVal RfcFieldAttributes As List(Of RfcFieldAttribute),
-                             Optional ByVal RosRfcFieldAttributes As List(Of RfcFieldAttribute) = Nothing)
+                             Optional ByVal SelectedRfcFieldsAttributes As List(Of RfcFieldAttribute) = Nothing)
 
     With SourceCode
       .AppendLine("  <Serializable, RfcStructure(AbapName :=""" & RfcStructureAttribute.AbapName & """  , Length := " & RfcStructureAttribute.Length & ", Length2 := " & RfcStructureAttribute.Length2 & ")> _")
@@ -389,10 +390,10 @@ Partial Public Class RemoteOpenSQL
       Dim EnabledRfcFieldAttribute As RfcFieldAttribute
       Dim EnabledRfcFieldSapCodePropertyName = String.Empty
 
-      If RosRfcFieldAttributes Is Nothing Then
+      If SelectedRfcFieldsAttributes Is Nothing Then
         EnabledRfcFieldAttributes = RfcFieldAttributes
       Else
-        EnabledRfcFieldAttributes = RosRfcFieldAttributes
+        EnabledRfcFieldAttributes = SelectedRfcFieldsAttributes
       End If
 
       .AppendLine("    Public Overrides Function GetItemsArray As Object()")

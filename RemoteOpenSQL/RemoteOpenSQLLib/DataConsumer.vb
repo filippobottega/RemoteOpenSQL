@@ -58,7 +58,7 @@ Public MustInherit Class DataConsumer
     End Try
   End Sub
 
-  Public Property LineRfcFieldAttributes As List(Of RfcFieldAttribute)
+  Public Property SelectedRfcFieldAttributes As List(Of RfcFieldAttribute)
     Get
       Return LineRfcFieldAttributesValue
     End Get
