@@ -30,7 +30,7 @@ Imports System.Runtime
 
 Public MustInherit Class DataConsumer
   Protected OutputNameValue As String
-  Protected RosRfcFieldAttributesValue As List(Of RfcFieldAttribute)
+  Protected LineRfcFieldAttributesValue As List(Of RfcFieldAttribute)
   Protected LengthArray() As Integer
   Protected ColumnsUBound As Integer
   Protected ColumnsUBoundMinus1 As Integer
@@ -58,19 +58,19 @@ Public MustInherit Class DataConsumer
     End Try
   End Sub
 
-  Public Property RosRfcFieldAttributes As List(Of RfcFieldAttribute)
+  Public Property LineRfcFieldAttributes As List(Of RfcFieldAttribute)
     Get
-      Return RosRfcFieldAttributesValue
+      Return LineRfcFieldAttributesValue
     End Get
     Set(ByVal value As List(Of RfcFieldAttribute))
-      RosRfcFieldAttributesValue = value
+      LineRfcFieldAttributesValue = value
 
-      ColumnsUBound = RosRfcFieldAttributesValue.Count - 1
+      ColumnsUBound = LineRfcFieldAttributesValue.Count - 1
       ColumnsUBoundMinus1 = ColumnsUBound - 1
 
       ReDim LengthArray(ColumnsUBound)
       For Count = 0 To ColumnsUBound
-        LengthArray(Count) = RosRfcFieldAttributesValue(Count).Length
+        LengthArray(Count) = LineRfcFieldAttributesValue(Count).Length
       Next
     End Set
   End Property
@@ -181,10 +181,10 @@ Public Class DelimitedTextFileConsumer
 
     If WriteHeaderValue Then
       For Count = 0 To ColumnsUBoundMinus1
-        TextStreamWriter.Write(RosRfcFieldAttributesValue(Count).AbapName)
+        TextStreamWriter.Write(LineRfcFieldAttributesValue(Count).AbapName)
         TextStreamWriter.Write(FieldsSeparatorValue)
       Next
-      TextStreamWriter.Write(RosRfcFieldAttributesValue(ColumnsUBound).AbapName)
+      TextStreamWriter.Write(LineRfcFieldAttributesValue(ColumnsUBound).AbapName)
       TextStreamWriter.Write(RowsSeparatorValue)
     End If
 
@@ -330,9 +330,9 @@ Public Class MicrosoftAccessConsumer
     With CreateTableQuery
       .Append("CREATE TABLE " & TableNameValue & " ( ")
       For Count = 0 To ColumnsUBoundMinus1
-        .Append("[" & RosRfcFieldAttributesValue(Count).AbapName & "] " & GetJetType(RosRfcFieldAttributesValue(Count)) & ",")
+        .Append("[" & LineRfcFieldAttributesValue(Count).AbapName & "] " & GetJetType(LineRfcFieldAttributesValue(Count)) & ",")
       Next
-      .Append("[" & RosRfcFieldAttributesValue(ColumnsUBound).AbapName & "] " & GetJetType(RosRfcFieldAttributesValue(ColumnsUBound)))
+      .Append("[" & LineRfcFieldAttributesValue(ColumnsUBound).AbapName & "] " & GetJetType(LineRfcFieldAttributesValue(ColumnsUBound)))
       .Append(" ) ")
       Try
         AccessApp.CurrentDb.Execute(.ToString)
@@ -369,7 +369,7 @@ Public Class MicrosoftAccessConsumer
       End If
 
       For Count = 0 To ColumnsUBound
-        .AppendLine("Col" & (Count + 1).ToString & " = " & RosRfcFieldAttributesValue(Count).AbapName & " " & GetSchemaFieldType(RosRfcFieldAttributesValue(Count)))
+        .AppendLine("Col" & (Count + 1).ToString & " = " & LineRfcFieldAttributesValue(Count).AbapName & " " & GetSchemaFieldType(LineRfcFieldAttributesValue(Count)))
       Next
     End With
 
@@ -594,7 +594,7 @@ Public Class MicrosoftExcelConsumer
     ReDim Result(ColumnsUBound, 1)
     For Count = 0 To ColumnsUBound
       Result(Count, 0) = Count + 1
-      Result(Count, 1) = GetXlColumnDataType(RosRfcFieldAttributesValue(Count))
+      Result(Count, 1) = GetXlColumnDataType(LineRfcFieldAttributesValue(Count))
     Next
     Return Result
   End Function

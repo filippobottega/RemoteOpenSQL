@@ -42,17 +42,17 @@ Public Class ROS_FIELD_INFO
   '@ FIELDNAME
   '@ </summary>
 
-  <RfcField(AbapName:="FIELDNAME", RFCTYPE:=RFCTYPE.RFCTYPE_CHAR, Length:=30, Length2:=60, Offset:=0, Offset2:=0), _
-  XmlElement("FIELDNAME", Form:=XmlSchemaForm.Unqualified)> _
-  Public Property FieldName As String
+  <RfcField(AbapName:="ABAPNAME", RFCTYPE:=RFCTYPE.RFCTYPE_CHAR, Length:=30, Length2:=60, Offset:=0, Offset2:=0), _
+  XmlElement("ABAPNAME", Form:=XmlSchemaForm.Unqualified)> _
+  Public Property AbapName As String
     Get
-      Return _FieldName
+      Return _AbapName
     End Get
     Set(ByVal Value As String)
-      _FieldName = Value
+      _AbapName = Value
     End Set
   End Property
-  Private _FieldName As String
+  Private _AbapName As String
 
   '@ <summary>
   '@ ROLLNAME

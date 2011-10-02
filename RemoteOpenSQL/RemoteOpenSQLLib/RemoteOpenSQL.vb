@@ -96,22 +96,35 @@ Partial Public Class RemoteOpenSQL
   Private EventsTaskFactory As New TaskFactory
 
   Private Class FieldItem
+
+    Private AbapNameValue As String
+    Private ColumnNameValue As String
+    Private ColumnAliasValue As String
+    Private OrderNameValue As String
+
     ''' <summary>
     ''' Nome del campo per l'elemento di una struttura ABAP
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Property AbapName As String
+    Public ReadOnly Property AbapName As String
+      Get
+        Return AbapNameValue
+      End Get
+    End Property
 
     ''' <summary>
-    ''' Nome del campo all'interno di una clausola OpenSQL ORDER BY
+    ''' Nome del campo all'interno dell'oggetto tabella
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
-    ''' <remarks>Può corrispondere ad un ALIAS, al nome di un campo di tabella oppure al nome di un campo di tabella 
-    ''' con il selettore di colonna</remarks>
-    Public Property FieldName As String
+    ''' <remarks></remarks>
+    Public ReadOnly Property FieldName As String
+      Get
+        Return DfiesItem.Fieldname
+      End Get
+    End Property
 
     ''' <summary>
     ''' Alias all'interno della query
@@ -119,7 +132,42 @@ Partial Public Class RemoteOpenSQL
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Property AliasName As String
+    Public ReadOnly Property ColumnAlias As String
+      Get
+        Return ColumnAliasValue
+      End Get
+    End Property
+
+
+    ''' <summary>
+    ''' Nome della colonna senza selettore di colonna
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public ReadOnly Property ColumnName As String
+      Get
+        Return ColumnNameValue
+      End Get
+    End Property
+
+    ''' <summary>
+    ''' Nome utilizzato nella clausola ORDER BY
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Property OrderName As String
+      Set(value As String)
+        If OrderNameValue <> String.Empty Then
+          Throw New RemoteOpenSQLException("Order name already assigned. Current value: " & OrderNameValue & ", new value: " & value)
+        End If
+        OrderNameValue = value
+      End Set
+      Get
+        Return OrderNameValue
+      End Get
+    End Property
 
     ''' <summary>
     ''' Elemento dati oppure tipo ABAP
@@ -127,10 +175,37 @@ Partial Public Class RemoteOpenSQL
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Property RollNameOrABAPType As String
+    Public ReadOnly Property RollNameOrABAPType As String
+      Get
+        If DfiesItem Is Nothing Then
+          Return String.Empty
+        End If
+
+        With DfiesItem
+          If Trim(.Rollname) <> String.Empty Then
+            Return .Rollname
+          Else
+            Select Case .Inttype
+              Case "I", "b", "s", "d", "t", "f"
+                Return .Inttype
+              Case "C"
+                Return "c LENGTH " & .Leng
+              Case "N"
+                Return "n LENGTH " & .Leng
+              Case "P"
+                Return "p LENGTH " & .Intlen & " DECIMALS " & .Decimals
+              Case "X"
+                Return "x LENGTH " & .Intlen
+            End Select
+          End If
+        End With
+
+        Return String.Empty
+      End Get
+    End Property
 
     ''' <summary>
-    ''' Indice del campo all'interno della tabella DFIES_TAB.
+    ''' Riga corrispondente all'interno della tabella DFIES_TAB.
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -138,7 +213,7 @@ Partial Public Class RemoteOpenSQL
     Public Property DfiesItem As DFIES
 
     ''' <summary>
-    ''' Oggetto tabella 
+    ''' Oggetto tabella associato al campo
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -157,15 +232,236 @@ Partial Public Class RemoteOpenSQL
       End Get
     End Property
 
-    Public Sub New(AbapName As String, ByVal FieldName As String, AliasName As String, ByVal RollNameOrABAPType As String, TableItem As TableItem, ByVal DfiesItem As DFIES)
+    ''' <summary>
+    ''' Nome della colonna con l'eventuale alias
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public ReadOnly Property ColumnNameAndAlias As String
+      Get
+        If ColumnAliasValue <> String.Empty Then
+          Return ColumnNameValue & " AS " & ColumnAliasValue
+        Else
+          Return ColumnNameValue
+        End If
+      End Get
+    End Property
+
+    ''' <summary>
+    ''' Field data will be transferred locally
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Property TransferData As Boolean
+
+    Public Sub New(TableItem As TableItem, ByVal DfiesItem As DFIES, ColumnName As String, Optional ColumnAlias As String = "", Optional TransferData As Boolean = True)
       MyBase.New()
-      Me.AbapName = AbapName
-      Me.FieldName = FieldName
-      Me.AliasName = AliasName
-      Me.RollNameOrABAPType = RollNameOrABAPType
+
+      ColumnNameValue = ColumnName
+      ColumnAliasValue = ColumnAlias
+
       Me.DfiesItem = DfiesItem
       Me.TableItem = TableItem
+
+      If ColumnAliasValue <> String.Empty Then
+        AbapNameValue = ColumnAliasValue
+      Else
+        AbapNameValue = DfiesItem.Fieldname
+      End If
+
+      Me.TransferData = TransferData
     End Sub
+  End Class
+
+  Private Class FieldItems
+    Private ColumnNamesIndex As New Dictionary(Of String, FieldItem)
+    Private ColumnAliasIndex As New Dictionary(Of String, FieldItem)
+    Private AbapNamesIndex As New Dictionary(Of String, FieldItem)
+    Private FieldList As New List(Of FieldItem)
+    Private AsteriskWildcardValue As Boolean
+
+    Friend ReadOnly Property AsEnumerable As System.Collections.Generic.IEnumerable(Of FieldItem)
+      Get
+        Return FieldList.AsEnumerable
+      End Get
+    End Property
+
+    Friend Property AsteriskWildcard
+      Set(value)
+        AsteriskWildcardValue = value
+      End Set
+      Get
+        Return AsteriskWildcardValue
+      End Get
+    End Property
+
+    Friend Sub Add(FieldItem As FieldItem)
+      If FieldItem.ColumnName = String.Empty Then
+        Throw New RemoteOpenSQLException("Column name empty.")
+      End If
+      If ColumnNamesIndex.ContainsKey(FieldItem.ColumnName) OrElse
+        AbapNamesIndex.ContainsKey(FieldItem.AbapName) OrElse
+        (FieldItem.ColumnAlias <> String.Empty AndAlso
+         ColumnAliasIndex.ContainsKey(FieldItem.ColumnAlias)) Then
+        Throw New RemoteOpenSQLException("Duplicate column found. Column name " & FieldItem.ColumnName)
+      End If
+
+      ColumnNamesIndex.Add(FieldItem.ColumnName, FieldItem)
+      AbapNamesIndex.Add(FieldItem.AbapName, FieldItem)
+      If FieldItem.ColumnAlias <> String.Empty Then
+        ColumnAliasIndex.Add(FieldItem.ColumnAlias, FieldItem)
+      End If
+      FieldList.Add(FieldItem)
+    End Sub
+
+    Friend Sub AddOrderNames(OrderNames As List(Of String), TableItems As Dictionary(Of String, TableItem))
+      ' Aggiungo le informazioni dei campi selezionati per l'ordinamento
+      ' Se alcuni campi non sono già presenti fra i campi selezionati li aggiungo
+      ' I campi aggiunti non saranno utilizzati nel trasferimento dei dati ma solo 
+      ' nell'ordinamento.
+
+      Dim OrderAbapNames As New List(Of String)
+
+      For Each OrderName In OrderNames
+
+        Dim OrderNameTokens = Split(OrderName, "~")
+        Dim OrderAbapName As String = OrderNameTokens(OrderNameTokens.Count - 1)
+        Dim TableNameOrAlias As String = String.Empty
+        If OrderNameTokens.Count = 2 Then
+          TableNameOrAlias = OrderNameTokens(0)
+        End If
+
+        ' Verifica dell'eventuale presenza di nomi di campo duplicati
+        If OrderAbapNames.Contains(OrderAbapName) Then
+          Throw New RemoteOpenSQLException("Duplicate name found in ORDER BY clause. Name: " & OrderAbapName)
+        End If
+
+        OrderAbapNames.Add(OrderAbapName)
+
+        ' Cerco il campo corrispondente fra gli alias
+        If ColumnAliasIndex.ContainsKey(OrderName) Then
+          ColumnAliasIndex(OrderName).OrderName = OrderName
+          Continue For
+        End If
+
+        ' Cerco il campo corrispondente fra i nomi di colonna
+        If ColumnNamesIndex.ContainsKey(OrderName) Then
+          ColumnNamesIndex(OrderName).OrderName = OrderName
+          Continue For
+        End If
+
+        ' Cerco il campo corrispondente fra i nomi abap
+        If AbapNamesIndex.ContainsKey(OrderAbapName) Then
+          AbapNamesIndex(OrderAbapName).OrderName = OrderName
+          Continue For
+        End If
+
+        ' Il campo per l'ordinamento non è stato trovato fra i campi selezionati
+        ' Procedo con l'aggiunto del campo ai campi selezionati
+
+        Dim FieldName As String = OrderAbapName
+
+        ' Determino il nome della tabella
+        Dim OrderNameTableItem As TableItem = Nothing
+        If TableNameOrAlias <> String.Empty Then
+          If TableItems.ContainsKey(TableNameOrAlias) Then
+            OrderNameTableItem = TableItems(TableNameOrAlias)
+          Else
+            Throw New RemoteOpenSQLException("ORDER BY " & OrderName & ": table " & TableNameOrAlias & " not found.")
+          End If
+        Else
+          ' Cerco la prima tabella contenente il nome del campo
+          For Each TableItem In TableItems.Values
+            If TableItem.DFIESTableIndex.ContainsKey(FieldName) Then
+              OrderNameTableItem = TableItem
+              Exit For
+            End If
+          Next
+        End If
+
+        ' A questo punto la tabella deve essere definita
+        If OrderNameTableItem Is Nothing Then
+          Throw New RemoteOpenSQLException("ORDER BY " & OrderName & ": table not found.")
+        End If
+
+        Dim OrderNameFieldItem As FieldItem
+        If TableItems.Count > 1 Then
+          OrderNameFieldItem = OrderNameTableItem.GetFieldItem(FieldName, OrderNameTableItem.UniqueName & "~" & FieldName, "", False)
+        Else
+          OrderNameFieldItem = OrderNameTableItem.GetFieldItem(FieldName, FieldName, "", False)
+        End If
+        OrderNameFieldItem.OrderName = OrderName
+        Add(OrderNameFieldItem)
+      Next
+
+    End Sub
+
+    Friend Function GetFieldItem(ColumnNameOrAlias As String) As FieldItem
+      If ColumnAliasIndex.ContainsKey(ColumnNameOrAlias) Then
+        Return ColumnAliasIndex(ColumnNameOrAlias)
+      ElseIf ColumnNamesIndex.ContainsKey(ColumnNameOrAlias) Then
+        Return ColumnNamesIndex(ColumnNameOrAlias)
+      Else
+        Return Nothing
+      End If
+    End Function
+
+    Friend Function ContainAbapNamesKey(Key As String) As Boolean
+      Return AbapNamesIndex.ContainsKey(Key)
+    End Function
+
+    Friend Function Count() As Integer
+      Return FieldList.Count
+    End Function
+
+    Friend Function Item(Index As Integer) As FieldItem
+      Return FieldList(Index)
+    End Function
+
+    Friend Function GetSelectedFields() As ROS_FIELD_INFOTable
+      Dim Result As New ROS_FIELD_INFOTable
+
+      For Each FieldItem In AsEnumerable
+        If Not FieldItem.TransferData Then
+          Continue For
+        End If
+
+        Dim FieldTableLine = New ROS_FIELD_INFO
+        With FieldTableLine
+          .AbapName = LCase(FieldItem.AbapName)
+          .RollNameOrABAPType = LCase(FieldItem.RollNameOrABAPType)
+        End With
+        Result.Add(FieldTableLine)
+
+      Next
+
+      Return Result
+
+    End Function
+
+
+    Friend Function GetOrderByFields() As ROS_FIELD_INFOTable
+      Dim Result As New ROS_FIELD_INFOTable
+
+      For Each FieldItem In AsEnumerable
+        If FieldItem.OrderName = String.Empty Then
+          Continue For
+        End If
+
+        Dim FieldTableLine = New ROS_FIELD_INFO
+        With FieldTableLine
+          .AbapName = LCase(FieldItem.AbapName)
+          .RollNameOrABAPType = LCase(FieldItem.RollNameOrABAPType)
+        End With
+        Result.Add(FieldTableLine)
+
+      Next
+
+      Return Result
+
+    End Function
   End Class
 
   Private Class TableItem
@@ -217,36 +513,9 @@ Partial Public Class RemoteOpenSQL
       End Get
     End Property
 
-    Private Function GetRollNameOrABAPType(ByVal DfiesItem As DFIES) As String
-      If DfiesItem Is Nothing Then
-        Return String.Empty
-      End If
+    Friend Function GetPrimaryKeyColumnNames(ClientSpecified As Boolean, UseColumnSelector As Boolean) As List(Of String)
 
-      With DfiesItem
-        If Trim(.Rollname) <> String.Empty Then
-          Return .Rollname
-        Else
-          Select Case .Inttype
-            Case "I", "b", "s", "d", "t", "f"
-              Return .Inttype
-            Case "C"
-              Return "c LENGTH " & .Leng
-            Case "N"
-              Return "n LENGTH " & .Leng
-            Case "P"
-              Return "p LENGTH " & .Intlen & " DECIMALS " & .Decimals
-            Case "X"
-              Return "x LENGTH " & .Intlen
-          End Select
-        End If
-      End With
-
-      Return String.Empty
-    End Function
-
-    Friend Function GetPrimaryKeyFieldItems(ClientSpecified As Boolean, UseColumnSelector As Boolean) As List(Of FieldItem)
-
-      Dim Result As New List(Of FieldItem)
+      Dim Result As New List(Of String)
 
       ' Ciclo su tutti i campi
       For Count = 0 To DFIESTableValue.Count - 1
@@ -258,40 +527,36 @@ Partial Public Class RemoteOpenSQL
           Continue For
         End If
         ' Determino il nome del campo per l'ordinamento, può contenere il selettore di colonna
-        Dim FieldName As String
-        Dim AbapName As String = DfiesItem.Fieldname
-
+        Dim ColumnName As String
         If UseColumnSelector Then
-          FieldName = UniqueName & "~" & DfiesItem.Fieldname
+          ColumnName = UniqueName & "~" & DfiesItem.Fieldname
         Else
-          FieldName = DfiesItem.Fieldname
+          ColumnName = DfiesItem.Fieldname
         End If
 
-        Result.Add(New FieldItem(AbapName, FieldName, "", GetRollNameOrABAPType(DfiesItem), Me, DfiesItem))
+        Result.Add(ColumnName)
       Next
 
       Return Result
     End Function
 
-    Friend Sub AddAllFields(FieldsList As Dictionary(Of String, FieldItem))
+    Friend Sub AddAllFields(FieldItems As FieldItems)
 
-      ' Ciclo su tutti i campi
+      ' Ciclo su tutti i campi ed aggiungo solo i campi non presenti in FieldItems
       For Count = 0 To DFIESTableValue.Count - 1
         Dim DfiesItem = DFIESTableValue.Item(Count)
-        If FieldsList.ContainsKey(DfiesItem.Fieldname) Then
-          Continue For
+        If Not FieldItems.ContainAbapNamesKey(DfiesItem.Fieldname) Then
+          FieldItems.Add(New FieldItem(Me, DfiesItem, DfiesItem.Fieldname))
         End If
-        Dim FieldItem As FieldItem = New FieldItem(DfiesItem.Fieldname, DfiesItem.Fieldname, "", GetRollNameOrABAPType(DfiesItem), Me, DfiesItem)
-        FieldsList.Add(FieldItem.TableNameOrTableAliasAndFieldName, FieldItem)
       Next
 
     End Sub
 
-    Friend Function GetFieldItem(AbapName As String, FieldName As String) As FieldItem
+    Friend Function GetFieldItem(FieldName As String, ColumnName As String, ColumnAlias As String, TransferData As Boolean) As FieldItem
 
       Dim DfiesItemIndex = DFIESTableIndexValue(FieldName)
       Dim DfiesItem = DFIESTableValue(DfiesItemIndex)
-      Return New FieldItem(AbapName, FieldName, "", GetRollNameOrABAPType(DfiesItem), Me, DfiesItem)
+      Return New FieldItem(Me, DfiesItem, ColumnName, ColumnAlias, TransferData)
 
     End Function
 
@@ -306,81 +571,6 @@ Partial Public Class RemoteOpenSQL
       Me.TableName = TableName
       Me.TableAlias = TableAlias
     End Sub
-  End Class
-
-  Private Class ColumnItem
-    ''' <summary>
-    ''' Nome della tabella. 
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property ColumnName As String
-    ''' <summary>
-    ''' Alias della tabella.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property ColumnAlias As String
-
-    ''' <summary>
-    ''' Nome che identifica univocamente la tabella all'interno della query OpenSQL
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public ReadOnly Property UniqueName As String
-      Get
-        If ColumnName = String.Empty Then
-          Return ColumnName
-        Else
-          Return ColumnAlias
-        End If
-      End Get
-    End Property
-
-    Public Sub New(ColumnName As String, ByVal ColumnAlias As String)
-      MyBase.New()
-      Me.ColumnName = ColumnName
-      Me.ColumnAlias = ColumnAlias
-    End Sub
-  End Class
-
-
-  Private Class ColumnItems
-    Private ColumnNamesIndex As New Dictionary(Of String, ColumnItem)
-    Private ColumnAliasIndex As New Dictionary(Of String, ColumnItem)
-    Private ColumnsList As New List(Of ColumnItem)
-
-    Friend Sub Add(ColumnItem As ColumnItem)
-      If ColumnItem.ColumnName = String.Empty Then
-        Exit Sub
-      End If
-      ColumnNamesIndex.Add(ColumnItem.ColumnName, ColumnItem)
-      If ColumnItem.ColumnAlias <> String.Empty Then
-        ColumnAliasIndex.Add(ColumnItem.ColumnAlias, ColumnItem)
-      End If
-      ColumnsList.Add(ColumnItem)
-    End Sub
-
-    Friend Function GetColumnName(ColumnNameOrAlias As String)
-      If ColumnAliasIndex.ContainsKey(ColumnNameOrAlias) Then
-        Return ColumnAliasIndex(ColumnNameOrAlias).ColumnName
-      ElseIf ColumnNamesIndex.ContainsKey(ColumnNameOrAlias) Then
-        Return ColumnNamesIndex(ColumnNameOrAlias).ColumnName
-      Else
-        Return String.Empty
-      End If
-    End Function
-
-    Friend Function Count() As Integer
-      Return ColumnNamesIndex.Count
-    End Function
-
-    Friend Function Item(Index As Integer) As ColumnItem
-      Return ColumnsList(Index)
-    End Function
   End Class
 
   Private Class CallContext
@@ -653,18 +843,6 @@ Partial Public Class RemoteOpenSQL
       Throw New RemoteOpenSQLException("Specify at least a table after FROM clause.")
     End If
 
-    Dim ColumnItems = GetColumnItems(ParseTree)
-
-    Dim OrderByNames = GetOrderByNames(ParseTree)
-
-    ' Se non specifico alcun campo per l'ordinamento allora ordino per chiave primaria
-    Dim OrderByPrimaryKey As Boolean = False
-    If OrderByNames.Count = 0 OrElse GetOrderByPrimaryKey(ParseTree) Then
-      OrderByPrimaryKey = True
-    End If
-
-    Dim ClientSpecified = GetClientSpecified(ParseTree)
-
     ' Leggo i metadati delle tabelle
 
     ' Create SAPProxyClient instance
@@ -677,8 +855,20 @@ Partial Public Class RemoteOpenSQL
 
     Client.Connection.Close()
 
-    ' Creo la lista delle colonne per l'ordinamento
-    Dim OrderByFields = New List(Of FieldItem)
+    ' Ottengo la lista di tutti i campi selezionati, se è stato utilizzato il carattere *
+    ' creo la lista completa di tutte le colonne selezionabili 
+    ' (rimuovo eventuali duplicati di campo presenti su più tabelle)
+    Dim FieldItems = GetFieldItems(ParseTree, TableItems)
+
+    Dim OrderNames = GetOrderNames(ParseTree)
+
+    ' Se non specifico alcun campo per l'ordinamento allora ordino per chiave primaria
+    Dim OrderByPrimaryKey As Boolean = False
+    If OrderNames.Count = 0 OrElse GetOrderByPrimaryKey(ParseTree) Then
+      OrderByPrimaryKey = True
+    End If
+
+    Dim ClientSpecified = GetClientSpecified(ParseTree)
 
     ' Rispetto all'OpenSQL la clausola ORDER BY PRIMARY KEY considera solo la chiave primaria
     ' della prima tabella presente nella clausola FROM che abbia una chiave primaria
@@ -691,153 +881,19 @@ Partial Public Class RemoteOpenSQL
 
       ' Ciclo su tutte le tabelle
       For Each TableItem In TableItems.Values
-        OrderByFields = TableItem.GetPrimaryKeyFieldItems(ClientSpecified, UseColumnSelector)
+        OrderNames = TableItem.GetPrimaryKeyColumnNames(ClientSpecified, UseColumnSelector)
         ' Se ho determinato i campi per l'ordinamento allora esco dal ciclo
-        If OrderByFields.Count > 0 Then
+        If OrderNames.Count > 0 Then
           Exit For
         End If
       Next
-    Else
-      For Count = 0 To OrderByNames.Count - 1
-        Dim OrderByName = OrderByNames(Count)
-        Dim OrderByNameTokens = Split(OrderByName, "~")
-        Dim TableNameOrAlias As String = String.Empty
-        Dim FieldNameOrAlias As String = String.Empty
-        Dim FieldName As String = String.Empty
-
-        If OrderByNameTokens.Count = 1 Then
-          ' Il nome può essere solo il nome di un campo o un alias di nome di campo
-          FieldNameOrAlias = OrderByNameTokens(0)
-        ElseIf OrderByNameTokens.Count = 2 Then
-          ' La prima parte del nome può essere il nome di una tabella o l'alias di un nome di tabella
-          TableNameOrAlias = OrderByNameTokens(0)
-          ' La seconda parte del campo corrisponde al nome di un campo
-          FieldName = OrderByNameTokens(1)
-        End If
-
-        ' Determino il nome del campo
-        If TableNameOrAlias = String.Empty AndAlso FieldName = String.Empty Then
-          Dim ColumnNameTokens = Split(ColumnItems.GetColumnName(FieldNameOrAlias), "~")
-          If ColumnNameTokens.Count = 1 Then
-            FieldName = ColumnNameTokens(0)
-          ElseIf ColumnNameTokens.Count = 2 Then
-            TableNameOrAlias = ColumnNameTokens(0)
-            FieldName = ColumnNameTokens(1)
-          End If
-        End If
-
-        ' A questo punto il nome del campo deve essere definito
-        If FieldName = String.Empty Then
-          Throw New RemoteOpenSQLException("ORDER BY " & OrderByName & ": field name not found.")
-        End If
-
-        ' Determino il nome della tabella
-        Dim CurrentTableItem As TableItem = Nothing
-        If TableNameOrAlias <> String.Empty Then
-          If TableItems.ContainsKey(TableNameOrAlias) Then
-            CurrentTableItem = TableItems(TableNameOrAlias)
-          Else
-            Throw New RemoteOpenSQLException("ORDER BY " & OrderByName & ": table " & TableNameOrAlias & " not found.")
-          End If
-        Else
-          ' Cerco la prima tabella contenente il nome del campo
-          For Each TableItem In TableItems.Values
-            If TableItem.DFIESTableIndex.ContainsKey(FieldNameOrAlias) Then
-              CurrentTableItem = TableItem
-              Exit For
-            End If
-          Next
-        End If
-
-        ' A questo punto la tabella deve essere definita
-        If CurrentTableItem Is Nothing Then
-          Throw New RemoteOpenSQLException("ORDER BY " & OrderByName & ": table not found.")
-        End If
-
-        Dim AbapName As String = Replace(Replace(OrderByName, "~", "_"), "\", "_")
-        OrderByFields.Add(CurrentTableItem.GetFieldItem(AbapName, FieldName))
-
-      Next
     End If
 
-    ' Creo la lista delle colonne selezionate dall'utente
-    Dim RosSelectedFields = New Dictionary(Of String, FieldItem)
-    For Count = 0 To ColumnItems.Count - 1
-      Dim ColumnItem = ColumnItems.Item(Count)
-      Dim FieldName As String = String.Empty
-      Dim TableNameOrAlias As String = String.Empty
+    ' Aggiungo alla lista dei campi selezionati le informazioni dei campi di ordinamento
+    ' aggiungendo eventualmente quei campi di selezione mancanti
+    FieldItems.AddOrderNames(OrderNames, TableItems)
 
-      ' Gestisco la selezione delle colonne tramite wildchar *
-      If ColumnItem.ColumnName = "*" Then
-        If ColumnItems.Count <> 1 Then
-          Throw New RemoteOpenSQLException("Field names not allowed with wildchar *.")
-        End If
-        For Each TableItem In TableItems.Values
-          TableItem.AddAllFields(RosSelectedFields)
-        Next
-        Exit For
-      End If
-
-      ' Determino il nome del campo
-      Dim ColumnNameTokens = Split(ColumnItem.ColumnName, "~")
-      If ColumnNameTokens.Count = 1 Then
-        FieldName = ColumnNameTokens(0)
-      ElseIf ColumnNameTokens.Count = 2 Then
-        TableNameOrAlias = ColumnNameTokens(0)
-        FieldName = ColumnNameTokens(1)
-      End If
-
-      ' A questo punto il nome del campo deve essere definito
-      If FieldName = String.Empty Then
-        Throw New RemoteOpenSQLException("SELECT: field name not found.")
-      End If
-
-      ' Determino il nome della tabella
-      Dim CurrentTableItem As TableItem = Nothing
-      If TableNameOrAlias <> String.Empty Then
-        If TableItems.ContainsKey(TableNameOrAlias) Then
-          CurrentTableItem = TableItems(TableNameOrAlias)
-        Else
-          Throw New RemoteOpenSQLException("SELECT " & ColumnItem.ColumnName & ": table " & TableNameOrAlias & " not found.")
-        End If
-      Else
-        ' Cerco la prima tabella contenente il nome del campo
-        For Each TableItem In TableItems.Values
-          If TableItem.DFIESTableIndex.ContainsKey(FieldName) Then
-            CurrentTableItem = TableItem
-            Exit For
-          End If
-        Next
-      End If
-
-      ' A questo punto la tabella deve essere definita
-      If CurrentTableItem Is Nothing Then
-        Throw New RemoteOpenSQLException("SELECT " & ColumnItem.ColumnName & ": table not found.")
-      End If
-
-      Dim AbapName As String
-      If ColumnItem.ColumnAlias <> String.Empty Then
-        AbapName = ColumnItem.ColumnAlias
-      Else
-        AbapName = FieldName
-      End If
-
-      Dim FieldItem As FieldItem = CurrentTableItem.GetFieldItem(AbapName, FieldName)
-      RosSelectedFields.Add(FieldItem.TableNameOrTableAliasAndFieldName, FieldItem)
-
-    Next
-
-    ' SelectedFields contiene le colonne selezionate dall'utente
-    Dim SelectedFields = New Dictionary(Of String, FieldItem)(RosSelectedFields)
-
-    ' Aggiungo alle colonne selezionate dall'utente anche le colonne OrderBy se non presenti.
-    For Each OrderByField In OrderByFields
-      If Not RosSelectedFields.ContainsKey(OrderByField.TableNameOrTableAliasAndFieldName) Then
-        RosSelectedFields.Add(OrderByField.AbapName, OrderByField)
-      End If
-    Next
-
-    ' Creo le strutture rfc per la generazione del CallbackServer
+     ' Creo le strutture rfc per la generazione del CallbackServer
 
     Dim Offset As Integer = 0
     Dim Offset2 As Integer = 0
@@ -845,25 +901,15 @@ Partial Public Class RemoteOpenSQL
     Dim PrevDfiesItem As DFIES = Nothing
 
     ' Determino l'elenco degli attributi RFC corrispondenti alle colonne della query Ros 
-    Dim RosRfcFieldAttributes = New List(Of RfcFieldAttribute)
+    Dim LineRfcFieldAttributes = New List(Of RfcFieldAttribute)
 
-    For Each RosSelectedField In RosSelectedFields.Values
-      PrevDfiesItem = DfiesItem
-      DfiesItem = RosSelectedField.DfiesItem
-      RosRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
-    Next
-
-    Consumer.RosRfcFieldAttributes = RosRfcFieldAttributes
-
-    ' Determino l'elenco degli attributi RFC corrispondenti alle colonne di selezione in SAP
-    ' dati dall'unione delle colonne della query Ros e dei campi OrderBy non presenti 
-    Dim LineRfcFieldAttributes = New List(Of RfcFieldAttribute)(RosRfcFieldAttributes)
-    For Each SelectedField In SelectedFields.Values
-      If Not RosSelectedFields.ContainsKey(SelectedField.FieldName) Then
-        PrevDfiesItem = DfiesItem
-        DfiesItem = SelectedField.DfiesItem
-        LineRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
+    For Each FieldItem In FieldItems.AsEnumerable
+      If Not FieldItem.TransferData Then
+        Continue For
       End If
+      PrevDfiesItem = DfiesItem
+      DfiesItem = FieldItem.DfiesItem
+      LineRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
     Next
 
     PrevDfiesItem = DfiesItem
@@ -879,6 +925,9 @@ Partial Public Class RemoteOpenSQL
       PartitionSize = CInt((Buffer) * CLng(1000000) / CLng(LineRfcStructure.Length2))
     End If
 
+    ' Assegno l'elenco degli attributi dei campi letti all'oggetto Consumer
+    Consumer.LineRfcFieldAttributes = LineRfcFieldAttributes
+
     ' Determino i parametri della struttura orderbystruct 
     Offset = 0
     Offset2 = 0
@@ -888,9 +937,12 @@ Partial Public Class RemoteOpenSQL
     Dim OrderByRfcStructure = New RfcStructureAttribute
     Dim OrderByRfcFieldAttributes = New List(Of RfcFieldAttribute)
 
-    For Each OrderByField In OrderByFields
+    For Each FieldItem In FieldItems.AsEnumerable
+      If FieldItem.OrderName = String.Empty Then
+        Continue For
+      End If
       PrevDfiesItem = DfiesItem
-      DfiesItem = OrderByField.DfiesItem
+      DfiesItem = FieldItem.DfiesItem
       OrderByRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
     Next
 
@@ -904,13 +956,13 @@ Partial Public Class RemoteOpenSQL
     ' Creo i dati per le chiamate
     Dim Parse_Tree_Step_1 = New ROS_PARSE_NODETable
     Dim Parse_Tree_Step_N = New ROS_PARSE_NODETable
-    Dim Selected_Fields = New ROS_FIELD_INFOTable
-    Dim Orderby_Fields = New ROS_FIELD_INFOTable
+    Dim Selected_Fields As ROS_FIELD_INFOTable
+    Dim Orderby_Fields As ROS_FIELD_INFOTable
 
-    FillParseTreeTable(GetParseTreeStep1(ParseTree, SelectedFields), Parse_Tree_Step_1)
-    FillParseTreeTable(GetParseTreeStepN(ParseTree, SelectedFields, OrderByFields), Parse_Tree_Step_N)
-    FillFieldsTable(SelectedFields.Values, Selected_Fields)
-    FillFieldsTable(OrderByFields, Orderby_Fields)
+    FillParseTreeTable(GetParseTreeStep1(ParseTree, FieldItems), Parse_Tree_Step_1)
+    FillParseTreeTable(GetParseTreeStepN(ParseTree, FieldItems), Parse_Tree_Step_N)
+    Selected_Fields = FieldItems.GetSelectedFields
+    Orderby_Fields = FieldItems.GetOrderByFields
 
     ' Todo: Introdurre la sintassi nella grammatica per il passaggio dei valori MaxRows e PartitionSize
 
@@ -1174,20 +1226,6 @@ Partial Public Class RemoteOpenSQL
       Next
     End If
   End Sub
-
-
-  Private Sub FillFieldsTable(ByVal FieldsList As List(Of FieldItem), ByVal FieldsTable As ROS_FIELD_INFOTable)
-    For Each FieldItem In FieldsList
-      Dim FieldTableLine = New ROS_FIELD_INFO
-
-      With FieldTableLine
-        .FieldName = LCase(FieldItem.FieldName)
-        .RollNameOrABAPType = LCase(FieldItem.RollNameOrABAPType)
-      End With
-      FieldsTable.Add(FieldTableLine)
-    Next
-  End Sub
-
 
   Public Function GetRemoteOpenSQLGrammar() As String
     Return File.ReadAllText(RemoteOpenSQLGrammarFullPath)

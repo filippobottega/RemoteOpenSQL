@@ -21,28 +21,71 @@ Partial Public Class RemoteOpenSQL
     Return Result
   End Function
 
-  Private Function GetColumnItems(ByVal ParseTree As NonterminalToken) As ColumnItems
-    Dim Result = New ColumnItems
+  Private Function GetFieldItems(ByVal ParseTree As NonterminalToken, TableItems As Dictionary(Of String, TableItem)) As FieldItems
+    Dim Result = New FieldItems
     For Each ColumnItemToken In ParseTree.NonTerminalChild("Select Stm").NonTerminalChild("Columns").NonTerminalChilds("Column Item", True)
-      Dim ColumnName As String = ""
-      For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Name").TerminalChilds
-        ColumnName = TerminalToken.Text
-      Next
       Dim ColumnAlias As String = ""
       For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Alias").TerminalChilds
         ColumnAlias = TerminalToken.Text
       Next
-      Result.Add(New ColumnItem(ColumnName, ColumnAlias))
+      Dim ColumnName As String = ""
+      For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Name").TerminalChilds
+        ColumnName = TerminalToken.Text
+      Next
+      Dim ColumnNameTokens = Split(ColumnName, "~")
+      Dim TableNameOrAlias As String = String.Empty
+      Dim FieldName As String = String.Empty
+      If ColumnNameTokens.Count = 1 Then
+        FieldName = ColumnNameTokens(0)
+      Else
+        TableNameOrAlias = ColumnNameTokens(0)
+        FieldName = ColumnNameTokens(1)
+      End If
+
+      ' Determino l'oggetto tabella associato
+      Dim TableItem As TableItem = Nothing
+      If TableNameOrAlias <> String.Empty Then
+        If TableItems.ContainsKey(TableNameOrAlias) Then
+          TableItem = TableItems(TableNameOrAlias)
+        Else
+          Throw New RemoteOpenSQLException("Table " & TableNameOrAlias & " not found.")
+        End If
+      Else
+        ' Cerco la prima tabella contenente il nome del campo
+        For Each TableItem In TableItems.Values
+          If TableItem.DFIESTableIndex.ContainsKey(FieldName) Then
+            TableItem = TableItem
+            Exit For
+          End If
+        Next
+        If TableItem Is Nothing Then
+          Throw New RemoteOpenSQLException("Table not found for column " & ColumnName & ".")
+        End If
+      End If
+
+      Result.Add(TableItem.GetFieldItem(FieldName, ColumnName, ColumnAlias, True))
     Next
+
     If Result.Count = 0 Then
-      If Not ParseTree.NonTerminalChild("Select Stm").NonTerminalChild("Columns").TerminalChild(" *") Is Nothing Then
-        Result.Add(New ColumnItem("*", ""))
+      If ParseTree.NonTerminalChild("Select Stm").NonTerminalChild("Columns").TerminalChild(" *") Is Nothing Then
+        Throw New RemoteOpenSQLException("Select at least one field or use * wildchar.")
+      End If
+
+      Result.AsteriskWildcard = True
+
+      For Each TableItem In TableItems.Values
+        TableItem.AddAllFields(Result)
+      Next
+
+      If Result.Count = 0 Then
+        Throw New RemoteOpenSQLException("Select at least one field and one table with at least one field.")
       End If
     End If
+
     Return Result
   End Function
 
-  Private Function GetOrderByNames(ByVal ParseTree As NonterminalToken) As List(Of String)
+  Private Function GetOrderNames(ByVal ParseTree As NonterminalToken) As List(Of String)
     Dim Result = New List(Of String)
     For Each OrderNameToken In ParseTree.NonTerminalChild("Select Stm").NonTerminalChild("Order Clause").NonTerminalChilds("Order Name", True)
       For Each Token In OrderNameToken.TerminalChilds
@@ -147,15 +190,15 @@ Partial Public Class RemoteOpenSQL
   End Function
 
 
-  Private Function GetParseTreeStep1(ByVal RemoteOpenSQLParseTree As NonterminalToken, ByVal SelectedFields As Dictionary(Of String, FieldItem)) As NonterminalToken
+  Private Function GetParseTreeStep1(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems) As NonterminalToken
     ' Costruisco la stringa contenente la query per il passo 1
     Dim QueryStep1 = "SELECT"
 
     With RemoteOpenSQLParseTree.NonTerminalChild("Select Stm")
       Dim Columns = RebuildQuery(.NonTerminalChild("Columns"))
       If Columns <> " *" Then
-        For Each SelectedField In SelectedFields.Values
-          QueryStep1 += " " & SelectedField.FieldName
+        For Each FieldItem In FieldItems.AsEnumerable
+          QueryStep1 += " " & FieldItem.ColumnNameAndAlias
         Next
       Else
         JoinQuerySteps(QueryStep1, Columns)
@@ -179,15 +222,15 @@ Partial Public Class RemoteOpenSQL
     End If
   End Sub
 
-  Private Function GetParseTreeStepN(ByVal RemoteOpenSQLParseTree As NonterminalToken, ByVal SelectedFields As Dictionary(Of String, FieldItem), ByVal OrderByFields As List(Of FieldItem)) As NonterminalToken
+  Private Function GetParseTreeStepN(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems) As NonterminalToken
     ' Costruisco la stringa contenente la query per il passo 1
     Dim QueryStepN = "SELECT"
 
     With RemoteOpenSQLParseTree.NonTerminalChild("Select Stm")
       Dim Columns = RebuildQuery(.NonTerminalChild("Columns"))
       If Columns <> " *" Then
-        For Each SelectedField In SelectedFields.Values
-          QueryStepN += " " & SelectedField.FieldName
+        For Each FieldItem In FieldItems.AsEnumerable
+          QueryStepN += " " & FieldItem.ColumnNameAndAlias
         Next
       Else
         JoinQuerySteps(QueryStepN, Columns)
@@ -206,9 +249,17 @@ Partial Public Class RemoteOpenSQL
       ' OR (A = 0 AND B = 0 AND C > 0) 
       ' OR (A = 0 AND B = 0 AND C = 0 AND D >= 0) 
       ')
+
+      Dim OrderFields = New List(Of FieldItem)
+      For Each FieldItem In FieldItems.AsEnumerable
+        If FieldItem.OrderName <> String.Empty Then
+          OrderFields.Add(FieldItem)
+        End If
+      Next
+
       QueryStepN += " ("
       ' Ciclo degli OR
-      For OrCount = 0 To OrderByFields.Count - 1
+      For OrCount = 0 To OrderFields.Count - 1
         If OrCount = 0 Then
           QueryStepN += " ("
         Else
@@ -219,16 +270,16 @@ Partial Public Class RemoteOpenSQL
           If AndCount > 0 Then
             QueryStepN += " AND"
           End If
-          Dim OrderByField = OrderByFields(AndCount)
+          Dim OrderField = OrderFields(AndCount)
           Dim LogicalOperator As String
-          If OrCount = OrderByFields.Count - 1 And AndCount = OrderByFields.Count - 1 Then
+          If OrCount = OrderFields.Count - 1 And AndCount = OrderFields.Count - 1 Then
             LogicalOperator = ">="
           ElseIf AndCount = OrCount Then
             LogicalOperator = ">"
           Else
             LogicalOperator = "="
           End If
-          QueryStepN += " " & OrderByField.FieldName & " " & LogicalOperator & " wa_orderby-" & OrderByField.FieldName
+          QueryStepN += " " & OrderField.OrderName & " " & LogicalOperator & " wa_orderby-" & OrderField.AbapName
         Next
         QueryStepN += " )"
       Next
