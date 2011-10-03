@@ -75,7 +75,7 @@ Partial Public Class RemoteOpenSQL
   Private CallbackServerExceptions As New List(Of Exception)
 
   Private GUIDValue As String
-  Private DestinationValue As New Destination
+  Private DestinationValue As Destination
   Private RemoteOpenSQLCompiledGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\RemoteOpenSQL.cgt")
   Private SapOpenSQLCompiledGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\SapOpenSQL.cgt")
   Private RemoteOpenSQLGrammarFullPath As String = Path.Combine(My.Application.Info.DirectoryPath, "Gold\RemoteOpenSQL.grm")
@@ -743,6 +743,12 @@ Partial Public Class RemoteOpenSQL
     ByVal Password As String,
     Optional ByVal SAPRouterString As String = "")
 
+    If Not DestinationValue Is Nothing Then
+      SAP.Connector.Connection.RemoveConnectionsFromPool(DestinationValue)
+    End If
+
+    DestinationValue = New Destination
+
     With DestinationValue
       .AppServerHost = AppServerHost
       .SystemNumber = SystemNumber
@@ -1233,9 +1239,11 @@ Partial Public Class RemoteOpenSQL
     Try
       Z_Remote_Open_SqlOutput = Client.Z_Remote_Open_Sql_(Z_Remote_Open_SqlInput)
     Catch ex As RfcSystemException
+      CallbackServer.Stop()
       Client.Connection.Close()
       Throw
     End Try
+    CallbackServer.Stop()
     Client.Connection.Close()
   End Sub
 

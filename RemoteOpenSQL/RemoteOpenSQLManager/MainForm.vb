@@ -553,6 +553,7 @@ Public Class MainForm
           DestinationPassword.Text,
           .SAPRouterString)
       Catch ex As Exception
+        DestinationPassword.Text = ""
         OutputTextBox.Text += ex.ToString & vbCrLf
         Exit Sub
       End Try
@@ -624,7 +625,12 @@ Public Class MainForm
   End Sub
 
   Private Sub QueryQuickOpenToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryQuickOpenToolStripButton.Click
-    Consumer.ViewData()
+    Try
+      Consumer.ViewData()
+    Catch ex As Exception
+      OutputTextBox.Text += ex.ToString & vbCrLf
+      Exit Sub
+    End Try
   End Sub
 
   Private Sub NumericKeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles PartitionSizeTextBox.KeyPress, BufferTextBox.KeyPress

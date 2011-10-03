@@ -49,7 +49,10 @@ Public MustInherit Class DataConsumer
     End Get
   End Property
 
-  Friend Sub TryReleaseComObject(ByVal ComObject As Object)
+  Friend Sub TryReleaseComObject(ByRef ComObject As Object)
+    If ComObject Is Nothing Then
+      Exit Sub
+    End If
     Try
       System.Runtime.InteropServices.Marshal.ReleaseComObject(ComObject)
     Catch
@@ -291,13 +294,9 @@ Public Class MicrosoftAccessConsumer
   End Property
 
   Public Overrides Sub ViewData()
-    Process.Start("""" & DatabaseFullPath & """")
-  End Sub
 
-  Public Overrides Sub BeginConsume()
-
-    If Not File.Exists(DatabaseFullPathValue) Then
-      Throw New RemoteOpenSQLException("File " & DatabaseFullPathValue & " not found.")
+    If Not AccessApp Is Nothing Then
+      TryReleaseComObject(AccessApp)
     End If
 
     AccessApp = GetObject(DatabaseFullPathValue)
@@ -306,24 +305,65 @@ Public Class MicrosoftAccessConsumer
       Throw New RemoteOpenSQLException("Unable to connect to Access Application.")
     End If
 
-    SessionGUID = Guid.NewGuid.ToString
-    SessionTempFolder = Directory.CreateDirectory(Path.Combine(Path.GetTempPath, "RemoteOpenSQL", SessionGUID)).FullName
+    Dim DoCmd As Object
+    DoCmd = AccessApp.DoCmd
 
-    TempTextFileGUID = Guid.NewGuid.ToString
+    Try
+      DoCmd.OpenTable(TableNameValue)
+    Catch ex As InteropServices.COMException
+      ' In caso di eccezione significa che la tabella è già aperta
+    End Try
 
+    TryReleaseComObject(DoCmd)
+
+    AccessApp.Visible = False
+    AccessApp.Visible = True
+
+    GC.Collect()
+    GC.WaitForPendingFinalizers()
+  End Sub
+
+  Public Overrides Sub BeginConsume()
+
+    If Not File.Exists(DatabaseFullPathValue) Then
+      Throw New RemoteOpenSQLException("File " & DatabaseFullPathValue & " not found.")
+    End If
+
+    If Not AccessApp Is Nothing Then
+      TryReleaseComObject(AccessApp)
+      GC.Collect()
+      GC.WaitForPendingFinalizers()
+    End If
+    AccessApp = GetObject(DatabaseFullPathValue)
+    AccessApp.Visible = False
+
+    If AccessApp Is Nothing Then
+      Throw New RemoteOpenSQLException("Unable to connect to Access Application.")
+    End If
+
+    Dim CurrentDb As Object = AccessApp.CurrentDb
+    Dim TableDefs As Object = CurrentDb.TableDefs
     Dim TableToDrop As Object = Nothing
 
     Try
-      TableToDrop = AccessApp.CurrentDb.TableDefs(TableNameValue)
+      TableToDrop = TableDefs(TableNameValue)
     Catch ex As System.Runtime.InteropServices.COMException
     End Try
 
+    TryReleaseComObject(TableDefs)
+
     If Not TableToDrop Is Nothing Then
       Try
-        AccessApp.CurrentDb.Execute("DROP TABLE " & TableNameValue, 128)
+        CurrentDb.Execute("DROP TABLE " & TableNameValue, 128)
       Catch ex As System.Runtime.InteropServices.COMException
+        TryReleaseComObject(TableToDrop)
+        TryReleaseComObject(CurrentDb)
+        TryReleaseComObject(AccessApp)
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
         Throw New RemoteOpenSQLException("Unable to DROP table " & TableNameValue & ".", ex)
       End Try
+      TryReleaseComObject(TableToDrop)
     End If
 
     Dim CreateTableQuery = New StringBuilder
@@ -335,13 +375,22 @@ Public Class MicrosoftAccessConsumer
       .Append("[" & LineRfcFieldAttributesValue(ColumnsUBound).AbapName & "] " & GetJetType(LineRfcFieldAttributesValue(ColumnsUBound)))
       .Append(" ) ")
       Try
-        AccessApp.CurrentDb.Execute(.ToString)
+        CurrentDb.Execute(.ToString)
       Catch ex As System.Runtime.InteropServices.COMException
         ' Impossibile creare la tabella
+        TryReleaseComObject(CurrentDb)
+        TryReleaseComObject(AccessApp)
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
         Throw
       End Try
     End With
 
+    TryReleaseComObject(CurrentDb)
+
+    SessionGUID = Guid.NewGuid.ToString
+    SessionTempFolder = Directory.CreateDirectory(Path.Combine(Path.GetTempPath, "RemoteOpenSQL", SessionGUID)).FullName
+    TempTextFileGUID = Guid.NewGuid.ToString
     TextStreamWriter = New StreamWriter(Path.Combine(SessionTempFolder, TempTextFileGUID & ".txt"), True, Encoding.Unicode)
   End Sub
 
@@ -478,13 +527,19 @@ Public Class MicrosoftAccessConsumer
   Private Sub SendDataToAccess(ByVal AccessTempTextFileGUID As String)
     WriteSchemaIni(AccessTempTextFileGUID)
 
+    Dim CurrentDb As Object = Nothing
+
     Try
       'ErrorCode = -2146825239
       'HelpLink=jeterr40.chm#5003049
       'Message=Impossibile aprire il database 'INSERT INTO AUSP SELECT * FROM [Text;HDR=NO;DATABASE=C:\Users\<user>\AppData\Local\Temp\RemoteOpenSQL\98a8ad96-9493-4060-ac04-0fb7cfdf13eb\].[04250005-cb65-4f6e-af7d-0ee7bf52429a.txt]'. È possibile che il database non sia riconoscibile per l'applicazione oppure che il file sia danneggiato.
       'Si verifica quando il file raggiunge i 2 GB
-      AccessApp.CurrentDb.Execute("INSERT INTO " & TableNameValue & " SELECT * FROM [Text;HDR=NO;DATABASE=" & SessionTempFolder & "\].[" & AccessTempTextFileGUID & ".txt]")
+      CurrentDb = AccessApp.CurrentDb
+      CurrentDb.Execute("INSERT INTO " & TableNameValue & " SELECT * FROM [Text;HDR=NO;DATABASE=" & SessionTempFolder & "\].[" & AccessTempTextFileGUID & ".txt]")
     Catch ex As InteropServices.COMException
+      TryReleaseComObject(CurrentDb)
+      GC.Collect()
+      GC.WaitForPendingFinalizers()
       Throw
     End Try
     File.Delete(Path.Combine(SessionTempFolder, "Schema.ini"))
@@ -512,6 +567,9 @@ Public Class MicrosoftAccessConsumer
     CloseStreamAndStartSendDataToAccess(True, False)
     If Not AccessApp Is Nothing Then
       AccessApp.Quit(2)
+      TryReleaseComObject(AccessApp)
+      GC.Collect()
+      GC.WaitForPendingFinalizers()
     End If
   End Sub
 End Class
@@ -538,7 +596,21 @@ Public Class MicrosoftExcelConsumer
   End Property
 
   Public Overrides Sub ViewData()
-    Process.Start("""" & ExcelFullPath & """")
+    'Create a new instance of Excel
+    Dim ExcelApplication As Object
+    Dim Workbooks As Object
+    Dim ActiveWorkbook As Object
+
+    ExcelApplication = CreateObject("Excel.Application")
+    Workbooks = ExcelApplication.Workbooks
+    ActiveWorkbook = Workbooks.Open(ExcelFullPath)
+    ExcelApplication.Visible = True
+    TryReleaseComObject(Workbooks)
+    TryReleaseComObject(ActiveWorkbook)
+    TryReleaseComObject(ExcelApplication)
+
+    GC.Collect()
+    GC.WaitForPendingFinalizers()
   End Sub
 
   Public Overrides Sub EndConsume()
@@ -607,10 +679,8 @@ Public Class MicrosoftExcelConsumer
     Select Case RfcFieldAttribute.RfcType
       Case RFCTYPE.RFCTYPE_DATE, RFCTYPE.RFCTYPE_TIME, RFCTYPE.RFCTYPE_CHAR, RFCTYPE.RFCTYPE_BYTE
         Return xlTextFormat
-      Case RFCTYPE.RFCTYPE_FLOAT, RFCTYPE.RFCTYPE_NUM, RFCTYPE.RFCTYPE_BCD
-        Return xlGeneralFormat
       Case Else
-        Return Nothing
+        Return xlGeneralFormat
     End Select
   End Function
 End Class
