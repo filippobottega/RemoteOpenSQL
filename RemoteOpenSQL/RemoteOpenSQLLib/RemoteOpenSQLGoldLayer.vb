@@ -12,9 +12,12 @@ Partial Public Class RemoteOpenSQL
         TableName = TerminalToken.Text
       Next
       Dim TableAlias As String = ""
-      For Each TerminalToken In TableItemToken.NonTerminalChild("Table Alias").TerminalChilds
-        TableAlias = TerminalToken.Text
-      Next
+      Dim TableAliasToken As NonterminalToken = TableItemToken.NonTerminalChild("Table Alias")
+      If Not TableAliasToken Is Nothing Then
+        For Each TerminalToken In TableItemToken.NonTerminalChild("Table Alias").TerminalChilds
+          TableAlias = TerminalToken.Text
+        Next
+      End If
       Dim TableItem = New TableItem(TableName, TableAlias)
       Result.Add(TableItem.UniqueName, TableItem)
     Next
@@ -25,9 +28,12 @@ Partial Public Class RemoteOpenSQL
     Dim Result = New FieldItems
     For Each ColumnItemToken In ParseTree.NonTerminalChild("Select Stm").NonTerminalChild("Columns").NonTerminalChilds("Column Item", True)
       Dim ColumnAlias As String = ""
-      For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Alias").TerminalChilds
-        ColumnAlias = TerminalToken.Text
-      Next
+      Dim ColumnAliasToken As NonterminalToken = ColumnItemToken.NonTerminalChild("Column Alias")
+      If Not ColumnAliasToken Is Nothing Then
+        For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Alias").TerminalChilds
+          ColumnAlias = TerminalToken.Text
+        Next
+      End If
       Dim ColumnName As String = ""
       For Each TerminalToken In ColumnItemToken.NonTerminalChild("Column Name").TerminalChilds
         ColumnName = TerminalToken.Text

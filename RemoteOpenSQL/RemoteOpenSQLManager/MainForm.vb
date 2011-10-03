@@ -339,7 +339,15 @@ Public Class MainForm
 
     With RemoteOpenSQLQueries
       .Query.AcceptChanges()
-      Dim QueryTreeRow = CType(.QueryTree.Rows.Find(e.Node.Tag), RemoteOpenSQLQueries.QueryTreeRow)
+      Dim QueryTreeRow As RemoteOpenSQLQueries.QueryTreeRow
+      With QueryTreeBindingSource
+        .Position = .Find("ID", QuerySelectedID)
+        If .Current Is Nothing Then
+          Exit Sub
+        End If
+        QueryTreeRow = CType(.Current.row, RemoteOpenSQLQueries.QueryTreeRow)
+      End With
+
       If QueryTreeRow.IsFolder Then
         For Each ControlItem In QueriesSplitContainer.Panel2.Controls
           CType(ControlItem, Control).Visible = False
@@ -356,7 +364,7 @@ Public Class MainForm
           .Query.AddQueryRow(QueryTreeRow, "", "")
         End If
         With QueryBindingSource
-          .Position = .Find("ID", Integer.Parse(e.Node.Tag))
+          .Position = .Find("ID", QuerySelectedID)
         End With
         QueryStartToolStripButton.Enabled = True
         QueryStopToolStripButton.Enabled = False
@@ -496,7 +504,7 @@ Public Class MainForm
   Private Sub QueryStartToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStartToolStripButton.Click
 
     OutputTextBox.Text = String.Empty
-    Dim QueryName = Replace(CType(QueryBindingSource.Current.row, RemoteOpenSQLQueries.QueryTreeRow).Name, " ", "")
+    Dim QueryName = Replace(CType(QueryTreeBindingSource.Current.row, RemoteOpenSQLQueries.QueryTreeRow).Name, " ", "")
 
     If TextRadioButton.Checked Then
       If TextApplicationTextBox.Text <> String.Empty AndAlso Not File.Exists(TextApplicationTextBox.Text) Then
@@ -535,15 +543,7 @@ Public Class MainForm
     QueryTimer.Enabled = True
 
     With CType(DestinationBindingSource.Current.row, RemoteOpenSQLDestinations.DestinationRow)
-#If DEBUG Then
-      RemoteOpenSQL.SetLogonParameters(
-        .AppServerHost,
-        .SystemNumber,
-        .Client,
-        .Username,
-        DestinationPassword.Text,
-        .SAPRouterString)
-#Else
+
       Try
         RemoteOpenSQL.SetLogonParameters(
           .AppServerHost,
@@ -556,7 +556,7 @@ Public Class MainForm
         OutputTextBox.Text += ex.ToString & vbCrLf
         Exit Sub
       End Try
-#End If
+
     End With
 
     Dim PartitionSize As Integer
@@ -644,4 +644,5 @@ Public Class MainForm
   Private Sub QueryStopToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStopToolStripButton.Click
     RemoteOpenSQL.StopQuery()
   End Sub
+
 End Class

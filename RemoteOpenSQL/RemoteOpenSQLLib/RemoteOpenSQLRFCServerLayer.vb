@@ -145,10 +145,10 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("        ByRef Orderby_Fields As ROS_FIELD_INFOTable, _")
       .AppendLine("          <RfcParameter(AbapName:=""CANCEL"", RFCTYPE:=RFCTYPE.RFCTYPE_CHAR, Optional:=False, Direction:=RFCINOUT.OUT, Length:=1, Length2:=2), _")
       .AppendLine("          XmlElement(""CANCEL"", IsNullable:=False, Form:=XmlSchemaForm.Unqualified)> _")
-      .AppendLine("        ByVal Cancel As String)")
+      .AppendLine("        ByRef Cancel As String)")
       .AppendLine("")
       .AppendLine("      Try")
-      .AppendLine("        If RemoteOpenSQL.RemoteOpenSQLLib.RemoteOpenSQL.Items(""" & GUID & """).IsCancellationRequested OrElse Abap_Code_Version <> ""1.0.0.0"" Then")
+      .AppendLine("        If RemoteOpenSQL.RemoteOpenSQLLib.RemoteOpenSQL.Items(""" & GUID & """).IsCancellationRequested Then")
       .AppendLine("          Cancel = ""X""")
       .AppendLine("          Exit Sub")
       .AppendLine("        End If")
@@ -156,6 +156,7 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("        RemoteOpenSQL.RemoteOpenSQLLib.RemoteOpenSQL.Items(""" & GUID & """).SendCallContext(")
       .AppendLine("                                                             """ & GUID & """,")
       .AppendLine("                                                             """ & ContextGUID & """, ")
+      .AppendLine("                                                             Abap_Code_Version, ")
       .AppendLine("                                                             Context_Index, ")
       .AppendLine("                                                             Max_Rows, ")
       .AppendLine("                                                             Partition_Size, ")
@@ -589,6 +590,7 @@ Partial Public Class RemoteOpenSQL
   Public Sub SendCallContext(
                             ByVal GUID As String,
                             ByVal ContextGUID As String,
+                            ByRef Abap_Code_Version As String,
                             ByRef ContextIndex As Integer,
                             ByRef MaxRows As Integer,
                             ByRef PartitionSize As Integer,
@@ -602,6 +604,10 @@ Partial Public Class RemoteOpenSQL
     End If
 
     Try
+      If Abap_Code_Version <> SupportedAbapCodeVersion Then
+        Throw New CompileException("Function module Z_REMOTE_OPEN_SQL has version " & Abap_Code_Version & " RemoteOpenSQLManager support version " & SupportedAbapCodeVersion)
+      End If
+
       With SAPCallContexts(ContextGUID)
         ContextIndex = .ContextIndex
         MaxRows = .MaxRows

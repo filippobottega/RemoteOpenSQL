@@ -95,6 +95,8 @@ Partial Public Class RemoteOpenSQL
   Private BufferValue = 100
   Private EventsTaskFactory As New TaskFactory
 
+  Private Const SupportedAbapCodeVersion As String = "2.0.0.0"
+
   Private Class FieldItem
 
     Private AbapNameValue As String
@@ -1026,9 +1028,10 @@ Partial Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-    ' Creazione del task per la chiamata delle funzione RunSession
+     ' Creazione del task per la chiamata delle funzione RunSession
     RaiseQueryStatusChanged("Starting call to Z_REMOTE_OPEN_SQL ...")
     Consumer.BeginConsume()
+
     SessionTask1 = TaskFactoryValue.StartNew(Sub() Me.RunSession(CallbackServer1))
     SessionTask2 = TaskFactoryValue.StartNew(Sub() Me.RunSession(CallbackServer2))
     SessionTask1.Wait()

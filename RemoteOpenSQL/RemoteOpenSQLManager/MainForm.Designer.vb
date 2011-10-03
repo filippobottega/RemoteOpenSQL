@@ -110,6 +110,7 @@ Partial Class MainForm
     Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
     Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
     Me.QueryTimer = New System.Windows.Forms.Timer(Me.components)
+    Me.QueryTreeBindingSource = New System.Windows.Forms.BindingSource(Me.components)
     Me.MainTabControl.SuspendLayout()
     Me.LogonTabPage.SuspendLayout()
     CType(Me.DestinationsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -145,6 +146,7 @@ Partial Class MainForm
     Me.QueryDescriptionGroupBox.SuspendLayout()
     Me.QueryStatusStrip.SuspendLayout()
     Me.QueriesToolStrip.SuspendLayout()
+    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.SuspendLayout()
     '
     'MainTabControl
@@ -996,6 +998,11 @@ Partial Class MainForm
     '
     Me.QueryTimer.Interval = 1000
     '
+    'QueryTreeBindingSource
+    '
+    Me.QueryTreeBindingSource.DataMember = "QueryTree"
+    Me.QueryTreeBindingSource.DataSource = Me.RemoteOpenSQLQueries
+    '
     'MainForm
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1057,9 +1064,10 @@ Partial Class MainForm
     Me.QueryStatusStrip.PerformLayout()
     Me.QueriesToolStrip.ResumeLayout(False)
     Me.QueriesToolStrip.PerformLayout()
+    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
     Me.ResumeLayout(False)
 
-  End Sub
+End Sub
   Friend WithEvents MainTabControl As System.Windows.Forms.TabControl
   Friend WithEvents LogonTabPage As System.Windows.Forms.TabPage
   Friend WithEvents QueriesTabPage As System.Windows.Forms.TabPage
@@ -1146,4 +1154,5 @@ Partial Class MainForm
   Friend WithEvents BufferTextBox As System.Windows.Forms.TextBox
   Friend WithEvents BufferLabel As System.Windows.Forms.Label
   Friend WithEvents DestinationGroupBox As System.Windows.Forms.GroupBox
+  Friend WithEvents QueryTreeBindingSource As System.Windows.Forms.BindingSource
 End Class
