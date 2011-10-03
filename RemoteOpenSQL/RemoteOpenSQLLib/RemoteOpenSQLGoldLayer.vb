@@ -196,7 +196,7 @@ Partial Public Class RemoteOpenSQL
   End Function
 
 
-  Private Function GetParseTreeStep1(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems) As NonterminalToken
+  Private Function GetParseTreeStep1(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems, RebuildOrderClause As Boolean) As NonterminalToken
     ' Costruisco la stringa contenente la query per il passo 1
     Dim QueryStep1 = "SELECT"
 
@@ -213,7 +213,17 @@ Partial Public Class RemoteOpenSQL
       JoinQuerySteps(QueryStep1, "UP TO uptorows ROWS")
       JoinQuerySteps(QueryStep1, "INTO CORRESPONDING FIELDS OF TABLE ta_lines")
       JoinQuerySteps(QueryStep1, RebuildQuery(.NonTerminalChild("Where Clause")))
-      JoinQuerySteps(QueryStep1, RebuildQuery(.NonTerminalChild("Order Clause")))
+
+      If RebuildOrderClause Then
+        JoinQuerySteps(QueryStep1, "ORDER BY")
+        For Each FieldItem In FieldItems.AsEnumerable
+          If FieldItem.OrderName <> String.Empty Then
+            QueryStep1 += " " & FieldItem.OrderName
+          End If
+        Next
+      Else
+        JoinQuerySteps(QueryStep1, RebuildQuery(.NonTerminalChild("Order Clause")))
+      End If
     End With
 
     ' Parse Query
@@ -228,7 +238,7 @@ Partial Public Class RemoteOpenSQL
     End If
   End Sub
 
-  Private Function GetParseTreeStepN(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems) As NonterminalToken
+  Private Function GetParseTreeStepN(ByVal RemoteOpenSQLParseTree As NonterminalToken, FieldItems As FieldItems, RebuildOrderClause As Boolean) As NonterminalToken
     ' Costruisco la stringa contenente la query per il passo 1
     Dim QueryStepN = "SELECT"
 
@@ -291,7 +301,16 @@ Partial Public Class RemoteOpenSQL
       Next
       QueryStepN += " )"
 
-      JoinQuerySteps(QueryStepN, RebuildQuery(.NonTerminalChild("Order Clause")))
+      If RebuildOrderClause Then
+        JoinQuerySteps(QueryStepN, "ORDER BY")
+        For Each FieldItem In FieldItems.AsEnumerable
+          If FieldItem.OrderName <> String.Empty Then
+            QueryStepN += " " & FieldItem.OrderName
+          End If
+        Next
+      Else
+        JoinQuerySteps(QueryStepN, RebuildQuery(.NonTerminalChild("Order Clause")))
+      End If
     End With
 
     ' Parse Query

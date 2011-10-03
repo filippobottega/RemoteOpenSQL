@@ -862,16 +862,16 @@ Partial Public Class RemoteOpenSQL
     Dim OrderNames = GetOrderNames(ParseTree)
 
     ' Se non specifico alcun campo per l'ordinamento allora ordino per chiave primaria
-    Dim OrderByPrimaryKey As Boolean = False
+    Dim RebuildOrderClause As Boolean = False
     If OrderNames.Count = 0 OrElse GetOrderByPrimaryKey(ParseTree) Then
-      OrderByPrimaryKey = True
+      RebuildOrderClause = True
     End If
 
     Dim ClientSpecified = GetClientSpecified(ParseTree)
 
     ' Rispetto all'OpenSQL la clausola ORDER BY PRIMARY KEY considera solo la chiave primaria
     ' della prima tabella presente nella clausola FROM che abbia una chiave primaria
-    If OrderByPrimaryKey Then
+    If RebuildOrderClause Then
       ' Determino se utilizzare il selettore di colonna
       Dim UseColumnSelector As Boolean = False
       If TableItems.Count > 1 Then
@@ -975,8 +975,8 @@ Partial Public Class RemoteOpenSQL
     Dim Selected_Fields As ROS_FIELD_INFOTable
     Dim Orderby_Fields As ROS_FIELD_INFOTable
 
-    FillParseTreeTable(GetParseTreeStep1(ParseTree, FieldItems), Parse_Tree_Step_1)
-    FillParseTreeTable(GetParseTreeStepN(ParseTree, FieldItems), Parse_Tree_Step_N)
+    FillParseTreeTable(GetParseTreeStep1(ParseTree, FieldItems, RebuildOrderClause), Parse_Tree_Step_1)
+    FillParseTreeTable(GetParseTreeStepN(ParseTree, FieldItems, RebuildOrderClause), Parse_Tree_Step_N)
     Selected_Fields = FieldItems.GetSelectedFields
     Orderby_Fields = FieldItems.GetOrderByFields
 
