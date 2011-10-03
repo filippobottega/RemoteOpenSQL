@@ -98,6 +98,9 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.vb">
+      <Link>SharedAssemblyInfo.vb</Link>
+    </Compile>
     <Compile Include="DDFIELDS.vb" />
     <Compile Include="DDFIXVALUE.vb" />
     <Compile Include="DDFIXVALUES.vb" />

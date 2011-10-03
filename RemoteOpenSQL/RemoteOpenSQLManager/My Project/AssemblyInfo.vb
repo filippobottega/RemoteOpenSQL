@@ -10,26 +10,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("RemoteOpenSQLManager")> 
 <Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("Filippo Bottega")> 
-<Assembly: AssemblyProduct("RemoteOpenSQLManager")> 
-<Assembly: AssemblyCopyright("Copyright © Filippo Bottega 2011")> 
-<Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
 <Assembly: Guid("e7be0678-59f9-4c81-ba7b-aa42abf3e768")> 
 
-' Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
-'
-'      Numero di versione principale
-'      Numero di versione secondario 
-'      Numero build
-'      Revisione
-'
-' È possibile specificare tutti i valori oppure impostare valori predefiniti per i numeri relativi alla revisione e alla build 
-' utilizzando l'asterisco (*) come descritto di seguito:
-' <Assembly: AssemblyVersion("1.0.*")> 
-
-<Assembly: AssemblyVersion("1.0.2.0")> 
-<Assembly: AssemblyFileVersion("1.0.2.0")> 

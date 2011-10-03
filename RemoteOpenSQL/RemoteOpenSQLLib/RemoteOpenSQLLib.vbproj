@@ -102,6 +102,9 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.vb">
+      <Link>SharedAssemblyInfo.vb</Link>
+    </Compile>
     <Compile Include="CompilerServices.vb" />
     <Compile Include="RemoteOpenSQLGoldLayer.vb" />
     <Compile Include="RemoteOpenSQLRFCServerLayer.vb" />
