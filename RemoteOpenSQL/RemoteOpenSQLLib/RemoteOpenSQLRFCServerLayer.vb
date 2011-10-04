@@ -38,6 +38,7 @@ Partial Public Class RemoteOpenSQL
 
     Dim SourceCode = New StringBuilder()
     Dim MixedAbapName = MixedCase(LineRfcStructure.AbapName, "_")
+    Dim UniqueIdentifier = "_" & Replace(Replace(Replace(ContextGUID, "-", ""), "{", ""), "}", "")
 
     ' Sezione Imports
     SourceCode.AppendLine("Imports Microsoft.VisualBasic.Interaction")
@@ -63,14 +64,14 @@ Partial Public Class RemoteOpenSQL
     ' Sezione per la definizione delle strutture
 
     ' Struttura linestruct
-    AddSapStructureCode(SourceCode, LineRfcStructure, LineRfcFields, SelectedRfcFields)
+    AddSapStructureCode(UniqueIdentifier, SourceCode, LineRfcStructure, LineRfcFields, SelectedRfcFields)
     ' Struttura orderbystruct
-    AddSapStructureCode(SourceCode, OrderByRfcStructure, OrderByRfcFields)
+    AddSapStructureCode(UniqueIdentifier, SourceCode, OrderByRfcStructure, OrderByRfcFields)
 
     ' Sezione per la definizione delle tabelle
 
     ' Tabella linestruct
-    AddConsumerSapTableCode(ContextGUID, SourceCode, LineRfcStructure.AbapName)
+    AddConsumerSapTableCode(UniqueIdentifier, ContextGUID, SourceCode, LineRfcStructure.AbapName)
     ' Tabella orderby
     ' AddSapTableCode(SourceCode, OrderByRfcStructure.AbapName)
 
@@ -78,7 +79,7 @@ Partial Public Class RemoteOpenSQL
     With SourceCode
       ' Sezione Classe SAPCS : Sap Callback Server
 
-      .AppendLine("  Public Class SapCallbackServer")
+      .AppendLine("  Public Class SapCallbackServer" & UniqueIdentifier)
       .AppendLine("      Inherits SAPServer")
       .AppendLine(" ")
       .AppendLine("    ' Constructors")
@@ -177,7 +178,7 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("    Protected Sub RECEIVE_NEXT_ROW( _")
       .AppendLine("          <RfcParameter(AbapName:=""NEXT_ROW"", RFCTYPE:=RFCTYPE.RFCTYPE_STRUCTURE, Optional:=False, Direction:=RFCINOUT.IN, Length:=" & OrderByRfcStructure.Length & ", Length2:=" & OrderByRfcStructure.Length2 & "), _")
       .AppendLine("          XmlElement(""NEXT_ROW"", IsNullable:=False, Form:=XmlSchemaForm.Unqualified)> _")
-      .AppendLine("        ByVal Next_Row As " & OrderByRfcStructure.AbapName & ", _")
+      .AppendLine("        ByVal Next_Row As " & OrderByRfcStructure.AbapName & UniqueIdentifier & ", _")
       .AppendLine("          <RfcParameter(AbapName:=""CANCEL"", RFCTYPE:=RFCTYPE.RFCTYPE_CHAR, Optional:=False, Direction:=RFCINOUT.OUT, Length:=1, Length2:=2), _")
       .AppendLine("          XmlElement(""CANCEL"", IsNullable:=False, Form:=XmlSchemaForm.Unqualified)> _")
       .AppendLine("        ByRef Cancel As String)")
@@ -206,7 +207,7 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("    Protected Sub SEND_NEXT_ROW( _")
       .AppendLine("          <RfcParameter(AbapName:=""NEXT_ROW"", RFCTYPE:=RFCTYPE.RFCTYPE_STRUCTURE, Optional:=False, Direction:=RFCINOUT.OUT, Length:=" & OrderByRfcStructure.Length & ", Length2:=" & OrderByRfcStructure.Length2 & "), _")
       .AppendLine("          XmlElement(""NEXT_ROW"", IsNullable:=False, Form:=XmlSchemaForm.Unqualified)> _")
-      .AppendLine("        ByRef next_row As " & OrderByRfcStructure.AbapName & ", _")
+      .AppendLine("        ByRef next_row As " & OrderByRfcStructure.AbapName & UniqueIdentifier & ", _")
       .AppendLine("          <RfcParameter(AbapName:=""CANCEL"", RFCTYPE:=RFCTYPE.RFCTYPE_CHAR, Optional:=False, Direction:=RFCINOUT.OUT, Length:=1, Length2:=2), _")
       .AppendLine("          XmlElement(""CANCEL"", IsNullable:=False, Form:=XmlSchemaForm.Unqualified)> _")
       .AppendLine("        ByRef Cancel As String)")
@@ -223,10 +224,13 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("                                                          """ & ContextGUID & """,")
       .AppendLine("                                                          NextRow,")
       .AppendLine("                                                          Cancel)")
-      .AppendLine("        next_row = New " & OrderByRfcStructure.AbapName)
-      .AppendLine("        For ItemIndex As Integer = 0 To SapStructure.GetSAPFieldsSchema(NextRow.GetType()).Length - 1")
-      .AppendLine("          next_row.Item(ItemIndex) = NextRow.Item(ItemIndex)")
-      .AppendLine("        Next")
+      .AppendLine("        next_row = New " & OrderByRfcStructure.AbapName & UniqueIdentifier)
+      .AppendLine("")
+      .AppendLine("        If Cancel <> ""X"" AndAlso Not NextRow Is Nothing Then")
+      .AppendLine("          For ItemIndex As Integer = 0 To SapStructure.GetSAPFieldsSchema(NextRow.GetType()).Length - 1")
+      .AppendLine("            next_row.Item(ItemIndex) = NextRow.Item(ItemIndex)")
+      .AppendLine("          Next")
+      .AppendLine("        End If")
       .AppendLine("")
       .AppendLine("      Catch ex As Exception")
       .AppendLine("        Cancel = ""X""")
@@ -260,7 +264,7 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("          <RfcParameter(AbapName:=""ROWS"",RfcType := RFCTYPE.RFCTYPE_ITAB, Optional := true, Direction := RFCINOUT.IN), _")
       .AppendLine("          XmlArray(""ROWS"", IsNullable := False, Form := XmlSchemaForm.Unqualified), ")
       .AppendLine("          XmlArrayItem(""item"", IsNullable := False, Form := XmlSchemaForm.Unqualified)>")
-      .AppendLine("        ByRef Rows As " & LineRfcStructure.AbapName & "Table)")
+      .AppendLine("        ByRef Rows As " & LineRfcStructure.AbapName & "Table" & UniqueIdentifier & ")")
       .AppendLine("")
       .AppendLine("      Try")
       .AppendLine("")
@@ -341,7 +345,7 @@ Partial Public Class RemoteOpenSQL
     End If
 
     For Each TypeItem In CompilerResults.CompiledAssembly.GetTypes()
-      If TypeItem.Name = "SapCallbackServer" Then
+      If TypeItem.Name = "SapCallbackServer" & UniqueIdentifier Then
         Return Activator.CreateInstance(TypeItem)
       End If
     Next
@@ -350,6 +354,7 @@ Partial Public Class RemoteOpenSQL
   End Function
 
   Private Sub AddSapStructureCode(
+                             ByVal UniqueIdentifier As String,
                              ByVal SourceCode As StringBuilder,
                              ByVal RfcStructureAttribute As RfcStructureAttribute,
                              ByVal RfcFieldAttributes As List(Of RfcFieldAttribute),
@@ -357,7 +362,7 @@ Partial Public Class RemoteOpenSQL
 
     With SourceCode
       .AppendLine("  <Serializable, RfcStructure(AbapName :=""" & RfcStructureAttribute.AbapName & """  , Length := " & RfcStructureAttribute.Length & ", Length2 := " & RfcStructureAttribute.Length2 & ")> _")
-      .AppendLine("  Public Class " & RfcStructureAttribute.AbapName & " ")
+      .AppendLine("  Public Class " & RfcStructureAttribute.AbapName & UniqueIdentifier & " ")
       .AppendLine("    Inherits RosSAPStructure")
       .AppendLine("")
 
@@ -459,51 +464,51 @@ Partial Public Class RemoteOpenSQL
 
   End Function
 
-  Private Sub AddSapTableCode(ByVal SourceCode As StringBuilder, ByVal AbapName As String)
+  Private Sub AddSapTableCode(UniqueIdentifier As String, ByVal SourceCode As StringBuilder, ByVal AbapName As String)
 
     With SourceCode
       .AppendLine("  <Serializable> _")
-      .AppendLine("  Public Class " & AbapName & "Table")
+      .AppendLine("  Public Class " & AbapName & "Table" & UniqueIdentifier)
       .AppendLine("    Inherits SAPTable")
       .AppendLine("")
       .AppendLine("    Public Overloads Overrides Function GetElementType() As Type")
-      .AppendLine("        Return GetType(" & AbapName & ")")
+      .AppendLine("        Return GetType(" & AbapName & UniqueIdentifier & ")")
       .AppendLine("    End Function")
       .AppendLine("")
       .AppendLine("    Overrides Public Function CreateNewRow() As Object ")
       .AppendLine("        Return new " & AbapName & "()")
       .AppendLine("    End Function")
       .AppendLine("     ")
-      .AppendLine("    Default Public Property Item(ByVal Index As Integer) As " & AbapName)
+      .AppendLine("    Default Public Property Item(ByVal Index As Integer) As " & AbapName & UniqueIdentifier)
       .AppendLine("        Get ")
-      .AppendLine("            Return CType(List(Index), " & AbapName & ")")
+      .AppendLine("            Return CType(List(Index), " & AbapName & UniqueIdentifier & ")")
       .AppendLine("        End Get")
-      .AppendLine("        Set(ByVal Value As " & AbapName & ")")
+      .AppendLine("        Set(ByVal Value As " & AbapName & UniqueIdentifier & ")")
       .AppendLine("            List(Index) = Value")
       .AppendLine("        End Set")
       .AppendLine("    End Property")
       .AppendLine("        ")
-      .AppendLine("    Public Function Add(ByVal Value As " & AbapName & ") As Integer ")
+      .AppendLine("    Public Function Add(ByVal Value As " & AbapName & UniqueIdentifier & ") As Integer ")
       .AppendLine("        Return List.Add(Value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Sub Insert(ByVal Index As Integer, ByVal Value As " & AbapName & ") ")
+      .AppendLine("    Public Sub Insert(ByVal Index As Integer, ByVal Value As " & AbapName & UniqueIdentifier & ") ")
       .AppendLine("        List.Insert(Index, value)")
       .AppendLine("    End Sub")
       .AppendLine("        ")
-      .AppendLine("    Public Function IndexOf(ByVal Value As " & AbapName & ") As Integer")
+      .AppendLine("    Public Function IndexOf(ByVal Value As " & AbapName & UniqueIdentifier & ") As Integer")
       .AppendLine("        Return List.IndexOf(value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Function Contains(ByVal Value As " & AbapName & ") As Boolean")
+      .AppendLine("    Public Function Contains(ByVal Value As " & AbapName & UniqueIdentifier & ") As Boolean")
       .AppendLine("        Return List.Contains(value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Sub Remove(ByVal Value As " & AbapName & ") ")
+      .AppendLine("    Public Sub Remove(ByVal Value As " & AbapName & UniqueIdentifier & ") ")
       .AppendLine("        List.Remove(value)")
       .AppendLine("    End Sub")
       .AppendLine("")
-      .AppendLine("    Public Sub CopyTo(ByVal Array() As " & AbapName & ", ByVal Index As Integer) ")
+      .AppendLine("    Public Sub CopyTo(ByVal Array() As " & AbapName & UniqueIdentifier & ", ByVal Index As Integer) ")
       .AppendLine("        List.CopyTo(array, index)")
       .AppendLine("    End Sub")
       .AppendLine("  End Class")
@@ -512,11 +517,15 @@ Partial Public Class RemoteOpenSQL
 
   End Sub
 
-  Private Sub AddConsumerSapTableCode(ByVal ContextGUID As String, ByVal SourceCode As StringBuilder, ByVal AbapName As String)
+  Private Sub AddConsumerSapTableCode(
+                                     ByVal UniqueIdentifier As String,
+                                     ByVal ContextGUID As String,
+                                     ByVal SourceCode As StringBuilder,
+                                     ByVal AbapName As String)
 
     With SourceCode
       .AppendLine("  <Serializable> _")
-      .AppendLine("  Public Class " & AbapName & "Table")
+      .AppendLine("  Public Class " & AbapName & "Table" & UniqueIdentifier)
       .AppendLine("    Inherits SAPTable")
       .AppendLine("    Implements IList")
       .AppendLine("")
@@ -543,43 +552,43 @@ Partial Public Class RemoteOpenSQL
       .AppendLine("    End Function")
       .AppendLine("        ")
       .AppendLine("    Public Overloads Overrides Function GetElementType() As Type")
-      .AppendLine("        Return GetType(" & AbapName & ")")
+      .AppendLine("        Return GetType(" & AbapName & UniqueIdentifier & ")")
       .AppendLine("    End Function")
       .AppendLine("")
       .AppendLine("    Overrides Public Function CreateNewRow() As Object ")
-      .AppendLine("        Return new " & AbapName & "()")
+      .AppendLine("        Return new " & AbapName & UniqueIdentifier & "()")
       .AppendLine("    End Function")
       .AppendLine("     ")
-      .AppendLine("    Default Public Property Item(ByVal Index As Integer) As " & AbapName)
+      .AppendLine("    Default Public Property Item(ByVal Index As Integer) As " & AbapName & UniqueIdentifier)
       .AppendLine("        Get ")
-      .AppendLine("            Return CType(List(Index), " & AbapName & ")")
+      .AppendLine("            Return CType(List(Index), " & AbapName & UniqueIdentifier & ")")
       .AppendLine("        End Get")
-      .AppendLine("        Set(ByVal Value As " & AbapName & ")")
+      .AppendLine("        Set(ByVal Value As " & AbapName & UniqueIdentifier & ")")
       .AppendLine("            List(Index) = Value")
       .AppendLine("        End Set")
       .AppendLine("    End Property")
       .AppendLine("        ")
-      .AppendLine("    Public Function Add(ByVal Value As " & AbapName & ") As Integer ")
+      .AppendLine("    Public Function Add(ByVal Value As " & AbapName & UniqueIdentifier & ") As Integer ")
       .AppendLine("        Return List.Add(Value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Sub Insert(ByVal Index As Integer, ByVal Value As " & AbapName & ") ")
+      .AppendLine("    Public Sub Insert(ByVal Index As Integer, ByVal Value As " & AbapName & UniqueIdentifier & ") ")
       .AppendLine("        List.Insert(Index, value)")
       .AppendLine("    End Sub")
       .AppendLine("        ")
-      .AppendLine("    Public Function IndexOf(ByVal Value As " & AbapName & ") As Integer")
+      .AppendLine("    Public Function IndexOf(ByVal Value As " & AbapName & UniqueIdentifier & ") As Integer")
       .AppendLine("        Return List.IndexOf(value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Function Contains(ByVal Value As " & AbapName & ") As Boolean")
+      .AppendLine("    Public Function Contains(ByVal Value As " & AbapName & UniqueIdentifier & ") As Boolean")
       .AppendLine("        Return List.Contains(value)")
       .AppendLine("    End Function")
       .AppendLine("        ")
-      .AppendLine("    Public Sub Remove(ByVal Value As " & AbapName & ") ")
+      .AppendLine("    Public Sub Remove(ByVal Value As " & AbapName & UniqueIdentifier & ") ")
       .AppendLine("        List.Remove(value)")
       .AppendLine("    End Sub")
       .AppendLine("")
-      .AppendLine("    Public Sub CopyTo(ByVal Array() As " & AbapName & ", ByVal Index As Integer) ")
+      .AppendLine("    Public Sub CopyTo(ByVal Array() As " & AbapName & UniqueIdentifier & ", ByVal Index As Integer) ")
       .AppendLine("        List.CopyTo(array, index)")
       .AppendLine("    End Sub")
       .AppendLine("  End Class")
@@ -618,7 +627,7 @@ Partial Public Class RemoteOpenSQL
         Orderby_Fields.FromADODataTable(.Orderby_Fields.ToADODataTable)
       End With
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
   End Sub
@@ -643,7 +652,7 @@ Partial Public Class RemoteOpenSQL
         End If
       End Try
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
   End Sub
@@ -688,7 +697,7 @@ Partial Public Class RemoteOpenSQL
         Cancel = "X"
       End Try
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
 
@@ -716,7 +725,7 @@ Partial Public Class RemoteOpenSQL
         Cancel = "X"
       End Try
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
   End Sub
@@ -737,9 +746,13 @@ Partial Public Class RemoteOpenSQL
         NextRow = SAPCallContext.NextRows.Take
       Catch ex As System.InvalidOperationException
         Cancel = "X"
+      Catch ex As System.OperationCanceledException
+        Cancel = "X"
+      Catch ex As System.ArgumentNullException
+        Cancel = "X"
       End Try
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
   End Sub
@@ -757,7 +770,7 @@ Partial Public Class RemoteOpenSQL
     Try
       Throw New CompileException("GUID: " & GUID & " ContextGUID: " & ContextGUID & " Message: " & Message & " Line: " & Line.ToString)
     Catch ex As Exception
-      CallbackServerExceptions.Add(ex)
+      ExceptionsAggregator.Add(ex)
       Throw
     End Try
   End Sub

@@ -72,7 +72,7 @@ Partial Public Class RemoteOpenSQL
 
   Private Shared ItemsValue As Dictionary(Of String, RemoteOpenSQL) = New Dictionary(Of String, RemoteOpenSQL)
 
-  Private CallbackServerExceptions As New List(Of Exception)
+  Private ExceptionsAggregator As New List(Of Exception)
 
   Private GUIDValue As String
   Private DestinationValue As Destination
@@ -573,6 +573,7 @@ Partial Public Class RemoteOpenSQL
   End Class
 
   Private Class CallContext
+    Implements IDisposable
 
     Private ContextGUIDValue As String
     Private Parse_Tree_Step_1Value As ROS_PARSE_NODETable
@@ -612,6 +613,33 @@ Partial Public Class RemoteOpenSQL
       If ContextIndex = 1 Then
         ReceiveRowsGate.Add(True)
       End If
+    End Sub
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+
+      If Not NextRowsCollection Is Nothing Then
+        If Not NextRowsCollection.IsAddingCompleted Then
+          NextRowsCollection.CompleteAdding()
+        End If
+        NextRowsCollection.Dispose()
+        NextRowsCollection = Nothing
+      End If
+
+      If Not ReceiveRowsGateCollection Is Nothing Then
+        If Not ReceiveRowsGateCollection.IsAddingCompleted Then
+          ReceiveRowsGateCollection.CompleteAdding()
+        End If
+        ReceiveRowsGateCollection.Dispose()
+        ReceiveRowsGateCollection = Nothing
+      End If
+
+      Parse_Tree_Step_1Value = Nothing
+      Parse_Tree_Step_NValue = Nothing
+      Selected_FieldsValue = Nothing
+      Orderby_FieldsValue = Nothing
+      NextRowValue = Nothing
+      LinkedContextValue = Nothing
+
     End Sub
 
     Public ReadOnly Property NextRows As BlockingCollection(Of SAPStructure)
@@ -898,7 +926,7 @@ Partial Public Class RemoteOpenSQL
     ' aggiungendo eventualmente quei campi di selezione mancanti
     FieldItems.AddOrderNames(OrderNames, TableItems)
 
-     ' Creo le strutture rfc per la generazione del CallbackServer
+    ' Creo le strutture rfc per la generazione del CallbackServer
 
     Dim Offset As Integer = 0
     Dim Offset2 As Integer = 0
@@ -1034,25 +1062,59 @@ Partial Public Class RemoteOpenSQL
       Exit Sub
     End If
 
-     ' Creazione del task per la chiamata delle funzione RunSession
+    ' Creazione del task per la chiamata delle funzione RunSession
     RaiseQueryStatusChanged("Starting call to Z_REMOTE_OPEN_SQL ...")
     Consumer.BeginConsume()
 
     SessionTask1 = TaskFactoryValue.StartNew(Sub() Me.RunSession(CallbackServer1))
     SessionTask2 = TaskFactoryValue.StartNew(Sub() Me.RunSession(CallbackServer2))
-    SessionTask1.Wait()
-    SessionTask2.Wait()
-    For Each EventTask In EventTasks
-      EventTask.Wait()
-    Next
-    EventTasks.Clear()
-    Consumer.EndConsume()
 
-    If CallbackServerExceptions.Count > 0 Then
-      Throw New AggregateException(CallbackServerExceptions.ToArray)
+    Try
+      SessionTask1.Wait()
+    Catch ex As Exception
+      DisposeContexts(SAPCallContexts)
+      ExceptionsAggregator.Add(ex)
+    End Try
+    Try
+      SessionTask2.Wait()
+    Catch ex As Exception
+      DisposeContexts(SAPCallContexts)
+      ExceptionsAggregator.Add(ex)
+    End Try
+    For Each EventTask In EventTasks
+      Try
+        EventTask.Wait()
+      Catch ex As Exception
+        ExceptionsAggregator.Add(ex)
+      End Try
+    Next
+
+    DisposeContexts(SAPCallContexts)
+
+    EventTasks.Clear()
+
+    Try
+      Consumer.EndConsume()
+    Catch ex As Exception
+      ExceptionsAggregator.Add(ex)
+    End Try
+
+    If ExceptionsAggregator.Count > 0 Then
+      Throw New AggregateException(ExceptionsAggregator.ToArray)
     End If
 
     RaiseQueryStatusChanged("Query Excecuted. Records: " & Consumer.Records & ".")
+  End Sub
+
+  Private Sub DisposeContexts(Contexts As Dictionary(Of String, CallContext))
+    For Each Context In Contexts.Values
+      Try
+        Context.Dispose()
+      Catch ex As Exception
+        ExceptionsAggregator.Add(ex)
+      End Try
+    Next
+    Contexts.Clear()
   End Sub
 
   Private Function IsEven(ByVal Number As Long) As Boolean

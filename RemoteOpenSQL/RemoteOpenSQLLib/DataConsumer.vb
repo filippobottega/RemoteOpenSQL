@@ -49,7 +49,7 @@ Public MustInherit Class DataConsumer
     End Get
   End Property
 
-  Friend Sub TryReleaseComObject(ByRef ComObject As Object)
+  Friend Sub TryReleaseComObject(Of T)(ByRef ComObject As T)
     If ComObject Is Nothing Then
       Exit Sub
     End If

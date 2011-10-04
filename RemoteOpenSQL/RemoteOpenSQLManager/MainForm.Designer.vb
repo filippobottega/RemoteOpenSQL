@@ -782,6 +782,7 @@ Partial Class MainForm
     Me.QueryTreeView.Dock = System.Windows.Forms.DockStyle.Fill
     Me.QueryTreeView.ImageIndex = 0
     Me.QueryTreeView.ImageList = Me.ImageList
+    Me.QueryTreeView.LabelEdit = True
     Me.QueryTreeView.Location = New System.Drawing.Point(0, 0)
     Me.QueryTreeView.Name = "QueryTreeView"
     Me.QueryTreeView.SelectedImageIndex = 0
