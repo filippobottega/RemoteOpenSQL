@@ -381,9 +381,71 @@
       condensed_text_or_rule = wa_terminal_parse_node-text_or_rule.
       CONDENSE condensed_text_or_rule NO-GAPS.
 
-      IF condensed_text_or_rule = wa_terminal_parse_node-text_or_rule.
+*     Check if text_or_rule is a string...
+
+      DATA: text_to_check TYPE char255.
+      DATA: result_tab TYPE match_result_tab.
+      DATA: wa_result_tab TYPE match_result.
+
+      text_to_check = wa_terminal_parse_node-text_or_rule.
+
+      REFRESH result_tab.
+      FIND ALL OCCURRENCES OF '''' IN text_to_check RESULTS result_tab.
+
+      IF condensed_text_or_rule = wa_terminal_parse_node-text_or_rule AND result_tab IS INITIAL.
+*       No spaces and don't contain ['] characters
         CONTINUE.
       ENDIF.
+
+      DATA: start_offset TYPE i.
+      DATA: stop_offset TYPE i.
+      DATA: offset_to_found TYPE i.
+
+      start_offset = 0.
+      stop_offset = STRLEN( text_to_check ) - 1.
+      offset_to_found = 0.
+
+      DATA: check_error TYPE c.
+      DATA: start_offset_checked TYPE c.
+      DATA: stop_offset_checked TYPE c.
+
+      check_error = ''.
+      start_offset_checked = ''.
+      stop_offset_checked = ''.
+
+      LOOP AT result_tab INTO wa_result_tab.
+        IF wa_result_tab-offset = start_offset AND offset_to_found = 0.
+          start_offset_checked = 'X'.
+          CONTINUE.
+        ENDIF.
+        IF wa_result_tab-offset = stop_offset AND offset_to_found = 0.
+          stop_offset_checked = 'X'.
+          CONTINUE.
+        ENDIF.
+        IF wa_result_tab-offset > stop_offset.
+          check_error = 'X'.
+          EXIT.
+        ENDIF.
+        IF offset_to_found = 0.
+          offset_to_found = wa_result_tab-offset + 1.
+          CONTINUE.
+        ENDIF.
+        IF offset_to_found <> wa_result_tab-offset.
+          check_error = 'X'.
+          EXIT.
+        ENDIF.
+        IF offset_to_found >= stop_offset.
+          check_error = 'X'.
+          EXIT.
+        ENDIF.
+        offset_to_found = 0.
+      ENDLOOP.
+
+      IF check_error IS INITIAL AND start_offset_checked = 'X' AND stop_offset_checked = 'X'.
+        CONTINUE.
+      ENDIF.
+
+*     Error: text_or_rule contain spaces or wrong number of ['] character.
 
       id_string = wa_terminal_parse_node-id.
       CONCATENATE 'Error checking text ' wa_terminal_parse_node-text_or_rule 'id' id_string

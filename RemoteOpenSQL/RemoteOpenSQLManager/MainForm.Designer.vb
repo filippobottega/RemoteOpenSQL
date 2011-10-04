@@ -33,8 +33,6 @@ Partial Class MainForm
     Me.DescriptionLabel = New System.Windows.Forms.Label()
     Me.SapRouterStringLabel = New System.Windows.Forms.Label()
     Me.DestinationDescription = New System.Windows.Forms.TextBox()
-    Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLDestinations = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLDestinations()
     Me.PasswordLabel = New System.Windows.Forms.Label()
     Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
     Me.UsernameLabel = New System.Windows.Forms.Label()
@@ -87,8 +85,6 @@ Partial Class MainForm
     Me.QuerySplitContainer = New System.Windows.Forms.SplitContainer()
     Me.QueryGroupBox = New System.Windows.Forms.GroupBox()
     Me.QueryTextBox = New System.Windows.Forms.TextBox()
-    Me.QueryBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-    Me.RemoteOpenSQLQueries = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLQueries()
     Me.OutputGroupBox = New System.Windows.Forms.GroupBox()
     Me.OutputTextBox = New System.Windows.Forms.TextBox()
     Me.QueryDescriptionGroupBox = New System.Windows.Forms.GroupBox()
@@ -110,6 +106,10 @@ Partial Class MainForm
     Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
     Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
     Me.QueryTimer = New System.Windows.Forms.Timer(Me.components)
+    Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+    Me.RemoteOpenSQLDestinations = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLDestinations()
+    Me.QueryBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+    Me.RemoteOpenSQLQueries = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLQueries()
     Me.QueryTreeBindingSource = New System.Windows.Forms.BindingSource(Me.components)
     Me.MainTabControl.SuspendLayout()
     Me.LogonTabPage.SuspendLayout()
@@ -118,8 +118,6 @@ Partial Class MainForm
     Me.DestinationsSplitContainer.Panel2.SuspendLayout()
     Me.DestinationsSplitContainer.SuspendLayout()
     Me.DestinationGroupBox.SuspendLayout()
-    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.DestinationToolStrip.SuspendLayout()
     Me.ABAPTabPage.SuspendLayout()
     Me.OptionsTabPage.SuspendLayout()
@@ -140,12 +138,14 @@ Partial Class MainForm
     Me.QuerySplitContainer.Panel2.SuspendLayout()
     Me.QuerySplitContainer.SuspendLayout()
     Me.QueryGroupBox.SuspendLayout()
-    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.OutputGroupBox.SuspendLayout()
     Me.QueryDescriptionGroupBox.SuspendLayout()
     Me.QueryStatusStrip.SuspendLayout()
     Me.QueriesToolStrip.SuspendLayout()
+    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).BeginInit()
     CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.SuspendLayout()
     '
@@ -262,16 +262,6 @@ Partial Class MainForm
     Me.DestinationDescription.Name = "DestinationDescription"
     Me.DestinationDescription.Size = New System.Drawing.Size(338, 20)
     Me.DestinationDescription.TabIndex = 0
-    '
-    'DestinationBindingSource
-    '
-    Me.DestinationBindingSource.DataMember = "Destination"
-    Me.DestinationBindingSource.DataSource = Me.RemoteOpenSQLDestinations
-    '
-    'RemoteOpenSQLDestinations
-    '
-    Me.RemoteOpenSQLDestinations.DataSetName = "RemoteOpenSQLDestinations"
-    Me.RemoteOpenSQLDestinations.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
     '
     'PasswordLabel
     '
@@ -829,16 +819,6 @@ Partial Class MainForm
     Me.QueryTextBox.Size = New System.Drawing.Size(627, 82)
     Me.QueryTextBox.TabIndex = 0
     '
-    'QueryBindingSource
-    '
-    Me.QueryBindingSource.DataMember = "Query"
-    Me.QueryBindingSource.DataSource = Me.RemoteOpenSQLQueries
-    '
-    'RemoteOpenSQLQueries
-    '
-    Me.RemoteOpenSQLQueries.DataSetName = "RemoteOpenSQLQueries"
-    Me.RemoteOpenSQLQueries.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
-    '
     'OutputGroupBox
     '
     Me.OutputGroupBox.Controls.Add(Me.OutputTextBox)
@@ -999,6 +979,26 @@ Partial Class MainForm
     '
     Me.QueryTimer.Interval = 1000
     '
+    'DestinationBindingSource
+    '
+    Me.DestinationBindingSource.DataMember = "Destination"
+    Me.DestinationBindingSource.DataSource = Me.RemoteOpenSQLDestinations
+    '
+    'RemoteOpenSQLDestinations
+    '
+    Me.RemoteOpenSQLDestinations.DataSetName = "RemoteOpenSQLDestinations"
+    Me.RemoteOpenSQLDestinations.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+    '
+    'QueryBindingSource
+    '
+    Me.QueryBindingSource.DataMember = "Query"
+    Me.QueryBindingSource.DataSource = Me.RemoteOpenSQLQueries
+    '
+    'RemoteOpenSQLQueries
+    '
+    Me.RemoteOpenSQLQueries.DataSetName = "RemoteOpenSQLQueries"
+    Me.RemoteOpenSQLQueries.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+    '
     'QueryTreeBindingSource
     '
     Me.QueryTreeBindingSource.DataMember = "QueryTree"
@@ -1023,8 +1023,6 @@ Partial Class MainForm
     Me.DestinationsSplitContainer.ResumeLayout(False)
     Me.DestinationGroupBox.ResumeLayout(False)
     Me.DestinationGroupBox.PerformLayout()
-    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
     Me.DestinationToolStrip.ResumeLayout(False)
     Me.DestinationToolStrip.PerformLayout()
     Me.ABAPTabPage.ResumeLayout(False)
@@ -1055,8 +1053,6 @@ Partial Class MainForm
     Me.QuerySplitContainer.ResumeLayout(False)
     Me.QueryGroupBox.ResumeLayout(False)
     Me.QueryGroupBox.PerformLayout()
-    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).EndInit()
     Me.OutputGroupBox.ResumeLayout(False)
     Me.OutputGroupBox.PerformLayout()
     Me.QueryDescriptionGroupBox.ResumeLayout(False)
@@ -1065,6 +1061,10 @@ Partial Class MainForm
     Me.QueryStatusStrip.PerformLayout()
     Me.QueriesToolStrip.ResumeLayout(False)
     Me.QueriesToolStrip.PerformLayout()
+    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).EndInit()
     CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
     Me.ResumeLayout(False)
 

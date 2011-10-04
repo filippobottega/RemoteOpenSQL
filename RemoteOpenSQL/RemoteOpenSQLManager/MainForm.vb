@@ -383,6 +383,9 @@ Public Class MainForm
   End Sub
 
   Private Sub DestinationTreeView_AfterLabelEdit(ByVal sender As System.Object, ByVal e As System.Windows.Forms.NodeLabelEditEventArgs) Handles DestinationTreeView.AfterLabelEdit
+    If e.Label Is Nothing Then
+      Exit Sub
+    End If
     CType(RemoteOpenSQLDestinations.DestinationTree.Rows.Find(Integer.Parse(e.Node.Tag)), RemoteOpenSQLDestinations.DestinationTreeRow).Name = e.Label
   End Sub
 
@@ -498,6 +501,9 @@ Public Class MainForm
   End Sub
 
   Private Sub QueryTreeView_AfterLabelEdit(ByVal sender As System.Object, ByVal e As System.Windows.Forms.NodeLabelEditEventArgs) Handles QueryTreeView.AfterLabelEdit
+    If e.Label Is Nothing Then
+      Exit Sub
+    End If
     CType(RemoteOpenSQLQueries.QueryTree.Rows.Find(Integer.Parse(e.Node.Tag)), RemoteOpenSQLQueries.QueryTreeRow).Name = e.Label
   End Sub
 
