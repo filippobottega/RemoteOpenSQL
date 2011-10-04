@@ -894,10 +894,16 @@ Partial Public Class RemoteOpenSQL
     Dim FieldItems = GetFieldItems(ParseTree, TableItems)
 
     Dim OrderNames = GetOrderNames(ParseTree)
+    Dim OrderByPrimaryKey = GetOrderByPrimaryKey(ParseTree)
+    Dim RebuildOrderClause As Boolean = False
 
     ' Se non specifico alcun campo per l'ordinamento allora ordino per chiave primaria
-    Dim RebuildOrderClause As Boolean = False
-    If OrderNames.Count = 0 OrElse GetOrderByPrimaryKey(ParseTree) Then
+    Dim CreateOrderNames As Boolean = False
+    If OrderNames.Count = 0 OrElse OrderByPrimaryKey Then
+      CreateOrderNames = True
+    End If
+
+    If (OrderNames.Count = 0 AndAlso Not OrderByPrimaryKey) OrElse (OrderByPrimaryKey AndAlso TableItems.Count > 1) Then
       RebuildOrderClause = True
     End If
 
@@ -905,7 +911,7 @@ Partial Public Class RemoteOpenSQL
 
     ' Rispetto all'OpenSQL la clausola ORDER BY PRIMARY KEY considera solo la chiave primaria
     ' della prima tabella presente nella clausola FROM che abbia una chiave primaria
-    If RebuildOrderClause Then
+    If CreateOrderNames Then
       ' Determino se utilizzare il selettore di colonna
       Dim UseColumnSelector As Boolean = False
       If TableItems.Count > 1 Then
