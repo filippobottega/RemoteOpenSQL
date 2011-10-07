@@ -657,4 +657,21 @@ Public Class MainForm
     RemoteOpenSQL.StopQuery()
   End Sub
 
+  Private Sub PrivacyCheckBox_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles PrivacyCheckBox.CheckedChanged
+    If PrivacyCheckBox.Checked Then
+      For Each ControlItem In CType(DestinationsSplitContainer.Panel2.Controls(0), GroupBox).Controls
+        If TypeOf (ControlItem) Is TextBox AndAlso Not ControlItem Is DestinationPassword Then
+          CType(ControlItem, TextBox).PasswordChar = "*"
+          CType(ControlItem, TextBox).UseSystemPasswordChar = True
+        End If
+      Next
+    Else
+      For Each ControlItem In CType(DestinationsSplitContainer.Panel2.Controls(0), GroupBox).Controls
+        If TypeOf (ControlItem) Is TextBox AndAlso Not ControlItem Is DestinationPassword Then
+          CType(ControlItem, TextBox).PasswordChar = ""
+          CType(ControlItem, TextBox).UseSystemPasswordChar = False
+        End If
+      Next
+    End If
+  End Sub
 End Class

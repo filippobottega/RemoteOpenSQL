@@ -72,7 +72,7 @@ Partial Public Class RemoteOpenSQL
 
   Private Shared ItemsValue As Dictionary(Of String, RemoteOpenSQL) = New Dictionary(Of String, RemoteOpenSQL)
 
-  Private ExceptionsAggregator As New List(Of Exception)
+  Private ExceptionsAggregator As List(Of Exception)
 
   Private GUIDValue As String
   Private DestinationValue As Destination
@@ -863,6 +863,11 @@ Partial Public Class RemoteOpenSQL
 
   Private Sub CallRfcRemoteOpenSQL(ByVal Query As String)
 
+    Dim CallStartTime As DateTime = Now
+
+    ' Inizializzo un nuovo aggregatore di eccezioni
+    ExceptionsAggregator = New List(Of Exception)
+
     ' Inizializzo un nuovo Token per la cancellazione del processo
     CancelSourceValue = New CancellationTokenSource
 
@@ -945,11 +950,11 @@ Partial Public Class RemoteOpenSQL
     For Each FieldItem In FieldItems.AsEnumerable
       PrevDfiesItem = DfiesItem
       DfiesItem = FieldItem.DfiesItem
-      LineRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
+      LineRfcFieldAttributes.Add(GetRfcFieldAttribute(FieldItem.AbapName, DfiesItem, PrevDfiesItem, Offset, Offset2))
     Next
 
     PrevDfiesItem = DfiesItem
-    GetRfcFieldAttribute(Nothing, PrevDfiesItem, Offset, Offset2)
+    GetRfcFieldAttribute(String.Empty, Nothing, PrevDfiesItem, Offset, Offset2)
 
     Dim LineRfcStructure = New RfcStructureAttribute
     LineRfcStructure.AbapName = "linestruct"
@@ -975,11 +980,11 @@ Partial Public Class RemoteOpenSQL
       End If
       PrevDfiesItem = DfiesItem
       DfiesItem = FieldItem.DfiesItem
-      SelectedRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
+      SelectedRfcFieldAttributes.Add(GetRfcFieldAttribute(FieldItem.AbapName, DfiesItem, PrevDfiesItem, Offset, Offset2))
     Next
 
     PrevDfiesItem = DfiesItem
-    GetRfcFieldAttribute(Nothing, PrevDfiesItem, Offset, Offset2)
+    GetRfcFieldAttribute(String.Empty, Nothing, PrevDfiesItem, Offset, Offset2)
 
     ' Assegno l'elenco dei campi selezionati dall'utente all'oggetto Consumer
     Consumer.SelectedRfcFieldAttributes = SelectedRfcFieldAttributes
@@ -998,11 +1003,11 @@ Partial Public Class RemoteOpenSQL
       End If
       PrevDfiesItem = DfiesItem
       DfiesItem = FieldItem.DfiesItem
-      OrderByRfcFieldAttributes.Add(GetRfcFieldAttribute(DfiesItem, PrevDfiesItem, Offset, Offset2))
+      OrderByRfcFieldAttributes.Add(GetRfcFieldAttribute(FieldItem.AbapName, DfiesItem, PrevDfiesItem, Offset, Offset2))
     Next
 
     PrevDfiesItem = DfiesItem
-    GetRfcFieldAttribute(Nothing, PrevDfiesItem, Offset, Offset2)
+    GetRfcFieldAttribute(String.Empty, Nothing, PrevDfiesItem, Offset, Offset2)
 
     Dim OrderByRfcStructure = New RfcStructureAttribute
     OrderByRfcStructure.AbapName = "orderbystruct"
@@ -1109,7 +1114,14 @@ Partial Public Class RemoteOpenSQL
       Throw New AggregateException(ExceptionsAggregator.ToArray)
     End If
 
-    RaiseQueryStatusChanged("Query Excecuted. Records: " & Consumer.Records & ".")
+    Dim ExcecutionSeconds = DateDiff(DateInterval.Second, CallStartTime, Now)
+    If ExcecutionSeconds = 0 Then
+      ExcecutionSeconds = 1
+    End If
+
+    Dim Rate = Format(CLng((CLng(Consumer.Records) * CLng(3600) / ExcecutionSeconds)), "#,0")
+
+    RaiseQueryStatusChanged("Query Excecuted. Records: " & Consumer.RecordsWithThousandSeparator & ", Rate: " & Rate & " records/h.")
   End Sub
 
   Private Sub DisposeContexts(Contexts As Dictionary(Of String, CallContext))
@@ -1131,7 +1143,7 @@ Partial Public Class RemoteOpenSQL
     IsOdd = (Number Mod 2 <> 0)
   End Function
 
-  Private Function GetRfcFieldAttribute(ByVal DfiesRow As DFIES, ByVal PrevDfiesRow As DFIES, ByRef Offset As Integer, ByRef Offset2 As Integer) As RfcFieldAttribute
+  Private Function GetRfcFieldAttribute(AbapName As String, ByVal DfiesRow As DFIES, ByVal PrevDfiesRow As DFIES, ByRef Offset As Integer, ByRef Offset2 As Integer) As RfcFieldAttribute
     Dim Result As RfcFieldAttribute = Nothing
     Dim CurrentRfcType As RFCTYPE = Nothing
     Dim PrevRfcType As RFCTYPE = Nothing
@@ -1172,52 +1184,52 @@ Partial Public Class RemoteOpenSQL
     Select Case CurrentRfcType
       Case RFCTYPE.RFCTYPE_INT
         ' Tipo interno I, Tipo .NET Integer, campo di esempio RLIB_OBJS-ANZAHL
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_INT, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_INT, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case RFCTYPE.RFCTYPE_INT1
         ' Tipo interno b, Tipo .NET Byte, campo di esempio T180S-COLOR
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_INT1, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_INT1, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case RFCTYPE.RFCTYPE_INT2
         ' Tipo interno s, Tipo .NET Short, campo di esempio RLIB_TREES-CLUSTR
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_INT2, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_INT2, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case RFCTYPE.RFCTYPE_DATE
         ' Tipo interno D, Tipo .NET String, campo di esempio MSTA-ERSDA
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_DATE, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_DATE, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
         Offset += DfiesRow.Leng
         Offset2 += DfiesRow.Leng * 2
       Case RFCTYPE.RFCTYPE_FLOAT
         ' Tipo interno F, Tipo .NET Double, campo di esempio MARD-BSKRF
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_FLOAT, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_FLOAT, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case RFCTYPE.RFCTYPE_TIME
         ' Tipo interno T, Tipo .NET String, campo di esempio MSEG-/BEV2/ED_AETIM
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_TIME, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_TIME, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
         Offset += DfiesRow.Leng
         Offset2 += DfiesRow.Leng * 2
       Case RFCTYPE.RFCTYPE_CHAR
         ' Tipo interno C, Tipo .NET String, campo di esempio MSTA-AENAM
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_CHAR, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_CHAR, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
         Offset += DfiesRow.Leng
         Offset2 += DfiesRow.Leng * 2
       Case RFCTYPE.RFCTYPE_NUM
         ' Tipo interno N, Tipo .NET String, campo di esempio COEP-BELTP
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_NUM, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_NUM, DfiesRow.Leng, DfiesRow.Leng * 2, 0, Offset, Offset2)
         Offset += DfiesRow.Leng
         Offset2 += DfiesRow.Leng * 2
       Case RFCTYPE.RFCTYPE_BCD
         ' Tipo interno P, Tipo .NET String, campo di esempio COEP-WTGBTR
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_BCD, DfiesRow.Intlen, DfiesRow.Intlen, DfiesRow.Decimals, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_BCD, DfiesRow.Intlen, DfiesRow.Intlen, DfiesRow.Decimals, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case RFCTYPE.RFCTYPE_BYTE
         ' Tipo interno X, Tipo .NET Byte(), campo di esempio TODIR-RELMAP
-        Result = New RfcFieldAttribute(DfiesRow.Fieldname, RFCTYPE.RFCTYPE_BYTE, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
+        Result = New RfcFieldAttribute(AbapName, RFCTYPE.RFCTYPE_BYTE, DfiesRow.Intlen, DfiesRow.Intlen, 0, Offset, Offset2)
         Offset += DfiesRow.Intlen
         Offset2 += DfiesRow.Intlen
       Case Else

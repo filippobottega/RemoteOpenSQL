@@ -37,6 +37,12 @@ Public MustInherit Class DataConsumer
 
   Public Property Records As Integer
 
+  Public ReadOnly Property RecordsWithThousandSeparator As String
+    Get
+      Return Format(Records, "#,0")
+    End Get
+  End Property
+
   Public Sub New(OutputName As String)
     MyBase.New()
 

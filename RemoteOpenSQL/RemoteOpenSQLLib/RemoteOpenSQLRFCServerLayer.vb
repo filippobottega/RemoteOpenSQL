@@ -672,7 +672,7 @@ Partial Public Class RemoteOpenSQL
     End If
 
     Try
-      RaiseQueryStatusChanged("Exporting data from SAP. Records already exported: " & Consumer.Records & " Last Application DB query time: " & Decimal.Parse(Replace(SelectLengthC, ".", ",")).ToString("F3") & " seconds.")
+      RaiseQueryStatusChanged("Exporting data from SAP. Records already exported: " & Consumer.RecordsWithThousandSeparator & " Last Application DB query time: " & Decimal.Parse(Replace(SelectLengthC, ".", ",")).ToString("F3") & " seconds.")
 
       Dim SAPCallContext = SAPCallContexts(ContextGUID)
 
