@@ -20,5 +20,5 @@ Imports System.Runtime.InteropServices
 ' to distinguish one build from another. AssemblyFileVersion is specified
 ' in AssemblyVersionInfo.cs so that it can be easily incremented by the
 ' automated build process.
-<Assembly: AssemblyVersion("1.0.3.0")> 
+<Assembly: AssemblyVersion("1.0.4.0")> 
 
