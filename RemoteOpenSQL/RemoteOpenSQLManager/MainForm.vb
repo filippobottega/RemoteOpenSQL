@@ -674,4 +674,11 @@ Public Class MainForm
       Next
     End If
   End Sub
+
+  Private Sub AbapCodeTextBox_KeyPress(sender As System.Object, e As System.Windows.Forms.KeyPressEventArgs) Handles AbapCodeTextBox.KeyPress
+    If e.KeyChar = Convert.ToChar(1) Then
+      DirectCast(sender, TextBox).SelectAll()
+      e.Handled = True
+    End If
+  End Sub
 End Class
