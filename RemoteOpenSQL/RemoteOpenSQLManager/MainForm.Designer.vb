@@ -53,36 +53,6 @@ Partial Class MainForm
     Me.DestinationNewToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.DestinationDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-    Me.ABAPTabPage = New System.Windows.Forms.TabPage()
-    Me.AbapCodeTextBox = New System.Windows.Forms.TextBox()
-    Me.OptionsTabPage = New System.Windows.Forms.TabPage()
-    Me.OutputFormatGroupBox = New System.Windows.Forms.GroupBox()
-    Me.AccessGroupBox = New System.Windows.Forms.GroupBox()
-    Me.AccessPathButton = New System.Windows.Forms.Button()
-    Me.AccessPathLabel = New System.Windows.Forms.Label()
-    Me.AccessPathTextBox = New System.Windows.Forms.TextBox()
-    Me.AccessRadioButton = New System.Windows.Forms.RadioButton()
-    Me.ExcelGroupBox = New System.Windows.Forms.GroupBox()
-    Me.ExcelPathButton = New System.Windows.Forms.Button()
-    Me.ExcelPathLabel = New System.Windows.Forms.Label()
-    Me.ExcelPathTextBox = New System.Windows.Forms.TextBox()
-    Me.ExcelRadioButton = New System.Windows.Forms.RadioButton()
-    Me.TextFormatGroupBox = New System.Windows.Forms.GroupBox()
-    Me.TextRadioButton = New System.Windows.Forms.RadioButton()
-    Me.TextApplicationButton = New System.Windows.Forms.Button()
-    Me.TextPathButton = New System.Windows.Forms.Button()
-    Me.TextApplicationTextBox = New System.Windows.Forms.TextBox()
-    Me.TextApplicationLabel = New System.Windows.Forms.Label()
-    Me.TextPathLabel = New System.Windows.Forms.Label()
-    Me.TextPathTextBox = New System.Windows.Forms.TextBox()
-    Me.QueryOptionsGroupBox = New System.Windows.Forms.GroupBox()
-    Me.BufferTextBox = New System.Windows.Forms.TextBox()
-    Me.BufferLabel = New System.Windows.Forms.Label()
-    Me.PartitionSizeTextBox = New System.Windows.Forms.TextBox()
-    Me.PartitionSizeLabel = New System.Windows.Forms.Label()
-    Me.GrammarTabPage = New System.Windows.Forms.TabPage()
-    Me.GrammarGroupBox = New System.Windows.Forms.GroupBox()
-    Me.GrammarTextBox = New System.Windows.Forms.TextBox()
     Me.QueriesTabPage = New System.Windows.Forms.TabPage()
     Me.QueriesSplitContainer = New System.Windows.Forms.SplitContainer()
     Me.QueryTreeView = New System.Windows.Forms.TreeView()
@@ -103,16 +73,40 @@ Partial Class MainForm
     Me.QueryNewToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.QueryDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.QueryToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-    Me.QueryStartToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryStopToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.StartToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.StopToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ViewToolStripButton = New System.Windows.Forms.ToolStripButton()
     Me.QueryToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-    Me.QueryQuickOpenToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+    Me.TextToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ExcelToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.AccessToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
     Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
     Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
     Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
     Me.QueryTimer = New System.Windows.Forms.Timer(Me.components)
     Me.QueryTreeBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+    Me.MenuStrip = New System.Windows.Forms.MenuStrip()
+    Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.NewDestinationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.NewQueriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+    Me.OpenDestinationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.OpenQueriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+    Me.SaveDestinationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.SaveQueriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+    Me.SaveDestinationsAsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.SaveQueriesAsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+    Me.ImportDestinationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ImportQueriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.AbabCodeToInstallToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.RemoteOpenSQLGrammarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.MainTabControl.SuspendLayout()
     Me.LogonTabPage.SuspendLayout()
     CType(Me.DestinationsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -123,15 +117,6 @@ Partial Class MainForm
     CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
     CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.DestinationToolStrip.SuspendLayout()
-    Me.ABAPTabPage.SuspendLayout()
-    Me.OptionsTabPage.SuspendLayout()
-    Me.OutputFormatGroupBox.SuspendLayout()
-    Me.AccessGroupBox.SuspendLayout()
-    Me.ExcelGroupBox.SuspendLayout()
-    Me.TextFormatGroupBox.SuspendLayout()
-    Me.QueryOptionsGroupBox.SuspendLayout()
-    Me.GrammarTabPage.SuspendLayout()
-    Me.GrammarGroupBox.SuspendLayout()
     Me.QueriesTabPage.SuspendLayout()
     CType(Me.QueriesSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.QueriesSplitContainer.Panel1.SuspendLayout()
@@ -149,21 +134,19 @@ Partial Class MainForm
     Me.QueryStatusStrip.SuspendLayout()
     Me.QueriesToolStrip.SuspendLayout()
     CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    Me.MenuStrip.SuspendLayout()
     Me.SuspendLayout()
     '
     'MainTabControl
     '
     Me.MainTabControl.Controls.Add(Me.LogonTabPage)
-    Me.MainTabControl.Controls.Add(Me.ABAPTabPage)
-    Me.MainTabControl.Controls.Add(Me.OptionsTabPage)
-    Me.MainTabControl.Controls.Add(Me.GrammarTabPage)
     Me.MainTabControl.Controls.Add(Me.QueriesTabPage)
     Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.MainTabControl.Location = New System.Drawing.Point(0, 0)
+    Me.MainTabControl.Location = New System.Drawing.Point(0, 24)
     Me.MainTabControl.Name = "MainTabControl"
     Me.MainTabControl.SelectedIndex = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.MainTabControl
-    Me.MainTabControl.Size = New System.Drawing.Size(884, 389)
+    Me.MainTabControl.Size = New System.Drawing.Size(884, 365)
     Me.MainTabControl.TabIndex = 0
     '
     'LogonTabPage
@@ -173,7 +156,7 @@ Partial Class MainForm
     Me.LogonTabPage.Location = New System.Drawing.Point(4, 22)
     Me.LogonTabPage.Name = "LogonTabPage"
     Me.LogonTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.LogonTabPage.Size = New System.Drawing.Size(876, 363)
+    Me.LogonTabPage.Size = New System.Drawing.Size(876, 339)
     Me.LogonTabPage.TabIndex = 0
     Me.LogonTabPage.Text = "Logon parameters"
     Me.LogonTabPage.UseVisualStyleBackColor = True
@@ -181,7 +164,7 @@ Partial Class MainForm
     'DestinationsSplitContainer
     '
     Me.DestinationsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.DestinationsSplitContainer.Location = New System.Drawing.Point(3, 42)
+    Me.DestinationsSplitContainer.Location = New System.Drawing.Point(3, 28)
     Me.DestinationsSplitContainer.Name = "DestinationsSplitContainer"
     '
     'DestinationsSplitContainer.Panel1
@@ -191,7 +174,7 @@ Partial Class MainForm
     'DestinationsSplitContainer.Panel2
     '
     Me.DestinationsSplitContainer.Panel2.Controls.Add(Me.DestinationGroupBox)
-    Me.DestinationsSplitContainer.Size = New System.Drawing.Size(870, 318)
+    Me.DestinationsSplitContainer.Size = New System.Drawing.Size(870, 308)
     Me.DestinationsSplitContainer.SplitterDistance = 242
     Me.DestinationsSplitContainer.TabIndex = 0
     '
@@ -205,7 +188,7 @@ Partial Class MainForm
     Me.DestinationTreeView.Location = New System.Drawing.Point(0, 0)
     Me.DestinationTreeView.Name = "DestinationTreeView"
     Me.DestinationTreeView.SelectedImageIndex = 0
-    Me.DestinationTreeView.Size = New System.Drawing.Size(242, 318)
+    Me.DestinationTreeView.Size = New System.Drawing.Size(242, 308)
     Me.DestinationTreeView.TabIndex = 1
     '
     'ImageList
@@ -236,7 +219,7 @@ Partial Class MainForm
     Me.DestinationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.DestinationGroupBox.Location = New System.Drawing.Point(0, 0)
     Me.DestinationGroupBox.Name = "DestinationGroupBox"
-    Me.DestinationGroupBox.Size = New System.Drawing.Size(624, 318)
+    Me.DestinationGroupBox.Size = New System.Drawing.Size(624, 308)
     Me.DestinationGroupBox.TabIndex = 14
     Me.DestinationGroupBox.TabStop = False
     Me.DestinationGroupBox.Text = "Destination"
@@ -400,376 +383,41 @@ Partial Class MainForm
     Me.DestinationToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DestinationNewFolderToolStripButton, Me.DestinationNewToolStripButton, Me.DestinationDeleteToolStripButton, Me.ToolStripSeparator3})
     Me.DestinationToolStrip.Location = New System.Drawing.Point(3, 3)
     Me.DestinationToolStrip.Name = "DestinationToolStrip"
-    Me.DestinationToolStrip.Size = New System.Drawing.Size(870, 39)
+    Me.DestinationToolStrip.Size = New System.Drawing.Size(870, 25)
     Me.DestinationToolStrip.TabIndex = 14
     Me.DestinationToolStrip.Text = "ToolStrip1"
     '
     'DestinationNewFolderToolStripButton
     '
-    Me.DestinationNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.DestinationNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.DestinationNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.DestinationNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewFolderToolStripButton.Name = "DestinationNewFolderToolStripButton"
-    Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.DestinationNewFolderToolStripButton.Text = "Add New Folder"
+    Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(71, 22)
+    Me.DestinationNewFolderToolStripButton.Text = "New Folder"
     '
     'DestinationNewToolStripButton
     '
-    Me.DestinationNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.DestinationNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.DestinationNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.DestinationNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewToolStripButton.Name = "DestinationNewToolStripButton"
-    Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.DestinationNewToolStripButton.Text = "Add New Destination"
+    Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(98, 22)
+    Me.DestinationNewToolStripButton.Text = "New Destination"
     '
     'DestinationDeleteToolStripButton
     '
-    Me.DestinationDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.DestinationDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.DestinationDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.DestinationDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationDeleteToolStripButton.Name = "DestinationDeleteToolStripButton"
-    Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.DestinationDeleteToolStripButton.Text = "Delete Folder or Destination"
+    Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(44, 22)
+    Me.DestinationDeleteToolStripButton.Text = "Delete"
     '
     'ToolStripSeparator3
     '
     Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-    Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 39)
-    '
-    'ABAPTabPage
-    '
-    Me.ABAPTabPage.Controls.Add(Me.AbapCodeTextBox)
-    Me.ABAPTabPage.Location = New System.Drawing.Point(4, 22)
-    Me.ABAPTabPage.Name = "ABAPTabPage"
-    Me.ABAPTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.ABAPTabPage.Size = New System.Drawing.Size(876, 363)
-    Me.ABAPTabPage.TabIndex = 2
-    Me.ABAPTabPage.Text = "Abap Code To Install"
-    Me.ABAPTabPage.UseVisualStyleBackColor = True
-    '
-    'AbapCodeTextBox
-    '
-    Me.AbapCodeTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.AbapCodeTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-    Me.AbapCodeTextBox.Location = New System.Drawing.Point(3, 3)
-    Me.AbapCodeTextBox.Multiline = True
-    Me.AbapCodeTextBox.Name = "AbapCodeTextBox"
-    Me.AbapCodeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.AbapCodeTextBox.Size = New System.Drawing.Size(870, 357)
-    Me.AbapCodeTextBox.TabIndex = 0
-    Me.AbapCodeTextBox.WordWrap = False
-    '
-    'OptionsTabPage
-    '
-    Me.OptionsTabPage.Controls.Add(Me.OutputFormatGroupBox)
-    Me.OptionsTabPage.Controls.Add(Me.QueryOptionsGroupBox)
-    Me.OptionsTabPage.Location = New System.Drawing.Point(4, 22)
-    Me.OptionsTabPage.Name = "OptionsTabPage"
-    Me.OptionsTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.OptionsTabPage.Size = New System.Drawing.Size(876, 363)
-    Me.OptionsTabPage.TabIndex = 3
-    Me.OptionsTabPage.Text = "Options"
-    Me.OptionsTabPage.UseVisualStyleBackColor = True
-    '
-    'OutputFormatGroupBox
-    '
-    Me.OutputFormatGroupBox.Controls.Add(Me.AccessGroupBox)
-    Me.OutputFormatGroupBox.Controls.Add(Me.ExcelGroupBox)
-    Me.OutputFormatGroupBox.Controls.Add(Me.TextFormatGroupBox)
-    Me.OutputFormatGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.OutputFormatGroupBox.Location = New System.Drawing.Point(3, 60)
-    Me.OutputFormatGroupBox.Name = "OutputFormatGroupBox"
-    Me.OutputFormatGroupBox.Size = New System.Drawing.Size(870, 300)
-    Me.OutputFormatGroupBox.TabIndex = 3
-    Me.OutputFormatGroupBox.TabStop = False
-    Me.OutputFormatGroupBox.Text = "Output format"
-    '
-    'AccessGroupBox
-    '
-    Me.AccessGroupBox.Controls.Add(Me.AccessPathButton)
-    Me.AccessGroupBox.Controls.Add(Me.AccessPathLabel)
-    Me.AccessGroupBox.Controls.Add(Me.AccessPathTextBox)
-    Me.AccessGroupBox.Controls.Add(Me.AccessRadioButton)
-    Me.AccessGroupBox.Dock = System.Windows.Forms.DockStyle.Top
-    Me.AccessGroupBox.Location = New System.Drawing.Point(3, 167)
-    Me.AccessGroupBox.Name = "AccessGroupBox"
-    Me.AccessGroupBox.Size = New System.Drawing.Size(864, 73)
-    Me.AccessGroupBox.TabIndex = 11
-    Me.AccessGroupBox.TabStop = False
-    Me.AccessGroupBox.Text = "Access"
-    '
-    'AccessPathButton
-    '
-    Me.AccessPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.application_vnd_ms_access_small
-    Me.AccessPathButton.Location = New System.Drawing.Point(829, 30)
-    Me.AccessPathButton.Name = "AccessPathButton"
-    Me.AccessPathButton.Size = New System.Drawing.Size(29, 23)
-    Me.AccessPathButton.TabIndex = 15
-    Me.AccessPathButton.UseVisualStyleBackColor = True
-    '
-    'AccessPathLabel
-    '
-    Me.AccessPathLabel.AutoSize = True
-    Me.AccessPathLabel.Location = New System.Drawing.Point(92, 36)
-    Me.AccessPathLabel.Name = "AccessPathLabel"
-    Me.AccessPathLabel.Size = New System.Drawing.Size(78, 13)
-    Me.AccessPathLabel.TabIndex = 11
-    Me.AccessPathLabel.Text = "Database Path"
-    '
-    'AccessPathTextBox
-    '
-    Me.AccessPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.AccessPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "AccessPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.AccessPathTextBox.Location = New System.Drawing.Point(176, 33)
-    Me.AccessPathTextBox.Name = "AccessPathTextBox"
-    Me.AccessPathTextBox.Size = New System.Drawing.Size(647, 20)
-    Me.AccessPathTextBox.TabIndex = 10
-    Me.AccessPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.AccessPathTextBox
-    '
-    'AccessRadioButton
-    '
-    Me.AccessRadioButton.Image = CType(resources.GetObject("AccessRadioButton.Image"), System.Drawing.Image)
-    Me.AccessRadioButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-    Me.AccessRadioButton.Location = New System.Drawing.Point(7, 17)
-    Me.AccessRadioButton.Name = "AccessRadioButton"
-    Me.AccessRadioButton.Size = New System.Drawing.Size(59, 50)
-    Me.AccessRadioButton.TabIndex = 9
-    Me.AccessRadioButton.TabStop = True
-    Me.AccessRadioButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-    Me.AccessRadioButton.UseVisualStyleBackColor = True
-    '
-    'ExcelGroupBox
-    '
-    Me.ExcelGroupBox.Controls.Add(Me.ExcelPathButton)
-    Me.ExcelGroupBox.Controls.Add(Me.ExcelPathLabel)
-    Me.ExcelGroupBox.Controls.Add(Me.ExcelPathTextBox)
-    Me.ExcelGroupBox.Controls.Add(Me.ExcelRadioButton)
-    Me.ExcelGroupBox.Dock = System.Windows.Forms.DockStyle.Top
-    Me.ExcelGroupBox.Location = New System.Drawing.Point(3, 94)
-    Me.ExcelGroupBox.Name = "ExcelGroupBox"
-    Me.ExcelGroupBox.Size = New System.Drawing.Size(864, 73)
-    Me.ExcelGroupBox.TabIndex = 10
-    Me.ExcelGroupBox.TabStop = False
-    Me.ExcelGroupBox.Text = "Excel"
-    '
-    'ExcelPathButton
-    '
-    Me.ExcelPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.ExcelPathButton.Image = CType(resources.GetObject("ExcelPathButton.Image"), System.Drawing.Image)
-    Me.ExcelPathButton.Location = New System.Drawing.Point(829, 26)
-    Me.ExcelPathButton.Name = "ExcelPathButton"
-    Me.ExcelPathButton.Size = New System.Drawing.Size(29, 23)
-    Me.ExcelPathButton.TabIndex = 15
-    Me.ExcelPathButton.UseVisualStyleBackColor = True
-    '
-    'ExcelPathLabel
-    '
-    Me.ExcelPathLabel.AutoSize = True
-    Me.ExcelPathLabel.Location = New System.Drawing.Point(141, 31)
-    Me.ExcelPathLabel.Name = "ExcelPathLabel"
-    Me.ExcelPathLabel.Size = New System.Drawing.Size(29, 13)
-    Me.ExcelPathLabel.TabIndex = 12
-    Me.ExcelPathLabel.Text = "Path"
-    '
-    'ExcelPathTextBox
-    '
-    Me.ExcelPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.ExcelPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "ExcelPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.ExcelPathTextBox.Location = New System.Drawing.Point(176, 28)
-    Me.ExcelPathTextBox.Name = "ExcelPathTextBox"
-    Me.ExcelPathTextBox.Size = New System.Drawing.Size(647, 20)
-    Me.ExcelPathTextBox.TabIndex = 7
-    Me.ExcelPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.ExcelPathTextBox
-    '
-    'ExcelRadioButton
-    '
-    Me.ExcelRadioButton.Image = CType(resources.GetObject("ExcelRadioButton.Image"), System.Drawing.Image)
-    Me.ExcelRadioButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-    Me.ExcelRadioButton.Location = New System.Drawing.Point(7, 12)
-    Me.ExcelRadioButton.Name = "ExcelRadioButton"
-    Me.ExcelRadioButton.Size = New System.Drawing.Size(59, 50)
-    Me.ExcelRadioButton.TabIndex = 6
-    Me.ExcelRadioButton.TabStop = True
-    Me.ExcelRadioButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-    Me.ExcelRadioButton.UseVisualStyleBackColor = True
-    '
-    'TextFormatGroupBox
-    '
-    Me.TextFormatGroupBox.Controls.Add(Me.TextRadioButton)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextApplicationButton)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextPathButton)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextApplicationTextBox)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextApplicationLabel)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextPathLabel)
-    Me.TextFormatGroupBox.Controls.Add(Me.TextPathTextBox)
-    Me.TextFormatGroupBox.Dock = System.Windows.Forms.DockStyle.Top
-    Me.TextFormatGroupBox.Location = New System.Drawing.Point(3, 16)
-    Me.TextFormatGroupBox.Name = "TextFormatGroupBox"
-    Me.TextFormatGroupBox.Size = New System.Drawing.Size(864, 78)
-    Me.TextFormatGroupBox.TabIndex = 9
-    Me.TextFormatGroupBox.TabStop = False
-    Me.TextFormatGroupBox.Text = "Text"
-    '
-    'TextRadioButton
-    '
-    Me.TextRadioButton.Checked = True
-    Me.TextRadioButton.Image = CType(resources.GetObject("TextRadioButton.Image"), System.Drawing.Image)
-    Me.TextRadioButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-    Me.TextRadioButton.Location = New System.Drawing.Point(8, 15)
-    Me.TextRadioButton.Name = "TextRadioButton"
-    Me.TextRadioButton.Size = New System.Drawing.Size(58, 50)
-    Me.TextRadioButton.TabIndex = 9
-    Me.TextRadioButton.TabStop = True
-    Me.TextRadioButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-    Me.TextRadioButton.UseVisualStyleBackColor = True
-    '
-    'TextApplicationButton
-    '
-    Me.TextApplicationButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.TextEdit_app_small
-    Me.TextApplicationButton.Location = New System.Drawing.Point(829, 42)
-    Me.TextApplicationButton.Name = "TextApplicationButton"
-    Me.TextApplicationButton.Size = New System.Drawing.Size(29, 23)
-    Me.TextApplicationButton.TabIndex = 15
-    Me.TextApplicationButton.UseVisualStyleBackColor = True
-    '
-    'TextPathButton
-    '
-    Me.TextPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextPathButton.Image = CType(resources.GetObject("TextPathButton.Image"), System.Drawing.Image)
-    Me.TextPathButton.Location = New System.Drawing.Point(829, 17)
-    Me.TextPathButton.Name = "TextPathButton"
-    Me.TextPathButton.Size = New System.Drawing.Size(29, 23)
-    Me.TextPathButton.TabIndex = 14
-    Me.TextPathButton.UseVisualStyleBackColor = True
-    '
-    'TextApplicationTextBox
-    '
-    Me.TextApplicationTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextApplicationTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "TextApplicationTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.TextApplicationTextBox.Location = New System.Drawing.Point(176, 45)
-    Me.TextApplicationTextBox.Name = "TextApplicationTextBox"
-    Me.TextApplicationTextBox.Size = New System.Drawing.Size(647, 20)
-    Me.TextApplicationTextBox.TabIndex = 13
-    Me.TextApplicationTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.TextApplicationTextBox
-    '
-    'TextApplicationLabel
-    '
-    Me.TextApplicationLabel.AutoSize = True
-    Me.TextApplicationLabel.Location = New System.Drawing.Point(74, 47)
-    Me.TextApplicationLabel.Name = "TextApplicationLabel"
-    Me.TextApplicationLabel.Size = New System.Drawing.Size(96, 13)
-    Me.TextApplicationLabel.TabIndex = 12
-    Me.TextApplicationLabel.Text = "Default Application"
-    '
-    'TextPathLabel
-    '
-    Me.TextPathLabel.AutoSize = True
-    Me.TextPathLabel.Location = New System.Drawing.Point(141, 22)
-    Me.TextPathLabel.Name = "TextPathLabel"
-    Me.TextPathLabel.Size = New System.Drawing.Size(29, 13)
-    Me.TextPathLabel.TabIndex = 11
-    Me.TextPathLabel.Text = "Path"
-    '
-    'TextPathTextBox
-    '
-    Me.TextPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-    Me.TextPathTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "TextPathTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.TextPathTextBox.Location = New System.Drawing.Point(176, 19)
-    Me.TextPathTextBox.Name = "TextPathTextBox"
-    Me.TextPathTextBox.Size = New System.Drawing.Size(647, 20)
-    Me.TextPathTextBox.TabIndex = 10
-    Me.TextPathTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.TextPathTextBox
-    '
-    'QueryOptionsGroupBox
-    '
-    Me.QueryOptionsGroupBox.Controls.Add(Me.BufferTextBox)
-    Me.QueryOptionsGroupBox.Controls.Add(Me.BufferLabel)
-    Me.QueryOptionsGroupBox.Controls.Add(Me.PartitionSizeTextBox)
-    Me.QueryOptionsGroupBox.Controls.Add(Me.PartitionSizeLabel)
-    Me.QueryOptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Top
-    Me.QueryOptionsGroupBox.Location = New System.Drawing.Point(3, 3)
-    Me.QueryOptionsGroupBox.Name = "QueryOptionsGroupBox"
-    Me.QueryOptionsGroupBox.Size = New System.Drawing.Size(870, 57)
-    Me.QueryOptionsGroupBox.TabIndex = 4
-    Me.QueryOptionsGroupBox.TabStop = False
-    Me.QueryOptionsGroupBox.Text = "Query Options"
-    '
-    'BufferTextBox
-    '
-    Me.BufferTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "BufferTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.BufferTextBox.Location = New System.Drawing.Point(555, 23)
-    Me.BufferTextBox.Name = "BufferTextBox"
-    Me.BufferTextBox.Size = New System.Drawing.Size(45, 20)
-    Me.BufferTextBox.TabIndex = 3
-    Me.BufferTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.BufferTextBox
-    '
-    'BufferLabel
-    '
-    Me.BufferLabel.AutoSize = True
-    Me.BufferLabel.Location = New System.Drawing.Point(369, 26)
-    Me.BufferLabel.Name = "BufferLabel"
-    Me.BufferLabel.Size = New System.Drawing.Size(180, 13)
-    Me.BufferLabel.TabIndex = 2
-    Me.BufferLabel.Text = "Buffer (MB) (Max. 1000, Default 100)"
-    '
-    'PartitionSizeTextBox
-    '
-    Me.PartitionSizeTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "PartitionSizeTextBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.PartitionSizeTextBox.Location = New System.Drawing.Point(232, 23)
-    Me.PartitionSizeTextBox.Name = "PartitionSizeTextBox"
-    Me.PartitionSizeTextBox.Size = New System.Drawing.Size(100, 20)
-    Me.PartitionSizeTextBox.TabIndex = 1
-    Me.PartitionSizeTextBox.Text = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.PartitionSizeTextBox
-    '
-    'PartitionSizeLabel
-    '
-    Me.PartitionSizeLabel.AutoSize = True
-    Me.PartitionSizeLabel.Location = New System.Drawing.Point(8, 26)
-    Me.PartitionSizeLabel.Name = "PartitionSizeLabel"
-    Me.PartitionSizeLabel.Size = New System.Drawing.Size(218, 13)
-    Me.PartitionSizeLabel.TabIndex = 0
-    Me.PartitionSizeLabel.Text = "Partition Size (Max. 2000000, Default 50000)"
-    '
-    'GrammarTabPage
-    '
-    Me.GrammarTabPage.Controls.Add(Me.GrammarGroupBox)
-    Me.GrammarTabPage.Location = New System.Drawing.Point(4, 22)
-    Me.GrammarTabPage.Name = "GrammarTabPage"
-    Me.GrammarTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.GrammarTabPage.Size = New System.Drawing.Size(876, 363)
-    Me.GrammarTabPage.TabIndex = 4
-    Me.GrammarTabPage.Text = "Remote Open SQL Grammar"
-    Me.GrammarTabPage.UseVisualStyleBackColor = True
-    '
-    'GrammarGroupBox
-    '
-    Me.GrammarGroupBox.Controls.Add(Me.GrammarTextBox)
-    Me.GrammarGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.GrammarGroupBox.Location = New System.Drawing.Point(3, 3)
-    Me.GrammarGroupBox.Name = "GrammarGroupBox"
-    Me.GrammarGroupBox.Size = New System.Drawing.Size(870, 357)
-    Me.GrammarGroupBox.TabIndex = 0
-    Me.GrammarGroupBox.TabStop = False
-    Me.GrammarGroupBox.Text = "Remote Open SQL Grammar"
-    '
-    'GrammarTextBox
-    '
-    Me.GrammarTextBox.BackColor = System.Drawing.SystemColors.Window
-    Me.GrammarTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.GrammarTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-    Me.GrammarTextBox.Location = New System.Drawing.Point(3, 16)
-    Me.GrammarTextBox.Multiline = True
-    Me.GrammarTextBox.Name = "GrammarTextBox"
-    Me.GrammarTextBox.ReadOnly = True
-    Me.GrammarTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.GrammarTextBox.Size = New System.Drawing.Size(864, 338)
-    Me.GrammarTextBox.TabIndex = 0
+    Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
     '
     'QueriesTabPage
     '
@@ -778,7 +426,7 @@ Partial Class MainForm
     Me.QueriesTabPage.Location = New System.Drawing.Point(4, 22)
     Me.QueriesTabPage.Name = "QueriesTabPage"
     Me.QueriesTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.QueriesTabPage.Size = New System.Drawing.Size(876, 363)
+    Me.QueriesTabPage.Size = New System.Drawing.Size(876, 339)
     Me.QueriesTabPage.TabIndex = 1
     Me.QueriesTabPage.Text = "Remote Open SQL Queries"
     Me.QueriesTabPage.UseVisualStyleBackColor = True
@@ -786,7 +434,7 @@ Partial Class MainForm
     'QueriesSplitContainer
     '
     Me.QueriesSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.QueriesSplitContainer.Location = New System.Drawing.Point(3, 42)
+    Me.QueriesSplitContainer.Location = New System.Drawing.Point(3, 28)
     Me.QueriesSplitContainer.Name = "QueriesSplitContainer"
     '
     'QueriesSplitContainer.Panel1
@@ -798,7 +446,7 @@ Partial Class MainForm
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QuerySplitContainer)
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QueryDescriptionGroupBox)
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QueryStatusStrip)
-    Me.QueriesSplitContainer.Size = New System.Drawing.Size(870, 318)
+    Me.QueriesSplitContainer.Size = New System.Drawing.Size(870, 308)
     Me.QueriesSplitContainer.SplitterDistance = 233
     Me.QueriesSplitContainer.TabIndex = 0
     '
@@ -812,7 +460,7 @@ Partial Class MainForm
     Me.QueryTreeView.Location = New System.Drawing.Point(0, 0)
     Me.QueryTreeView.Name = "QueryTreeView"
     Me.QueryTreeView.SelectedImageIndex = 0
-    Me.QueryTreeView.Size = New System.Drawing.Size(233, 318)
+    Me.QueryTreeView.Size = New System.Drawing.Size(233, 308)
     Me.QueryTreeView.TabIndex = 0
     '
     'QuerySplitContainer
@@ -829,8 +477,8 @@ Partial Class MainForm
     'QuerySplitContainer.Panel2
     '
     Me.QuerySplitContainer.Panel2.Controls.Add(Me.OutputGroupBox)
-    Me.QuerySplitContainer.Size = New System.Drawing.Size(633, 201)
-    Me.QuerySplitContainer.SplitterDistance = 101
+    Me.QuerySplitContainer.Size = New System.Drawing.Size(633, 191)
+    Me.QuerySplitContainer.SplitterDistance = 94
     Me.QuerySplitContainer.TabIndex = 2
     '
     'QueryGroupBox
@@ -839,7 +487,7 @@ Partial Class MainForm
     Me.QueryGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.QueryGroupBox.Location = New System.Drawing.Point(0, 0)
     Me.QueryGroupBox.Name = "QueryGroupBox"
-    Me.QueryGroupBox.Size = New System.Drawing.Size(633, 101)
+    Me.QueryGroupBox.Size = New System.Drawing.Size(633, 94)
     Me.QueryGroupBox.TabIndex = 0
     Me.QueryGroupBox.TabStop = False
     Me.QueryGroupBox.Text = "Query"
@@ -852,7 +500,7 @@ Partial Class MainForm
     Me.QueryTextBox.Multiline = True
     Me.QueryTextBox.Name = "QueryTextBox"
     Me.QueryTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.QueryTextBox.Size = New System.Drawing.Size(627, 82)
+    Me.QueryTextBox.Size = New System.Drawing.Size(627, 75)
     Me.QueryTextBox.TabIndex = 0
     '
     'QueryBindingSource
@@ -871,7 +519,7 @@ Partial Class MainForm
     Me.OutputGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.OutputGroupBox.Location = New System.Drawing.Point(0, 0)
     Me.OutputGroupBox.Name = "OutputGroupBox"
-    Me.OutputGroupBox.Size = New System.Drawing.Size(633, 96)
+    Me.OutputGroupBox.Size = New System.Drawing.Size(633, 93)
     Me.OutputGroupBox.TabIndex = 0
     Me.OutputGroupBox.TabStop = False
     Me.OutputGroupBox.Text = "Output"
@@ -885,7 +533,7 @@ Partial Class MainForm
     Me.OutputTextBox.Name = "OutputTextBox"
     Me.OutputTextBox.ReadOnly = True
     Me.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.OutputTextBox.Size = New System.Drawing.Size(627, 77)
+    Me.OutputTextBox.Size = New System.Drawing.Size(627, 74)
     Me.OutputTextBox.TabIndex = 0
     '
     'QueryDescriptionGroupBox
@@ -913,7 +561,7 @@ Partial Class MainForm
     'QueryStatusStrip
     '
     Me.QueryStatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueryToolStripProgressBar, Me.QueryToolStripStatusLabel})
-    Me.QueryStatusStrip.Location = New System.Drawing.Point(0, 296)
+    Me.QueryStatusStrip.Location = New System.Drawing.Point(0, 286)
     Me.QueryStatusStrip.Name = "QueryStatusStrip"
     Me.QueryStatusStrip.Size = New System.Drawing.Size(633, 22)
     Me.QueryStatusStrip.TabIndex = 0
@@ -933,84 +581,117 @@ Partial Class MainForm
     'QueriesToolStrip
     '
     Me.QueriesToolStrip.ImageScalingSize = New System.Drawing.Size(32, 32)
-    Me.QueriesToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueryNewFolderToolStripButton, Me.QueryNewToolStripButton, Me.QueryDeleteToolStripButton, Me.QueryToolStripSeparator1, Me.QueryStartToolStripButton, Me.QueryStopToolStripButton, Me.QueryToolStripSeparator2, Me.QueryQuickOpenToolStripButton, Me.QueryToolStripSeparator3})
+    Me.QueriesToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueryNewFolderToolStripButton, Me.QueryNewToolStripButton, Me.QueryDeleteToolStripButton, Me.QueryToolStripSeparator1, Me.StartToolStripButton, Me.StopToolStripButton, Me.ViewToolStripButton, Me.QueryToolStripSeparator2, Me.TextToolStripButton, Me.ExcelToolStripButton, Me.AccessToolStripButton, Me.ToolStripSeparator5})
     Me.QueriesToolStrip.Location = New System.Drawing.Point(3, 3)
     Me.QueriesToolStrip.Name = "QueriesToolStrip"
-    Me.QueriesToolStrip.Size = New System.Drawing.Size(870, 39)
+    Me.QueriesToolStrip.Size = New System.Drawing.Size(870, 25)
     Me.QueriesToolStrip.TabIndex = 15
     Me.QueriesToolStrip.Text = "Add New Folder"
     '
     'QueryNewFolderToolStripButton
     '
-    Me.QueryNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.QueryNewFolderToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.QueryNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.QueryNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewFolderToolStripButton.Name = "QueryNewFolderToolStripButton"
-    Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryNewFolderToolStripButton.Text = "Add New Folder"
+    Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(71, 22)
+    Me.QueryNewFolderToolStripButton.Text = "New Folder"
     '
     'QueryNewToolStripButton
     '
-    Me.QueryNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.QueryNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.QueryNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.QueryNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewToolStripButton.Name = "QueryNewToolStripButton"
-    Me.QueryNewToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryNewToolStripButton.Text = "Add New Query"
+    Me.QueryNewToolStripButton.Size = New System.Drawing.Size(70, 22)
+    Me.QueryNewToolStripButton.Text = "New Query"
     '
     'QueryDeleteToolStripButton
     '
-    Me.QueryDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.QueryDeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
     Me.QueryDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.QueryDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryDeleteToolStripButton.Name = "QueryDeleteToolStripButton"
-    Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryDeleteToolStripButton.Text = "Delete Folder or Query"
+    Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(44, 22)
+    Me.QueryDeleteToolStripButton.Text = "Delete"
     '
     'QueryToolStripSeparator1
     '
     Me.QueryToolStripSeparator1.Name = "QueryToolStripSeparator1"
-    Me.QueryToolStripSeparator1.Size = New System.Drawing.Size(6, 39)
+    Me.QueryToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
     '
-    'QueryStartToolStripButton
+    'StartToolStripButton
     '
-    Me.QueryStartToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryStartToolStripButton.Enabled = False
-    Me.QueryStartToolStripButton.Image = CType(resources.GetObject("QueryStartToolStripButton.Image"), System.Drawing.Image)
-    Me.QueryStartToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-    Me.QueryStartToolStripButton.Name = "QueryStartToolStripButton"
-    Me.QueryStartToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryStartToolStripButton.Text = "Start Query"
+    Me.StartToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.StartToolStripButton.Enabled = False
+    Me.StartToolStripButton.Image = CType(resources.GetObject("StartToolStripButton.Image"), System.Drawing.Image)
+    Me.StartToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.StartToolStripButton.Name = "StartToolStripButton"
+    Me.StartToolStripButton.Size = New System.Drawing.Size(32, 22)
+    Me.StartToolStripButton.Text = "Run"
     '
-    'QueryStopToolStripButton
+    'StopToolStripButton
     '
-    Me.QueryStopToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryStopToolStripButton.Enabled = False
-    Me.QueryStopToolStripButton.Image = CType(resources.GetObject("QueryStopToolStripButton.Image"), System.Drawing.Image)
-    Me.QueryStopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-    Me.QueryStopToolStripButton.Name = "QueryStopToolStripButton"
-    Me.QueryStopToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryStopToolStripButton.Text = "Stop Query"
+    Me.StopToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.StopToolStripButton.Enabled = False
+    Me.StopToolStripButton.Image = CType(resources.GetObject("StopToolStripButton.Image"), System.Drawing.Image)
+    Me.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.StopToolStripButton.Name = "StopToolStripButton"
+    Me.StopToolStripButton.Size = New System.Drawing.Size(35, 22)
+    Me.StopToolStripButton.Text = "Stop"
+    '
+    'ViewToolStripButton
+    '
+    Me.ViewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.ViewToolStripButton.Enabled = False
+    Me.ViewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.quickopen
+    Me.ViewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.ViewToolStripButton.Name = "ViewToolStripButton"
+    Me.ViewToolStripButton.Size = New System.Drawing.Size(36, 22)
+    Me.ViewToolStripButton.Text = "View"
     '
     'QueryToolStripSeparator2
     '
     Me.QueryToolStripSeparator2.Name = "QueryToolStripSeparator2"
-    Me.QueryToolStripSeparator2.Size = New System.Drawing.Size(6, 39)
+    Me.QueryToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
     '
-    'QueryQuickOpenToolStripButton
+    'TextToolStripButton
     '
-    Me.QueryQuickOpenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.QueryQuickOpenToolStripButton.Enabled = False
-    Me.QueryQuickOpenToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.quickopen
-    Me.QueryQuickOpenToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-    Me.QueryQuickOpenToolStripButton.Name = "QueryQuickOpenToolStripButton"
-    Me.QueryQuickOpenToolStripButton.Size = New System.Drawing.Size(36, 36)
-    Me.QueryQuickOpenToolStripButton.Text = "Open Query Result"
+    Me.TextToolStripButton.CheckOnClick = True
+    Me.TextToolStripButton.CheckState = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.TextToolStripButtonCheckState
+    Me.TextToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.TextToolStripButton.Image = CType(resources.GetObject("TextToolStripButton.Image"), System.Drawing.Image)
+    Me.TextToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.TextToolStripButton.Name = "TextToolStripButton"
+    Me.TextToolStripButton.Size = New System.Drawing.Size(33, 22)
+    Me.TextToolStripButton.Text = "Text"
     '
-    'QueryToolStripSeparator3
+    'ExcelToolStripButton
     '
-    Me.QueryToolStripSeparator3.Name = "QueryToolStripSeparator3"
-    Me.QueryToolStripSeparator3.Size = New System.Drawing.Size(6, 39)
+    Me.ExcelToolStripButton.CheckOnClick = True
+    Me.ExcelToolStripButton.CheckState = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.ExcelToolStripButtonCheckState
+    Me.ExcelToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.ExcelToolStripButton.Image = CType(resources.GetObject("ExcelToolStripButton.Image"), System.Drawing.Image)
+    Me.ExcelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.ExcelToolStripButton.Name = "ExcelToolStripButton"
+    Me.ExcelToolStripButton.Size = New System.Drawing.Size(37, 22)
+    Me.ExcelToolStripButton.Text = "Excel"
+    '
+    'AccessToolStripButton
+    '
+    Me.AccessToolStripButton.CheckOnClick = True
+    Me.AccessToolStripButton.CheckState = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.AccessToolStripButtonCheckState
+    Me.AccessToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+    Me.AccessToolStripButton.Image = CType(resources.GetObject("AccessToolStripButton.Image"), System.Drawing.Image)
+    Me.AccessToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.AccessToolStripButton.Name = "AccessToolStripButton"
+    Me.AccessToolStripButton.Size = New System.Drawing.Size(47, 22)
+    Me.AccessToolStripButton.Text = "Access"
+    '
+    'ToolStripSeparator5
+    '
+    Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+    Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 25)
     '
     'ToolStripButton1
     '
@@ -1030,13 +711,143 @@ Partial Class MainForm
     Me.QueryTreeBindingSource.DataMember = "QueryTree"
     Me.QueryTreeBindingSource.DataSource = Me.RemoteOpenSQLQueries
     '
+    'MenuStrip
+    '
+    Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
+    Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
+    Me.MenuStrip.Name = "MenuStrip"
+    Me.MenuStrip.Size = New System.Drawing.Size(884, 24)
+    Me.MenuStrip.TabIndex = 1
+    Me.MenuStrip.Text = "MenuStrip1"
+    '
+    'FileToolStripMenuItem
+    '
+    Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewDestinationsToolStripMenuItem, Me.NewQueriesToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenDestinationsToolStripMenuItem, Me.OpenQueriesToolStripMenuItem, Me.ToolStripSeparator1, Me.SaveDestinationsToolStripMenuItem, Me.SaveQueriesToolStripMenuItem, Me.ToolStripSeparator2, Me.SaveDestinationsAsToolStripMenuItem, Me.SaveQueriesAsToolStripMenuItem, Me.ToolStripSeparator4, Me.ImportDestinationsToolStripMenuItem, Me.ImportQueriesToolStripMenuItem})
+    Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+    Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+    Me.FileToolStripMenuItem.Text = "File"
+    '
+    'NewDestinationsToolStripMenuItem
+    '
+    Me.NewDestinationsToolStripMenuItem.Name = "NewDestinationsToolStripMenuItem"
+    Me.NewDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.NewDestinationsToolStripMenuItem.Text = "New destinations"
+    '
+    'NewQueriesToolStripMenuItem
+    '
+    Me.NewQueriesToolStripMenuItem.Name = "NewQueriesToolStripMenuItem"
+    Me.NewQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.NewQueriesToolStripMenuItem.Text = "New queries"
+    '
+    'ToolStripSeparator6
+    '
+    Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
+    Me.ToolStripSeparator6.Size = New System.Drawing.Size(185, 6)
+    '
+    'OpenDestinationsToolStripMenuItem
+    '
+    Me.OpenDestinationsToolStripMenuItem.Name = "OpenDestinationsToolStripMenuItem"
+    Me.OpenDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.OpenDestinationsToolStripMenuItem.Text = "Open destinations..."
+    '
+    'OpenQueriesToolStripMenuItem
+    '
+    Me.OpenQueriesToolStripMenuItem.Name = "OpenQueriesToolStripMenuItem"
+    Me.OpenQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.OpenQueriesToolStripMenuItem.Text = "Open queries..."
+    '
+    'ToolStripSeparator1
+    '
+    Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+    Me.ToolStripSeparator1.Size = New System.Drawing.Size(185, 6)
+    '
+    'SaveDestinationsToolStripMenuItem
+    '
+    Me.SaveDestinationsToolStripMenuItem.Name = "SaveDestinationsToolStripMenuItem"
+    Me.SaveDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.SaveDestinationsToolStripMenuItem.Text = "Save destinations"
+    '
+    'SaveQueriesToolStripMenuItem
+    '
+    Me.SaveQueriesToolStripMenuItem.Name = "SaveQueriesToolStripMenuItem"
+    Me.SaveQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.SaveQueriesToolStripMenuItem.Text = "Save queries"
+    '
+    'ToolStripSeparator2
+    '
+    Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+    Me.ToolStripSeparator2.Size = New System.Drawing.Size(185, 6)
+    '
+    'SaveDestinationsAsToolStripMenuItem
+    '
+    Me.SaveDestinationsAsToolStripMenuItem.Name = "SaveDestinationsAsToolStripMenuItem"
+    Me.SaveDestinationsAsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.SaveDestinationsAsToolStripMenuItem.Text = "Save destinations as..."
+    '
+    'SaveQueriesAsToolStripMenuItem
+    '
+    Me.SaveQueriesAsToolStripMenuItem.Name = "SaveQueriesAsToolStripMenuItem"
+    Me.SaveQueriesAsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.SaveQueriesAsToolStripMenuItem.Text = "Save queries as..."
+    '
+    'ToolStripSeparator4
+    '
+    Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+    Me.ToolStripSeparator4.Size = New System.Drawing.Size(185, 6)
+    '
+    'ImportDestinationsToolStripMenuItem
+    '
+    Me.ImportDestinationsToolStripMenuItem.Name = "ImportDestinationsToolStripMenuItem"
+    Me.ImportDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.ImportDestinationsToolStripMenuItem.Text = "Import destinations..."
+    '
+    'ImportQueriesToolStripMenuItem
+    '
+    Me.ImportQueriesToolStripMenuItem.Name = "ImportQueriesToolStripMenuItem"
+    Me.ImportQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.ImportQueriesToolStripMenuItem.Text = "Import queries..."
+    '
+    'ToolsToolStripMenuItem
+    '
+    Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.AbabCodeToInstallToolStripMenuItem})
+    Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
+    Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
+    Me.ToolsToolStripMenuItem.Text = "Tools"
+    '
+    'OptionsToolStripMenuItem
+    '
+    Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+    Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.OptionsToolStripMenuItem.Text = "Options..."
+    '
+    'AbabCodeToInstallToolStripMenuItem
+    '
+    Me.AbabCodeToInstallToolStripMenuItem.Name = "AbabCodeToInstallToolStripMenuItem"
+    Me.AbabCodeToInstallToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+    Me.AbabCodeToInstallToolStripMenuItem.Text = "Abab code to install..."
+    '
+    'HelpToolStripMenuItem
+    '
+    Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RemoteOpenSQLGrammarToolStripMenuItem})
+    Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+    Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+    Me.HelpToolStripMenuItem.Text = "Help"
+    '
+    'RemoteOpenSQLGrammarToolStripMenuItem
+    '
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Name = "RemoteOpenSQLGrammarToolStripMenuItem"
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Text = "RemoteOpenSQL Grammar..."
+    '
     'MainForm
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
     Me.ClientSize = New System.Drawing.Size(884, 389)
     Me.Controls.Add(Me.MainTabControl)
+    Me.Controls.Add(Me.MenuStrip)
     Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+    Me.MainMenuStrip = Me.MenuStrip
     Me.Name = "MainForm"
     Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
     Me.Text = "Remote Open SQL Manager"
@@ -1053,21 +864,6 @@ Partial Class MainForm
     CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
     Me.DestinationToolStrip.ResumeLayout(False)
     Me.DestinationToolStrip.PerformLayout()
-    Me.ABAPTabPage.ResumeLayout(False)
-    Me.ABAPTabPage.PerformLayout()
-    Me.OptionsTabPage.ResumeLayout(False)
-    Me.OutputFormatGroupBox.ResumeLayout(False)
-    Me.AccessGroupBox.ResumeLayout(False)
-    Me.AccessGroupBox.PerformLayout()
-    Me.ExcelGroupBox.ResumeLayout(False)
-    Me.ExcelGroupBox.PerformLayout()
-    Me.TextFormatGroupBox.ResumeLayout(False)
-    Me.TextFormatGroupBox.PerformLayout()
-    Me.QueryOptionsGroupBox.ResumeLayout(False)
-    Me.QueryOptionsGroupBox.PerformLayout()
-    Me.GrammarTabPage.ResumeLayout(False)
-    Me.GrammarGroupBox.ResumeLayout(False)
-    Me.GrammarGroupBox.PerformLayout()
     Me.QueriesTabPage.ResumeLayout(False)
     Me.QueriesTabPage.PerformLayout()
     Me.QueriesSplitContainer.Panel1.ResumeLayout(False)
@@ -1092,14 +888,16 @@ Partial Class MainForm
     Me.QueriesToolStrip.ResumeLayout(False)
     Me.QueriesToolStrip.PerformLayout()
     CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    Me.MenuStrip.ResumeLayout(False)
+    Me.MenuStrip.PerformLayout()
     Me.ResumeLayout(False)
+    Me.PerformLayout()
 
-End Sub
+  End Sub
   Friend WithEvents MainTabControl As System.Windows.Forms.TabControl
   Friend WithEvents LogonTabPage As System.Windows.Forms.TabPage
   Friend WithEvents QueriesTabPage As System.Windows.Forms.TabPage
   Friend WithEvents QueriesSplitContainer As System.Windows.Forms.SplitContainer
-  Friend WithEvents ABAPTabPage As System.Windows.Forms.TabPage
   Friend WithEvents DestinationsSplitContainer As System.Windows.Forms.SplitContainer
   Friend WithEvents DestinationPassword As System.Windows.Forms.TextBox
   Friend WithEvents DestinationUsername As System.Windows.Forms.TextBox
@@ -1119,69 +917,64 @@ End Sub
   Friend WithEvents DescriptionLabel As System.Windows.Forms.Label
   Friend WithEvents DestinationSapRouterString As System.Windows.Forms.TextBox
   Friend WithEvents DestinationTreeView As System.Windows.Forms.TreeView
-  Friend WithEvents OptionsTabPage As System.Windows.Forms.TabPage
   Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
   Friend WithEvents DestinationToolStrip As System.Windows.Forms.ToolStrip
   Friend WithEvents DestinationNewFolderToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents DestinationNewToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents DestinationDeleteToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents ImageList As System.Windows.Forms.ImageList
-  Friend WithEvents AbapCodeTextBox As System.Windows.Forms.TextBox
   Friend WithEvents QueryTreeView As System.Windows.Forms.TreeView
   Friend WithEvents QueriesToolStrip As System.Windows.Forms.ToolStrip
   Friend WithEvents QueryNewFolderToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents QueryNewToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents QueryDeleteToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents QueryToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-  Friend WithEvents QueryStartToolStripButton As System.Windows.Forms.ToolStripButton
-  Friend WithEvents QueryStopToolStripButton As System.Windows.Forms.ToolStripButton
+  Friend WithEvents StartToolStripButton As System.Windows.Forms.ToolStripButton
+  Friend WithEvents StopToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents QueryToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
   Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
-  Friend WithEvents QueryQuickOpenToolStripButton As System.Windows.Forms.ToolStripButton
-  Friend WithEvents QueryToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents ViewToolStripButton As System.Windows.Forms.ToolStripButton
   Friend WithEvents QuerySplitContainer As System.Windows.Forms.SplitContainer
   Friend WithEvents QueryGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents OutputGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents QueryDescriptionGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents QueryStatusStrip As System.Windows.Forms.StatusStrip
-  Friend WithEvents OutputFormatGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents QueryTextBox As System.Windows.Forms.TextBox
   Friend WithEvents OutputTextBox As System.Windows.Forms.TextBox
   Friend WithEvents QueryDescriptionTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents AccessGroupBox As System.Windows.Forms.GroupBox
-  Friend WithEvents AccessPathLabel As System.Windows.Forms.Label
-  Friend WithEvents AccessPathTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents AccessRadioButton As System.Windows.Forms.RadioButton
-  Friend WithEvents ExcelGroupBox As System.Windows.Forms.GroupBox
-  Friend WithEvents ExcelPathLabel As System.Windows.Forms.Label
-  Friend WithEvents ExcelPathTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents ExcelRadioButton As System.Windows.Forms.RadioButton
-  Friend WithEvents TextFormatGroupBox As System.Windows.Forms.GroupBox
-  Friend WithEvents TextPathButton As System.Windows.Forms.Button
-  Friend WithEvents TextApplicationTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents TextApplicationLabel As System.Windows.Forms.Label
-  Friend WithEvents TextPathLabel As System.Windows.Forms.Label
-  Friend WithEvents TextPathTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents TextRadioButton As System.Windows.Forms.RadioButton
   Friend WithEvents FolderBrowserDialog As System.Windows.Forms.FolderBrowserDialog
   Friend WithEvents OpenFileDialog As System.Windows.Forms.OpenFileDialog
-  Friend WithEvents AccessPathButton As System.Windows.Forms.Button
-  Friend WithEvents ExcelPathButton As System.Windows.Forms.Button
-  Friend WithEvents TextApplicationButton As System.Windows.Forms.Button
   Friend WithEvents QueryBindingSource As System.Windows.Forms.BindingSource
   Friend WithEvents QueryToolStripProgressBar As System.Windows.Forms.ToolStripProgressBar
-  Friend WithEvents QueryOptionsGroupBox As System.Windows.Forms.GroupBox
-  Friend WithEvents PartitionSizeLabel As System.Windows.Forms.Label
-  Friend WithEvents PartitionSizeTextBox As System.Windows.Forms.TextBox
   Friend WithEvents QueryTimer As System.Windows.Forms.Timer
   Friend WithEvents QueryToolStripStatusLabel As System.Windows.Forms.ToolStripStatusLabel
-  Friend WithEvents GrammarTabPage As System.Windows.Forms.TabPage
-  Friend WithEvents GrammarGroupBox As System.Windows.Forms.GroupBox
-  Friend WithEvents GrammarTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents BufferTextBox As System.Windows.Forms.TextBox
-  Friend WithEvents BufferLabel As System.Windows.Forms.Label
   Friend WithEvents DestinationGroupBox As System.Windows.Forms.GroupBox
   Friend WithEvents QueryTreeBindingSource As System.Windows.Forms.BindingSource
   Friend WithEvents PrivacyCheckBox As System.Windows.Forms.CheckBox
   Friend WithEvents PrivacyLabel As System.Windows.Forms.Label
+  Friend WithEvents MenuStrip As System.Windows.Forms.MenuStrip
+  Friend WithEvents FileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents OpenDestinationsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents OpenQueriesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents SaveDestinationsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents SaveQueriesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents SaveDestinationsAsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents SaveQueriesAsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents ImportDestinationsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ImportQueriesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ToolsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents OptionsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents AbabCodeToInstallToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents HelpToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents RemoteOpenSQLGrammarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents TextToolStripButton As System.Windows.Forms.ToolStripButton
+  Friend WithEvents ExcelToolStripButton As System.Windows.Forms.ToolStripButton
+  Friend WithEvents AccessToolStripButton As System.Windows.Forms.ToolStripButton
+  Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents NewDestinationsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents NewQueriesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
 End Class

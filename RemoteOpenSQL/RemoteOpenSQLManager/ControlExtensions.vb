@@ -19,9 +19,11 @@
 ' Home Page: www.remoteopensql.com
 ' EMail of the author: filippo.bottega@gmail.com
 
+Imports System.Runtime.CompilerServices
+
 Module ControlExtensions
 
-  <System.Runtime.CompilerServices.Extension()> _
+  <Extension()>
   Public Sub UIThread(ByVal control As Control, ByVal code As Action)
     If control.InvokeRequired Then
       control.BeginInvoke(code)
@@ -30,7 +32,7 @@ Module ControlExtensions
     code.Invoke()
   End Sub
 
-  <System.Runtime.CompilerServices.Extension()> _
+  <Extension()>
   Public Sub UIThreadInvoke(ByVal control As Control, ByVal code As Action)
     If control.InvokeRequired Then
       control.Invoke(code)
@@ -39,4 +41,15 @@ Module ControlExtensions
     code.Invoke()
   End Sub
 
+  <Extension()>
+  Public Function AllControls(control As Control) As List(Of Control)
+    Dim Result As New List(Of Control)
+
+    Result.Add(control)
+    For Each control In control.Controls
+      Result.AddRange(control.AllControls.ToArray)
+    Next
+
+    Return Result
+  End Function
 End Module

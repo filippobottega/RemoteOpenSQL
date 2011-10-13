@@ -19,17 +19,9 @@
 ' Home Page: www.remoteopensql.com
 ' EMail of the author: filippo.bottega@gmail.com
 
-Public Class PasswordForm
-  Public Shared Function GetPassword() As String
-    Dim PasswordForm As New PasswordForm
-    If PasswordForm.ShowDialog = DialogResult.OK Then
-      Return PasswordForm.PasswordTextBox.Text
-    Else
-      Return String.Empty
-    End If
-  End Function
+Public Class RemoteOpenSQLGrammarForm
 
-  Private Sub PasswordForm_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+  Private Sub RemoteOpenSQLGrammarForm_MaximizedBoundsChanged(sender As Object, e As System.EventArgs) Handles Me.MaximizedBoundsChanged
     For Each Control In Me.AllControls
       If TypeOf Control Is TextBox Then
         AddHandler Control.KeyPress, AddressOf TextBox_KeyPress

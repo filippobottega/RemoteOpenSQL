@@ -19,21 +19,13 @@
 ' Home Page: www.remoteopensql.com
 ' EMail of the author: filippo.bottega@gmail.com
 
-Public Class PasswordForm
-  Public Shared Function GetPassword() As String
-    Dim PasswordForm As New PasswordForm
-    If PasswordForm.ShowDialog = DialogResult.OK Then
-      Return PasswordForm.PasswordTextBox.Text
-    Else
-      Return String.Empty
-    End If
-  End Function
+Module ControlsMethods
 
-  Private Sub PasswordForm_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-    For Each Control In Me.AllControls
-      If TypeOf Control Is TextBox Then
-        AddHandler Control.KeyPress, AddressOf TextBox_KeyPress
-      End If
-    Next
+  Public Sub TextBox_KeyPress(sender As System.Object, e As System.Windows.Forms.KeyPressEventArgs)
+    If e.KeyChar = Convert.ToChar(1) Then
+      DirectCast(sender, TextBox).SelectAll()
+      e.Handled = True
+    End If
   End Sub
-End Class
+
+End Module

@@ -27,7 +27,7 @@ Public Class MainForm
   Private WithEvents RemoteOpenSQL As RemoteOpenSQLLib.RemoteOpenSQL
   Private RemoteOpenSQLDestinationsFullPath As String
   Private RemoteOpenSQLQueriesFullPath As String
-  Private OutputFormatRadioButtons As New List(Of RadioButton)
+  Private ConsumerTypeToolStripButtons As New List(Of ToolStripButton)
   Private Consumer As DataConsumer
   Private QueryStartTime As DateTime
 
@@ -37,17 +37,20 @@ Public Class MainForm
     RemoteOpenSQLQueries.Query.AcceptChanges()
     RemoteOpenSQLQueries.WriteXml(RemoteOpenSQLQueriesFullPath)
 
-    My.Settings.TextRadioButton = TextRadioButton.Checked
-    My.Settings.ExcelRadioButton = ExcelRadioButton.Checked
-    My.Settings.AccessRadioButton = AccessRadioButton.Checked
+    My.Settings.TextToolStripButtonCheckState = TextToolStripButton.CheckState
+    My.Settings.ExcelToolStripButtonCheckState = ExcelToolStripButton.CheckState
+    My.Settings.AccessToolStripButtonCheckState = AccessToolStripButton.CheckState
+
   End Sub
 
   Private Sub MainForm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
     Try
       RemoteOpenSQL = New RemoteOpenSQLLib.RemoteOpenSQL
 
-      AbapCodeTextBox.Text = RemoteOpenSQL.GetAbapCodeRfcRemoteOpenSql
-      GrammarTextBox.Text = RemoteOpenSQL.GetRemoteOpenSQLGrammar
+      AbapCodeToInstallForm.AbapCodeTextBox.Text = RemoteOpenSQL.GetAbapCodeRfcRemoteOpenSql
+      AbapCodeToInstallForm.AbapCodeTextBox.Select(0, 0)
+      RemoteOpenSQLGrammarForm.GrammarTextBox.Text = RemoteOpenSQL.GetRemoteOpenSQLGrammar
+      RemoteOpenSQLGrammarForm.GrammarTextBox.Select(0, 0)
 
       RemoteOpenSQLDestinationsFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLDestinations.xml")
       RemoteOpenSQLQueriesFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RemoteOpenSQLQueries.xml")
@@ -79,21 +82,27 @@ Public Class MainForm
         QueryTreeView.Select()
       End If
 
-      For Each ControItem In GetAllControls(OutputFormatGroupBox.Controls)
-        If TypeOf (ControItem) Is RadioButton Then
-          OutputFormatRadioButtons.Add(CType(ControItem, RadioButton))
+      ConsumerTypeToolStripButtons.Add(TextToolStripButton)
+      ConsumerTypeToolStripButtons.Add(ExcelToolStripButton)
+      ConsumerTypeToolStripButtons.Add(AccessToolStripButton)
+
+      TextToolStripButton.CheckState = My.Settings.TextToolStripButtonCheckState
+      ExcelToolStripButton.CheckState = My.Settings.ExcelToolStripButtonCheckState
+      AccessToolStripButton.CheckState = My.Settings.AccessToolStripButtonCheckState
+
+      If My.Settings.PartitionSizeTextBox = String.Empty Then
+        My.Settings.PartitionSizeTextBox = "50000"
+      End If
+      If My.Settings.BufferTextBox = String.Empty Then
+        My.Settings.BufferTextBox = "100"
+      End If
+
+      For Each Control In Me.AllControls
+        If TypeOf Control Is TextBox Then
+          AddHandler Control.KeyPress, AddressOf TextBox_KeyPress
         End If
       Next
 
-      TextRadioButton.Checked = My.Settings.TextRadioButton
-      ExcelRadioButton.Checked = My.Settings.ExcelRadioButton
-      AccessRadioButton.Checked = My.Settings.AccessRadioButton
-      If PartitionSizeTextBox.Text = String.Empty Then
-        PartitionSizeTextBox.Text = "50000"
-      End If
-      If BufferTextBox.Text = String.Empty Then
-        BufferTextBox.Text = "100"
-      End If
     Catch ex As Exception
       MsgBox(ex.ToString)
     End Try
@@ -352,9 +361,9 @@ Public Class MainForm
         For Each ControlItem In QueriesSplitContainer.Panel2.Controls
           CType(ControlItem, Control).Visible = False
         Next
-        QueryStartToolStripButton.Enabled = False
-        QueryStopToolStripButton.Enabled = False
-        QueryQuickOpenToolStripButton.Enabled = False
+        StartToolStripButton.Enabled = False
+        StopToolStripButton.Enabled = False
+        ViewToolStripButton.Enabled = False
       Else
         For Each ControlItem In QueriesSplitContainer.Panel2.Controls
           CType(ControlItem, Control).Visible = True
@@ -366,9 +375,9 @@ Public Class MainForm
         With QueryBindingSource
           .Position = .Find("ID", QuerySelectedID)
         End With
-        QueryStartToolStripButton.Enabled = True
-        QueryStopToolStripButton.Enabled = False
-        QueryQuickOpenToolStripButton.Enabled = False
+        StartToolStripButton.Enabled = True
+        StopToolStripButton.Enabled = False
+        ViewToolStripButton.Enabled = False
       End If
 
     End With
@@ -399,64 +408,43 @@ Public Class MainForm
     End If
   End Sub
 
-  Private Sub OutputFormatRadioButton_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextRadioButton.CheckedChanged, ExcelRadioButton.CheckedChanged, AccessRadioButton.CheckedChanged
-    If Not CType(sender, RadioButton).Checked Then
-      Exit Sub
-    End If
-
-    For Each RadioButton In OutputFormatRadioButtons
-      If Not RadioButton Is CType(sender, RadioButton) AndAlso RadioButton.Checked = True Then
-        RadioButton.Checked = False
-      End If
-    Next
-  End Sub
-
-  Private Function GetAllControls(ByRef Controls As System.Windows.Forms.Control.ControlCollection) As List(Of Control)
-    Dim Result = New List(Of Control)
-    For Each ControlItem As Control In Controls
-      Result.Add(ControlItem)
-      Result.AddRange(GetAllControls(ControlItem.Controls))
-    Next
-    Return Result
-  End Function
-
-  Private Sub TextPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextPathButton.Click
-    FolderBrowserDialog.SelectedPath = TextPathTextBox.Text
+  Private Sub TextPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    FolderBrowserDialog.SelectedPath = OptionsForm.TextPathTextBox.Text
     If FolderBrowserDialog.ShowDialog() = DialogResult.OK Then
-      TextPathTextBox.Text = FolderBrowserDialog.SelectedPath
+      OptionsForm.TextPathTextBox.Text = FolderBrowserDialog.SelectedPath
     End If
   End Sub
 
-  Private Sub TextApplicationButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextApplicationButton.Click
+  Private Sub TextApplicationButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
     OpenFileDialog.DefaultExt = "exe"
     OpenFileDialog.Filter = "Application (*.exe)|*.exe"
-    If TextApplicationTextBox.Text <> String.Empty Then
-      OpenFileDialog.InitialDirectory = Path.GetDirectoryName(TextApplicationTextBox.Text)
-      OpenFileDialog.FileName = Path.GetFileName(TextApplicationTextBox.Text)
+    If OptionsForm.TextApplicationTextBox.Text <> String.Empty Then
+      OpenFileDialog.InitialDirectory = Path.GetDirectoryName(OptionsForm.TextApplicationTextBox.Text)
+      OpenFileDialog.FileName = Path.GetFileName(OptionsForm.TextApplicationTextBox.Text)
     End If
 
     If OpenFileDialog.ShowDialog = DialogResult.OK Then
-      TextApplicationTextBox.Text = OpenFileDialog.FileName
+      OptionsForm.TextApplicationTextBox.Text = OpenFileDialog.FileName
     End If
   End Sub
 
-  Private Sub ExcelPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExcelPathButton.Click
-    FolderBrowserDialog.SelectedPath = ExcelPathTextBox.Text
+  Private Sub ExcelPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    FolderBrowserDialog.SelectedPath = OptionsForm.ExcelPathTextBox.Text
     If FolderBrowserDialog.ShowDialog() = DialogResult.OK Then
-      ExcelPathTextBox.Text = FolderBrowserDialog.SelectedPath
+      OptionsForm.ExcelPathTextBox.Text = FolderBrowserDialog.SelectedPath
     End If
   End Sub
 
-  Private Sub AccessPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AccessPathButton.Click
+  Private Sub AccessPathButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
     OpenFileDialog.DefaultExt = "accdb"
     OpenFileDialog.Filter = "Microsoft Access (*.accdb;*.mdb)|*.accdb;*.mdb"
-    If AccessPathTextBox.Text <> String.Empty Then
-      OpenFileDialog.InitialDirectory = Path.GetDirectoryName(AccessPathTextBox.Text)
-      OpenFileDialog.FileName = Path.GetFileName(AccessPathTextBox.Text)
+    If OptionsForm.AccessPathTextBox.Text <> String.Empty Then
+      OpenFileDialog.InitialDirectory = Path.GetDirectoryName(OptionsForm.AccessPathTextBox.Text)
+      OpenFileDialog.FileName = Path.GetFileName(OptionsForm.AccessPathTextBox.Text)
     End If
 
     If OpenFileDialog.ShowDialog = DialogResult.OK Then
-      AccessPathTextBox.Text = OpenFileDialog.FileName
+      OptionsForm.AccessPathTextBox.Text = OpenFileDialog.FileName
     End If
   End Sub
 
@@ -507,29 +495,29 @@ Public Class MainForm
     CType(RemoteOpenSQLQueries.QueryTree.Rows.Find(Integer.Parse(e.Node.Tag)), RemoteOpenSQLQueries.QueryTreeRow).Name = e.Label
   End Sub
 
-  Private Sub QueryStartToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStartToolStripButton.Click
+  Private Sub QueryStartToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StartToolStripButton.Click
 
     OutputTextBox.Text = String.Empty
     Dim QueryName = Replace(CType(QueryTreeBindingSource.Current.row, RemoteOpenSQLQueries.QueryTreeRow).Name, " ", "")
 
-    If TextRadioButton.Checked Then
-      If TextApplicationTextBox.Text <> String.Empty AndAlso Not File.Exists(TextApplicationTextBox.Text) Then
-        MsgBox("File " & TextApplicationTextBox.Text & " not found.", vbCritical)
+    If My.Settings.TextToolStripButtonCheckState = CheckState.Checked Then
+      If My.Settings.TextApplicationTextBox <> String.Empty AndAlso Not File.Exists(My.Settings.TextApplicationTextBox) Then
+        MsgBox("File " & My.Settings.TextApplicationTextBox & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New DelimitedTextFileConsumer(QueryName, TextPathTextBox.Text)
-      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
-    ElseIf ExcelRadioButton.Checked Then
-      Consumer = New MicrosoftExcelConsumer(QueryName, ExcelPathTextBox.Text)
-    ElseIf AccessRadioButton.Checked Then
-      If Not File.Exists(AccessPathTextBox.Text) Then
-        MsgBox("File " & AccessPathTextBox.Text & " not found.", vbCritical)
+      Consumer = New DelimitedTextFileConsumer(QueryName, My.Settings.TextPathTextBox)
+      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = My.Settings.TextApplicationTextBox
+    ElseIf My.Settings.ExcelToolStripButtonCheckState = CheckState.Checked Then
+      Consumer = New MicrosoftExcelConsumer(QueryName, My.Settings.ExcelPathTextBox)
+    ElseIf My.Settings.AccessToolStripButtonCheckState = CheckState.Checked Then
+      If Not File.Exists(My.Settings.AccessPathTextBox) Then
+        MsgBox("File " & My.Settings.AccessPathTextBox & " not found.", vbCritical)
         Exit Sub
       End If
-      Consumer = New MicrosoftAccessConsumer(QueryName, AccessPathTextBox.Text)
+      Consumer = New MicrosoftAccessConsumer(QueryName, My.Settings.AccessPathTextBox)
     Else
-      Consumer = New DelimitedTextFileConsumer(QueryName, TextPathTextBox.Text)
-      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = TextApplicationTextBox.Text
+      Consumer = New DelimitedTextFileConsumer(QueryName, My.Settings.TextPathTextBox)
+      CType(Consumer, DelimitedTextFileConsumer).ViewerPath = My.Settings.TextApplicationTextBox
     End If
 
     If DestinationBindingSource.Current Is Nothing Then
@@ -567,7 +555,7 @@ Public Class MainForm
     End With
 
     Dim PartitionSize As Integer
-    If Integer.TryParse(PartitionSizeTextBox.Text, PartitionSize) Then
+    If Integer.TryParse(My.Settings.PartitionSizeTextBox, PartitionSize) Then
       If PartitionSize > 2000000 Then
         PartitionSize = 2000000
       ElseIf PartitionSize < 1000 And PartitionSize > 0 Then
@@ -580,7 +568,7 @@ Public Class MainForm
     End If
 
     Dim Buffer As Integer
-    If Integer.TryParse(BufferTextBox.Text, Buffer) Then
+    If Integer.TryParse(My.Settings.BufferTextBox, Buffer) Then
       If Buffer > 1000 Then
         Buffer = 1000
       ElseIf Buffer < 10 And Buffer > 0 Then
@@ -596,20 +584,20 @@ Public Class MainForm
     RemoteOpenSQL.Buffer = Buffer
     RemoteOpenSQL.StartRunQuery(QueryTextBox.Text, Consumer)
 
-    QueryStartToolStripButton.Enabled = False
-    QueryStopToolStripButton.Enabled = True
-    QueryQuickOpenToolStripButton.Enabled = False
+    StartToolStripButton.Enabled = False
+    StopToolStripButton.Enabled = True
+    ViewToolStripButton.Enabled = False
     QueryToolStripProgressBar.Style = ProgressBarStyle.Marquee
   End Sub
 
   Private Sub RemoteOpenSQL_QueryExecuted(ByVal sender As RemoteOpenSQLLib.RemoteOpenSQL, ByVal e As QueryExecutedEventArgs) Handles RemoteOpenSQL.QueryExecuted
     Me.UIThreadInvoke(Sub()
-                        QueryStartToolStripButton.Enabled = True
-                        QueryStopToolStripButton.Enabled = False
+                        StartToolStripButton.Enabled = True
+                        StopToolStripButton.Enabled = False
                         If e.Exception Is Nothing Then
-                          QueryQuickOpenToolStripButton.Enabled = True
+                          ViewToolStripButton.Enabled = True
                         Else
-                          QueryQuickOpenToolStripButton.Enabled = False
+                          ViewToolStripButton.Enabled = False
                           OutputTextBox.Text += e.Exception.ToString & vbCrLf
                         End If
                         QueryToolStripProgressBar.Style = ProgressBarStyle.Blocks
@@ -630,7 +618,7 @@ Public Class MainForm
     End If
   End Sub
 
-  Private Sub QueryQuickOpenToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryQuickOpenToolStripButton.Click
+  Private Sub QueryQuickOpenToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ViewToolStripButton.Click
     Try
       Consumer.ViewData()
     Catch ex As Exception
@@ -639,7 +627,7 @@ Public Class MainForm
     End Try
   End Sub
 
-  Private Sub NumericKeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles PartitionSizeTextBox.KeyPress, BufferTextBox.KeyPress
+  Private Sub NumericKeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
 
     Dim SenderTextBox As TextBox = sender
 
@@ -653,7 +641,7 @@ Public Class MainForm
     QueryToolStripStatusLabel.Text = New TimeSpan(0, 0, DateDiff(DateInterval.Second, QueryStartTime, Now)).ToString
   End Sub
 
-  Private Sub QueryStopToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles QueryStopToolStripButton.Click
+  Private Sub QueryStopToolStripButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StopToolStripButton.Click
     RemoteOpenSQL.StopQuery()
   End Sub
 
@@ -675,10 +663,27 @@ Public Class MainForm
     End If
   End Sub
 
-  Private Sub AbapCodeTextBox_KeyPress(sender As System.Object, e As System.Windows.Forms.KeyPressEventArgs) Handles AbapCodeTextBox.KeyPress
-    If e.KeyChar = Convert.ToChar(1) Then
-      DirectCast(sender, TextBox).SelectAll()
-      e.Handled = True
+  Private Sub AbabCodeToInstallToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles AbabCodeToInstallToolStripMenuItem.Click
+    AbapCodeToInstallForm.ShowDialog()
+  End Sub
+
+  Private Sub OptionsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OptionsToolStripMenuItem.Click
+    OptionsForm.ShowDialog()
+  End Sub
+
+  Private Sub RemoteOpenSQLGrammarToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles RemoteOpenSQLGrammarToolStripMenuItem.Click
+    RemoteOpenSQLGrammarForm.ShowDialog()
+  End Sub
+
+  Private Sub ConsumerTypeToolStripButton_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextToolStripButton.CheckedChanged, ExcelToolStripButton.CheckedChanged, AccessToolStripButton.CheckedChanged
+    If Not CType(sender, ToolStripButton).Checked Then
+      Exit Sub
     End If
+
+    For Each ToolStripButton In ConsumerTypeToolStripButtons
+      If Not ToolStripButton Is CType(sender, ToolStripButton) AndAlso ToolStripButton.Checked = True Then
+        ToolStripButton.Checked = False
+      End If
+    Next
   End Sub
 End Class

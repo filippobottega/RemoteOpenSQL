@@ -19,17 +19,13 @@
 ' Home Page: www.remoteopensql.com
 ' EMail of the author: filippo.bottega@gmail.com
 
-Public Class PasswordForm
-  Public Shared Function GetPassword() As String
-    Dim PasswordForm As New PasswordForm
-    If PasswordForm.ShowDialog = DialogResult.OK Then
-      Return PasswordForm.PasswordTextBox.Text
-    Else
-      Return String.Empty
-    End If
-  End Function
+Public Class AbapCodeToInstallForm
 
-  Private Sub PasswordForm_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+  Private Sub CopyToClipboardToolStripButton_Click(sender As System.Object, e As System.EventArgs) Handles CopyToClipboardToolStripButton.Click
+    Clipboard.SetText(AbapCodeTextBox.Text)
+  End Sub
+
+  Private Sub AbapCodeToInstallForm_Load(sender As Object, e As System.EventArgs) Handles Me.Load
     For Each Control In Me.AllControls
       If TypeOf Control Is TextBox Then
         AddHandler Control.KeyPress, AddressOf TextBox_KeyPress

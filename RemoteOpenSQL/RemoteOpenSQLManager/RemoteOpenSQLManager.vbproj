@@ -121,8 +121,15 @@
     <Compile Include="..\SharedAssemblyInfo.vb">
       <Link>SharedAssemblyInfo.vb</Link>
     </Compile>
+    <Compile Include="AbapCodeToInstallForm.Designer.vb">
+      <DependentUpon>AbapCodeToInstallForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AbapCodeToInstallForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="ControlExtensions.vb" />
+    <Compile Include="ControlsMethods.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +152,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="OptionsForm.Designer.vb">
+      <DependentUpon>OptionsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OptionsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PasswordForm.Designer.vb">
       <DependentUpon>PasswordForm.vb</DependentUpon>
     </Compile>
@@ -156,6 +169,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RemoteOpenSQLDestinations.xsd</DependentUpon>
     </Compile>
+    <Compile Include="RemoteOpenSQLGrammarForm.Designer.vb">
+      <DependentUpon>RemoteOpenSQLGrammarForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteOpenSQLGrammarForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="RemoteOpenSQLQueries.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -163,6 +182,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AbapCodeToInstallForm.resx">
+      <DependentUpon>AbapCodeToInstallForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -172,8 +194,14 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="OptionsForm.resx">
+      <DependentUpon>OptionsForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PasswordForm.resx">
       <DependentUpon>PasswordForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoteOpenSQLGrammarForm.resx">
+      <DependentUpon>RemoteOpenSQLGrammarForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
