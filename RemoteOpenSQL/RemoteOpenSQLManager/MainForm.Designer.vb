@@ -24,63 +24,11 @@ Partial Class MainForm
   Private Sub InitializeComponent()
     Me.components = New System.ComponentModel.Container()
     Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-    Me.MainTabControl = New System.Windows.Forms.TabControl()
-    Me.LogonTabPage = New System.Windows.Forms.TabPage()
-    Me.DestinationsSplitContainer = New System.Windows.Forms.SplitContainer()
-    Me.DestinationTreeView = New System.Windows.Forms.TreeView()
     Me.ImageList = New System.Windows.Forms.ImageList(Me.components)
-    Me.DestinationGroupBox = New System.Windows.Forms.GroupBox()
-    Me.PrivacyCheckBox = New System.Windows.Forms.CheckBox()
-    Me.PrivacyLabel = New System.Windows.Forms.Label()
-    Me.DescriptionLabel = New System.Windows.Forms.Label()
-    Me.SapRouterStringLabel = New System.Windows.Forms.Label()
-    Me.DestinationDescription = New System.Windows.Forms.TextBox()
     Me.DestinationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
     Me.RemoteOpenSQLDestinations = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLDestinations()
-    Me.PasswordLabel = New System.Windows.Forms.Label()
-    Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
-    Me.UsernameLabel = New System.Windows.Forms.Label()
-    Me.DestinationSystemNumber = New System.Windows.Forms.TextBox()
-    Me.ClientLabel = New System.Windows.Forms.Label()
-    Me.DestinationClient = New System.Windows.Forms.TextBox()
-    Me.SystemNumberLabel = New System.Windows.Forms.Label()
-    Me.DestinationUsername = New System.Windows.Forms.TextBox()
-    Me.AppServerHostLabel = New System.Windows.Forms.Label()
-    Me.DestinationPassword = New System.Windows.Forms.TextBox()
-    Me.DestinationSapRouterString = New System.Windows.Forms.TextBox()
-    Me.DestinationToolStrip = New System.Windows.Forms.ToolStrip()
-    Me.DestinationNewFolderToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.DestinationNewToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.DestinationDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-    Me.QueriesTabPage = New System.Windows.Forms.TabPage()
-    Me.QueriesSplitContainer = New System.Windows.Forms.SplitContainer()
-    Me.QueryTreeView = New System.Windows.Forms.TreeView()
-    Me.QuerySplitContainer = New System.Windows.Forms.SplitContainer()
-    Me.QueryGroupBox = New System.Windows.Forms.GroupBox()
-    Me.QueryTextBox = New System.Windows.Forms.TextBox()
     Me.QueryBindingSource = New System.Windows.Forms.BindingSource(Me.components)
     Me.RemoteOpenSQLQueries = New RemoteOpenSQL.RemoteOpenSQLManager.RemoteOpenSQLQueries()
-    Me.OutputGroupBox = New System.Windows.Forms.GroupBox()
-    Me.OutputTextBox = New System.Windows.Forms.TextBox()
-    Me.QueryDescriptionGroupBox = New System.Windows.Forms.GroupBox()
-    Me.QueryDescriptionTextBox = New System.Windows.Forms.TextBox()
-    Me.QueryStatusStrip = New System.Windows.Forms.StatusStrip()
-    Me.QueryToolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
-    Me.QueryToolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
-    Me.QueriesToolStrip = New System.Windows.Forms.ToolStrip()
-    Me.QueryNewFolderToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryNewToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-    Me.StartToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.StopToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.ViewToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.QueryToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-    Me.TextToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.ExcelToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.AccessToolStripButton = New System.Windows.Forms.ToolStripButton()
-    Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
     Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
     Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
     Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
@@ -107,6 +55,68 @@ Partial Class MainForm
     Me.AbabCodeToInstallToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.RemoteOpenSQLGrammarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.DestinationsSaveFileDialog = New System.Windows.Forms.SaveFileDialog()
+    Me.QueriesSaveFileDialog = New System.Windows.Forms.SaveFileDialog()
+    Me.MainTabControl = New System.Windows.Forms.TabControl()
+    Me.LogonTabPage = New System.Windows.Forms.TabPage()
+    Me.DestinationsSplitContainer = New System.Windows.Forms.SplitContainer()
+    Me.DestinationTreeView = New System.Windows.Forms.TreeView()
+    Me.DestinationGroupBox = New System.Windows.Forms.GroupBox()
+    Me.PrivacyCheckBox = New System.Windows.Forms.CheckBox()
+    Me.PrivacyLabel = New System.Windows.Forms.Label()
+    Me.DescriptionLabel = New System.Windows.Forms.Label()
+    Me.SapRouterStringLabel = New System.Windows.Forms.Label()
+    Me.DestinationDescription = New System.Windows.Forms.TextBox()
+    Me.PasswordLabel = New System.Windows.Forms.Label()
+    Me.DestinationAppServerHost = New System.Windows.Forms.TextBox()
+    Me.UsernameLabel = New System.Windows.Forms.Label()
+    Me.DestinationSystemNumber = New System.Windows.Forms.TextBox()
+    Me.ClientLabel = New System.Windows.Forms.Label()
+    Me.DestinationClient = New System.Windows.Forms.TextBox()
+    Me.SystemNumberLabel = New System.Windows.Forms.Label()
+    Me.DestinationUsername = New System.Windows.Forms.TextBox()
+    Me.AppServerHostLabel = New System.Windows.Forms.Label()
+    Me.DestinationPassword = New System.Windows.Forms.TextBox()
+    Me.DestinationSapRouterString = New System.Windows.Forms.TextBox()
+    Me.DestinationToolStrip = New System.Windows.Forms.ToolStrip()
+    Me.DestinationNewFolderToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.DestinationNewToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.DestinationDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+    Me.QueriesTabPage = New System.Windows.Forms.TabPage()
+    Me.QueriesSplitContainer = New System.Windows.Forms.SplitContainer()
+    Me.QueryTreeView = New System.Windows.Forms.TreeView()
+    Me.QuerySplitContainer = New System.Windows.Forms.SplitContainer()
+    Me.QueryGroupBox = New System.Windows.Forms.GroupBox()
+    Me.QueryTextBox = New System.Windows.Forms.TextBox()
+    Me.OutputGroupBox = New System.Windows.Forms.GroupBox()
+    Me.OutputTextBox = New System.Windows.Forms.TextBox()
+    Me.QueryDescriptionGroupBox = New System.Windows.Forms.GroupBox()
+    Me.QueryDescriptionTextBox = New System.Windows.Forms.TextBox()
+    Me.QueryStatusStrip = New System.Windows.Forms.StatusStrip()
+    Me.QueryToolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
+    Me.QueryToolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
+    Me.QueriesToolStrip = New System.Windows.Forms.ToolStrip()
+    Me.QueryNewFolderToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.QueryNewToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.QueryDeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.QueryToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+    Me.StartToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.StopToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ViewToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.QueryToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+    Me.TextToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ExcelToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.AccessToolStripButton = New System.Windows.Forms.ToolStripButton()
+    Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+    Me.DestinationsOpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+    Me.QueriesOpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).BeginInit()
+    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+    Me.MenuStrip.SuspendLayout()
     Me.MainTabControl.SuspendLayout()
     Me.LogonTabPage.SuspendLayout()
     CType(Me.DestinationsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -114,8 +124,6 @@ Partial Class MainForm
     Me.DestinationsSplitContainer.Panel2.SuspendLayout()
     Me.DestinationsSplitContainer.SuspendLayout()
     Me.DestinationGroupBox.SuspendLayout()
-    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.DestinationToolStrip.SuspendLayout()
     Me.QueriesTabPage.SuspendLayout()
     CType(Me.QueriesSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -127,15 +135,193 @@ Partial Class MainForm
     Me.QuerySplitContainer.Panel2.SuspendLayout()
     Me.QuerySplitContainer.SuspendLayout()
     Me.QueryGroupBox.SuspendLayout()
-    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.OutputGroupBox.SuspendLayout()
     Me.QueryDescriptionGroupBox.SuspendLayout()
     Me.QueryStatusStrip.SuspendLayout()
     Me.QueriesToolStrip.SuspendLayout()
-    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-    Me.MenuStrip.SuspendLayout()
     Me.SuspendLayout()
+    '
+    'ImageList
+    '
+    Me.ImageList.ImageStream = CType(resources.GetObject("ImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
+    Me.ImageList.TransparentColor = System.Drawing.Color.Transparent
+    Me.ImageList.Images.SetKeyName(0, "folder-yellow.png")
+    Me.ImageList.Images.SetKeyName(1, "kaddressbook-4.png")
+    '
+    'DestinationBindingSource
+    '
+    Me.DestinationBindingSource.DataMember = "Destination"
+    Me.DestinationBindingSource.DataSource = Me.RemoteOpenSQLDestinations
+    '
+    'RemoteOpenSQLDestinations
+    '
+    Me.RemoteOpenSQLDestinations.DataSetName = "RemoteOpenSQLDestinations"
+    Me.RemoteOpenSQLDestinations.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+    '
+    'QueryBindingSource
+    '
+    Me.QueryBindingSource.DataMember = "Query"
+    Me.QueryBindingSource.DataSource = Me.RemoteOpenSQLQueries
+    '
+    'RemoteOpenSQLQueries
+    '
+    Me.RemoteOpenSQLQueries.DataSetName = "RemoteOpenSQLQueries"
+    Me.RemoteOpenSQLQueries.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+    '
+    'ToolStripButton1
+    '
+    Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+    Me.ToolStripButton1.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
+    Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+    Me.ToolStripButton1.Name = "ToolStripButton1"
+    Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+    Me.ToolStripButton1.Text = "ToolStripButton1"
+    '
+    'QueryTimer
+    '
+    Me.QueryTimer.Interval = 1000
+    '
+    'QueryTreeBindingSource
+    '
+    Me.QueryTreeBindingSource.DataMember = "QueryTree"
+    Me.QueryTreeBindingSource.DataSource = Me.RemoteOpenSQLQueries
+    '
+    'MenuStrip
+    '
+    Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
+    Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
+    Me.MenuStrip.Name = "MenuStrip"
+    Me.MenuStrip.Size = New System.Drawing.Size(884, 24)
+    Me.MenuStrip.TabIndex = 1
+    Me.MenuStrip.Text = "MenuStrip1"
+    '
+    'FileToolStripMenuItem
+    '
+    Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewDestinationsToolStripMenuItem, Me.NewQueriesToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenDestinationsToolStripMenuItem, Me.OpenQueriesToolStripMenuItem, Me.ToolStripSeparator1, Me.SaveDestinationsToolStripMenuItem, Me.SaveQueriesToolStripMenuItem, Me.ToolStripSeparator2, Me.SaveDestinationsAsToolStripMenuItem, Me.SaveQueriesAsToolStripMenuItem, Me.ToolStripSeparator4, Me.ImportDestinationsToolStripMenuItem, Me.ImportQueriesToolStripMenuItem})
+    Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+    Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+    Me.FileToolStripMenuItem.Text = "File"
+    '
+    'NewDestinationsToolStripMenuItem
+    '
+    Me.NewDestinationsToolStripMenuItem.Name = "NewDestinationsToolStripMenuItem"
+    Me.NewDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.NewDestinationsToolStripMenuItem.Text = "New destinations"
+    '
+    'NewQueriesToolStripMenuItem
+    '
+    Me.NewQueriesToolStripMenuItem.Name = "NewQueriesToolStripMenuItem"
+    Me.NewQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.NewQueriesToolStripMenuItem.Text = "New queries"
+    '
+    'ToolStripSeparator6
+    '
+    Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
+    Me.ToolStripSeparator6.Size = New System.Drawing.Size(176, 6)
+    '
+    'OpenDestinationsToolStripMenuItem
+    '
+    Me.OpenDestinationsToolStripMenuItem.Name = "OpenDestinationsToolStripMenuItem"
+    Me.OpenDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OpenDestinationsToolStripMenuItem.Text = "Open destinations"
+    '
+    'OpenQueriesToolStripMenuItem
+    '
+    Me.OpenQueriesToolStripMenuItem.Name = "OpenQueriesToolStripMenuItem"
+    Me.OpenQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OpenQueriesToolStripMenuItem.Text = "Open queries"
+    '
+    'ToolStripSeparator1
+    '
+    Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+    Me.ToolStripSeparator1.Size = New System.Drawing.Size(176, 6)
+    '
+    'SaveDestinationsToolStripMenuItem
+    '
+    Me.SaveDestinationsToolStripMenuItem.Name = "SaveDestinationsToolStripMenuItem"
+    Me.SaveDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveDestinationsToolStripMenuItem.Text = "Save destinations"
+    '
+    'SaveQueriesToolStripMenuItem
+    '
+    Me.SaveQueriesToolStripMenuItem.Name = "SaveQueriesToolStripMenuItem"
+    Me.SaveQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveQueriesToolStripMenuItem.Text = "Save queries"
+    '
+    'ToolStripSeparator2
+    '
+    Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+    Me.ToolStripSeparator2.Size = New System.Drawing.Size(176, 6)
+    '
+    'SaveDestinationsAsToolStripMenuItem
+    '
+    Me.SaveDestinationsAsToolStripMenuItem.Name = "SaveDestinationsAsToolStripMenuItem"
+    Me.SaveDestinationsAsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveDestinationsAsToolStripMenuItem.Text = "Save destinations as"
+    '
+    'SaveQueriesAsToolStripMenuItem
+    '
+    Me.SaveQueriesAsToolStripMenuItem.Name = "SaveQueriesAsToolStripMenuItem"
+    Me.SaveQueriesAsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveQueriesAsToolStripMenuItem.Text = "Save queries as"
+    '
+    'ToolStripSeparator4
+    '
+    Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+    Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
+    '
+    'ImportDestinationsToolStripMenuItem
+    '
+    Me.ImportDestinationsToolStripMenuItem.Name = "ImportDestinationsToolStripMenuItem"
+    Me.ImportDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.ImportDestinationsToolStripMenuItem.Text = "Import destinations"
+    '
+    'ImportQueriesToolStripMenuItem
+    '
+    Me.ImportQueriesToolStripMenuItem.Name = "ImportQueriesToolStripMenuItem"
+    Me.ImportQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.ImportQueriesToolStripMenuItem.Text = "Import queries"
+    '
+    'ToolsToolStripMenuItem
+    '
+    Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.AbabCodeToInstallToolStripMenuItem})
+    Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
+    Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
+    Me.ToolsToolStripMenuItem.Text = "Tools"
+    '
+    'OptionsToolStripMenuItem
+    '
+    Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+    Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OptionsToolStripMenuItem.Text = "Options"
+    '
+    'AbabCodeToInstallToolStripMenuItem
+    '
+    Me.AbabCodeToInstallToolStripMenuItem.Name = "AbabCodeToInstallToolStripMenuItem"
+    Me.AbabCodeToInstallToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.AbabCodeToInstallToolStripMenuItem.Text = "Abab code to install"
+    '
+    'HelpToolStripMenuItem
+    '
+    Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RemoteOpenSQLGrammarToolStripMenuItem})
+    Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+    Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+    Me.HelpToolStripMenuItem.Text = "Help"
+    '
+    'RemoteOpenSQLGrammarToolStripMenuItem
+    '
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Name = "RemoteOpenSQLGrammarToolStripMenuItem"
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Size = New System.Drawing.Size(218, 22)
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Text = "RemoteOpenSQL Grammar"
+    '
+    'DestinationsSaveFileDialog
+    '
+    Me.DestinationsSaveFileDialog.DefaultExt = "xml"
+    Me.DestinationsSaveFileDialog.Filter = "Destinations|*.xml"
+    '
+    'QueriesSaveFileDialog
+    '
+    Me.QueriesSaveFileDialog.Filter = "Queries|*.xml"
     '
     'MainTabControl
     '
@@ -190,13 +376,6 @@ Partial Class MainForm
     Me.DestinationTreeView.SelectedImageIndex = 0
     Me.DestinationTreeView.Size = New System.Drawing.Size(242, 308)
     Me.DestinationTreeView.TabIndex = 1
-    '
-    'ImageList
-    '
-    Me.ImageList.ImageStream = CType(resources.GetObject("ImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
-    Me.ImageList.TransparentColor = System.Drawing.Color.Transparent
-    Me.ImageList.Images.SetKeyName(0, "folder-yellow.png")
-    Me.ImageList.Images.SetKeyName(1, "kaddressbook-4.png")
     '
     'DestinationGroupBox
     '
@@ -270,16 +449,6 @@ Partial Class MainForm
     Me.DestinationDescription.Name = "DestinationDescription"
     Me.DestinationDescription.Size = New System.Drawing.Size(338, 20)
     Me.DestinationDescription.TabIndex = 0
-    '
-    'DestinationBindingSource
-    '
-    Me.DestinationBindingSource.DataMember = "Destination"
-    Me.DestinationBindingSource.DataSource = Me.RemoteOpenSQLDestinations
-    '
-    'RemoteOpenSQLDestinations
-    '
-    Me.RemoteOpenSQLDestinations.DataSetName = "RemoteOpenSQLDestinations"
-    Me.RemoteOpenSQLDestinations.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
     '
     'PasswordLabel
     '
@@ -503,16 +672,6 @@ Partial Class MainForm
     Me.QueryTextBox.Size = New System.Drawing.Size(627, 75)
     Me.QueryTextBox.TabIndex = 0
     '
-    'QueryBindingSource
-    '
-    Me.QueryBindingSource.DataMember = "Query"
-    Me.QueryBindingSource.DataSource = Me.RemoteOpenSQLQueries
-    '
-    'RemoteOpenSQLQueries
-    '
-    Me.RemoteOpenSQLQueries.DataSetName = "RemoteOpenSQLQueries"
-    Me.RemoteOpenSQLQueries.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
-    '
     'OutputGroupBox
     '
     Me.OutputGroupBox.Controls.Add(Me.OutputTextBox)
@@ -693,151 +852,13 @@ Partial Class MainForm
     Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
     Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 25)
     '
-    'ToolStripButton1
+    'DestinationsOpenFileDialog
     '
-    Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-    Me.ToolStripButton1.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
-    Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-    Me.ToolStripButton1.Name = "ToolStripButton1"
-    Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-    Me.ToolStripButton1.Text = "ToolStripButton1"
+    Me.DestinationsOpenFileDialog.Filter = "Destinations|*.xml"
     '
-    'QueryTimer
+    'QueriesOpenFileDialog
     '
-    Me.QueryTimer.Interval = 1000
-    '
-    'QueryTreeBindingSource
-    '
-    Me.QueryTreeBindingSource.DataMember = "QueryTree"
-    Me.QueryTreeBindingSource.DataSource = Me.RemoteOpenSQLQueries
-    '
-    'MenuStrip
-    '
-    Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
-    Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
-    Me.MenuStrip.Name = "MenuStrip"
-    Me.MenuStrip.Size = New System.Drawing.Size(884, 24)
-    Me.MenuStrip.TabIndex = 1
-    Me.MenuStrip.Text = "MenuStrip1"
-    '
-    'FileToolStripMenuItem
-    '
-    Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewDestinationsToolStripMenuItem, Me.NewQueriesToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenDestinationsToolStripMenuItem, Me.OpenQueriesToolStripMenuItem, Me.ToolStripSeparator1, Me.SaveDestinationsToolStripMenuItem, Me.SaveQueriesToolStripMenuItem, Me.ToolStripSeparator2, Me.SaveDestinationsAsToolStripMenuItem, Me.SaveQueriesAsToolStripMenuItem, Me.ToolStripSeparator4, Me.ImportDestinationsToolStripMenuItem, Me.ImportQueriesToolStripMenuItem})
-    Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-    Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-    Me.FileToolStripMenuItem.Text = "File"
-    '
-    'NewDestinationsToolStripMenuItem
-    '
-    Me.NewDestinationsToolStripMenuItem.Name = "NewDestinationsToolStripMenuItem"
-    Me.NewDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.NewDestinationsToolStripMenuItem.Text = "New destinations"
-    '
-    'NewQueriesToolStripMenuItem
-    '
-    Me.NewQueriesToolStripMenuItem.Name = "NewQueriesToolStripMenuItem"
-    Me.NewQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.NewQueriesToolStripMenuItem.Text = "New queries"
-    '
-    'ToolStripSeparator6
-    '
-    Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-    Me.ToolStripSeparator6.Size = New System.Drawing.Size(185, 6)
-    '
-    'OpenDestinationsToolStripMenuItem
-    '
-    Me.OpenDestinationsToolStripMenuItem.Name = "OpenDestinationsToolStripMenuItem"
-    Me.OpenDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.OpenDestinationsToolStripMenuItem.Text = "Open destinations..."
-    '
-    'OpenQueriesToolStripMenuItem
-    '
-    Me.OpenQueriesToolStripMenuItem.Name = "OpenQueriesToolStripMenuItem"
-    Me.OpenQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.OpenQueriesToolStripMenuItem.Text = "Open queries..."
-    '
-    'ToolStripSeparator1
-    '
-    Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-    Me.ToolStripSeparator1.Size = New System.Drawing.Size(185, 6)
-    '
-    'SaveDestinationsToolStripMenuItem
-    '
-    Me.SaveDestinationsToolStripMenuItem.Name = "SaveDestinationsToolStripMenuItem"
-    Me.SaveDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.SaveDestinationsToolStripMenuItem.Text = "Save destinations"
-    '
-    'SaveQueriesToolStripMenuItem
-    '
-    Me.SaveQueriesToolStripMenuItem.Name = "SaveQueriesToolStripMenuItem"
-    Me.SaveQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.SaveQueriesToolStripMenuItem.Text = "Save queries"
-    '
-    'ToolStripSeparator2
-    '
-    Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-    Me.ToolStripSeparator2.Size = New System.Drawing.Size(185, 6)
-    '
-    'SaveDestinationsAsToolStripMenuItem
-    '
-    Me.SaveDestinationsAsToolStripMenuItem.Name = "SaveDestinationsAsToolStripMenuItem"
-    Me.SaveDestinationsAsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.SaveDestinationsAsToolStripMenuItem.Text = "Save destinations as..."
-    '
-    'SaveQueriesAsToolStripMenuItem
-    '
-    Me.SaveQueriesAsToolStripMenuItem.Name = "SaveQueriesAsToolStripMenuItem"
-    Me.SaveQueriesAsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.SaveQueriesAsToolStripMenuItem.Text = "Save queries as..."
-    '
-    'ToolStripSeparator4
-    '
-    Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-    Me.ToolStripSeparator4.Size = New System.Drawing.Size(185, 6)
-    '
-    'ImportDestinationsToolStripMenuItem
-    '
-    Me.ImportDestinationsToolStripMenuItem.Name = "ImportDestinationsToolStripMenuItem"
-    Me.ImportDestinationsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.ImportDestinationsToolStripMenuItem.Text = "Import destinations..."
-    '
-    'ImportQueriesToolStripMenuItem
-    '
-    Me.ImportQueriesToolStripMenuItem.Name = "ImportQueriesToolStripMenuItem"
-    Me.ImportQueriesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.ImportQueriesToolStripMenuItem.Text = "Import queries..."
-    '
-    'ToolsToolStripMenuItem
-    '
-    Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.AbabCodeToInstallToolStripMenuItem})
-    Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-    Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
-    Me.ToolsToolStripMenuItem.Text = "Tools"
-    '
-    'OptionsToolStripMenuItem
-    '
-    Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-    Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.OptionsToolStripMenuItem.Text = "Options..."
-    '
-    'AbabCodeToInstallToolStripMenuItem
-    '
-    Me.AbabCodeToInstallToolStripMenuItem.Name = "AbabCodeToInstallToolStripMenuItem"
-    Me.AbabCodeToInstallToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-    Me.AbabCodeToInstallToolStripMenuItem.Text = "Abab code to install..."
-    '
-    'HelpToolStripMenuItem
-    '
-    Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RemoteOpenSQLGrammarToolStripMenuItem})
-    Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-    Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-    Me.HelpToolStripMenuItem.Text = "Help"
-    '
-    'RemoteOpenSQLGrammarToolStripMenuItem
-    '
-    Me.RemoteOpenSQLGrammarToolStripMenuItem.Name = "RemoteOpenSQLGrammarToolStripMenuItem"
-    Me.RemoteOpenSQLGrammarToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
-    Me.RemoteOpenSQLGrammarToolStripMenuItem.Text = "RemoteOpenSQL Grammar..."
+    Me.QueriesOpenFileDialog.Filter = "Queries|*.xml"
     '
     'MainForm
     '
@@ -851,6 +872,13 @@ Partial Class MainForm
     Me.Name = "MainForm"
     Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
     Me.Text = "Remote Open SQL Manager"
+    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).EndInit()
+    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+    Me.MenuStrip.ResumeLayout(False)
+    Me.MenuStrip.PerformLayout()
     Me.MainTabControl.ResumeLayout(False)
     Me.LogonTabPage.ResumeLayout(False)
     Me.LogonTabPage.PerformLayout()
@@ -860,8 +888,6 @@ Partial Class MainForm
     Me.DestinationsSplitContainer.ResumeLayout(False)
     Me.DestinationGroupBox.ResumeLayout(False)
     Me.DestinationGroupBox.PerformLayout()
-    CType(Me.DestinationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-    CType(Me.RemoteOpenSQLDestinations, System.ComponentModel.ISupportInitialize).EndInit()
     Me.DestinationToolStrip.ResumeLayout(False)
     Me.DestinationToolStrip.PerformLayout()
     Me.QueriesTabPage.ResumeLayout(False)
@@ -877,8 +903,6 @@ Partial Class MainForm
     Me.QuerySplitContainer.ResumeLayout(False)
     Me.QueryGroupBox.ResumeLayout(False)
     Me.QueryGroupBox.PerformLayout()
-    CType(Me.QueryBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-    CType(Me.RemoteOpenSQLQueries, System.ComponentModel.ISupportInitialize).EndInit()
     Me.OutputGroupBox.ResumeLayout(False)
     Me.OutputGroupBox.PerformLayout()
     Me.QueryDescriptionGroupBox.ResumeLayout(False)
@@ -887,9 +911,6 @@ Partial Class MainForm
     Me.QueryStatusStrip.PerformLayout()
     Me.QueriesToolStrip.ResumeLayout(False)
     Me.QueriesToolStrip.PerformLayout()
-    CType(Me.QueryTreeBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-    Me.MenuStrip.ResumeLayout(False)
-    Me.MenuStrip.PerformLayout()
     Me.ResumeLayout(False)
     Me.PerformLayout()
 
@@ -977,4 +998,8 @@ Partial Class MainForm
   Friend WithEvents NewDestinationsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
   Friend WithEvents NewQueriesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
   Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
+  Friend WithEvents DestinationsSaveFileDialog As System.Windows.Forms.SaveFileDialog
+  Friend WithEvents QueriesSaveFileDialog As System.Windows.Forms.SaveFileDialog
+  Friend WithEvents DestinationsOpenFileDialog As System.Windows.Forms.OpenFileDialog
+  Friend WithEvents QueriesOpenFileDialog As System.Windows.Forms.OpenFileDialog
 End Class

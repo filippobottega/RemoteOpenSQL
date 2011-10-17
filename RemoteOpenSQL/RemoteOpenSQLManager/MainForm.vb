@@ -32,10 +32,28 @@ Public Class MainForm
   Private QueryStartTime As DateTime
 
   Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-    RemoteOpenSQLDestinations.Destination.AcceptChanges()
-    RemoteOpenSQLDestinations.WriteXml(RemoteOpenSQLDestinationsFullPath)
-    RemoteOpenSQLQueries.Query.AcceptChanges()
-    RemoteOpenSQLQueries.WriteXml(RemoteOpenSQLQueriesFullPath)
+
+    If RemoteOpenSQLDestinations.HasChanges Then
+      Select Case MsgBox("Do you want to save chages to " & Path.GetFileName(RemoteOpenSQLDestinationsFullPath) & " ?", MsgBoxStyle.YesNoCancel)
+        Case MsgBoxResult.Cancel
+          e.Cancel = True
+          Exit Sub
+        Case MsgBoxResult.Yes
+          RemoteOpenSQLDestinations.AcceptChanges()
+          RemoteOpenSQLDestinations.WriteXml(RemoteOpenSQLDestinationsFullPath)
+      End Select
+    End If
+
+    If RemoteOpenSQLQueries.HasChanges Then
+      Select Case MsgBox("Do you want to save chages to " & Path.GetFileName(RemoteOpenSQLQueriesFullPath) & " ?", MsgBoxStyle.YesNoCancel)
+        Case MsgBoxResult.Cancel
+          e.Cancel = True
+          Exit Sub
+        Case MsgBoxResult.Yes
+          RemoteOpenSQLQueries.AcceptChanges()
+          RemoteOpenSQLQueries.WriteXml(RemoteOpenSQLQueriesFullPath)
+      End Select
+    End If
 
     My.Settings.TextToolStripButtonCheckState = TextToolStripButton.CheckState
     My.Settings.ExcelToolStripButtonCheckState = ExcelToolStripButton.CheckState
@@ -242,13 +260,23 @@ Public Class MainForm
 
     With RemoteOpenSQLDestinations.DestinationTree
       If DestinationTreeView.SelectedNode Is Nothing Then
-        NewID = .AddDestinationTreeRow(0, IsFolder, NewName, True).ID
+        Try
+          NewID = .AddDestinationTreeRow(0, IsFolder, NewName, True).ID
+        Catch ex As System.Data.ConstraintException
+          MsgBox("The name " & NewName & " already exists.", MsgBoxStyle.Critical)
+          Exit Sub
+        End Try
       Else
         Dim FolderTreeRow = CType(.Rows.Find(DestinationTreeView.SelectedNode.Tag), RemoteOpenSQLDestinations.DestinationTreeRow)
         If Not FolderTreeRow.IsFolder Then
           FolderTreeRow = CType(.Rows.Find(FolderTreeRow.FatherID), RemoteOpenSQLDestinations.DestinationTreeRow)
         End If
-        NewID = .AddDestinationTreeRow(FolderTreeRow.ID, IsFolder, NewName, True).ID
+        Try
+          NewID = .AddDestinationTreeRow(FolderTreeRow.ID, IsFolder, NewName, True).ID
+        Catch ex As Exception
+          MsgBox("The name " & NewName & " already exists.", MsgBoxStyle.Critical)
+          Exit Sub
+        End Try
       End If
     End With
 
@@ -274,13 +302,23 @@ Public Class MainForm
 
     With RemoteOpenSQLQueries.QueryTree
       If QueryTreeView.SelectedNode Is Nothing Then
-        NewID = .AddQueryTreeRow(0, IsFolder, NewName, True).ID
+        Try
+          NewID = .AddQueryTreeRow(0, IsFolder, NewName, True).ID
+        Catch ex As System.Data.ConstraintException
+          MsgBox("The name " & NewName & " already exists.", MsgBoxStyle.Critical)
+          Exit Sub
+        End Try
       Else
         Dim FolderTreeRow = CType(.Rows.Find(QueryTreeView.SelectedNode.Tag), RemoteOpenSQLQueries.QueryTreeRow)
         If Not FolderTreeRow.IsFolder Then
           FolderTreeRow = CType(.Rows.Find(FolderTreeRow.FatherID), RemoteOpenSQLQueries.QueryTreeRow)
         End If
-        NewID = .AddQueryTreeRow(FolderTreeRow.ID, IsFolder, NewName, True).ID
+        Try
+          NewID = .AddQueryTreeRow(FolderTreeRow.ID, IsFolder, NewName, True).ID
+        Catch ex As System.Data.ConstraintException
+          MsgBox("The name " & NewName & " already exists.", MsgBoxStyle.Critical)
+          Exit Sub
+        End Try
       End If
     End With
 
@@ -685,5 +723,196 @@ Public Class MainForm
         ToolStripButton.Checked = False
       End If
     Next
+  End Sub
+
+  Private Sub SaveDestinations(Optional ByRef Cancel As Boolean = False, Optional AskToSave As Boolean = True, Optional SaveAs As Boolean = False)
+    If RemoteOpenSQLDestinations.HasChanges Then
+      If AskToSave Then
+        Select Case MsgBox("Do you want to save destinations chages?", MsgBoxStyle.YesNoCancel)
+          Case MsgBoxResult.Cancel
+            Cancel = True
+            Exit Sub
+          Case MsgBoxResult.No
+            Exit Sub
+        End Select
+      End If
+
+      If RemoteOpenSQLDestinationsFullPath = String.Empty OrElse SaveAs Then
+        Select Case DestinationsSaveFileDialog.ShowDialog
+          Case Windows.Forms.DialogResult.OK Or Windows.Forms.DialogResult.Yes
+            RemoteOpenSQLDestinationsFullPath = DestinationsSaveFileDialog.FileName
+          Case Else
+            Cancel = True
+            Exit Sub
+        End Select
+      End If
+
+      If RemoteOpenSQLDestinationsFullPath = String.Empty Then
+        Cancel = True
+        Exit Sub
+      End If
+
+      RemoteOpenSQLDestinations.AcceptChanges()
+      RemoteOpenSQLDestinations.WriteXml(RemoteOpenSQLDestinationsFullPath)
+
+    End If
+  End Sub
+
+  Private Sub NewDestinationsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles NewDestinationsToolStripMenuItem.Click
+    Dim Cancel As Boolean = False
+
+    SaveDestinations(Cancel)
+
+    If Cancel Then
+      Exit Sub
+    End If
+
+    RemoteOpenSQLDestinationsFullPath = String.Empty
+    RemoteOpenSQLDestinations.Clear()
+    DestinationSelectedID = RemoteOpenSQLDestinations.DestinationTree.AddDestinationTreeRow(0, True, "Destinations", True).ID
+
+    UpdateDestinationTree()
+ 
+    If MainTabControl.SelectedTab Is LogonTabPage Then
+      DestinationTreeView.Select()
+    End If
+  End Sub
+
+  Private Sub SaveQueries(Optional ByRef Cancel As Boolean = False, Optional AskToSave As Boolean = True, Optional SaveAs As Boolean = False)
+    If RemoteOpenSQLQueries.HasChanges Then
+      If AskToSave Then
+        Select Case MsgBox("Do you want to save queries chages?", MsgBoxStyle.YesNoCancel)
+          Case MsgBoxResult.Cancel
+            Cancel = True
+            Exit Sub
+          Case MsgBoxResult.No
+            Exit Sub
+        End Select
+      End If
+
+      If RemoteOpenSQLQueriesFullPath = String.Empty OrElse SaveAs Then
+        Select Case QueriesSaveFileDialog.ShowDialog
+          Case Windows.Forms.DialogResult.OK Or Windows.Forms.DialogResult.Yes
+            RemoteOpenSQLQueriesFullPath = QueriesSaveFileDialog.FileName
+          Case Else
+            Cancel = True
+            Exit Sub
+        End Select
+      End If
+
+      If RemoteOpenSQLQueriesFullPath = String.Empty Then
+        Cancel = True
+        Exit Sub
+      End If
+
+      RemoteOpenSQLQueries.AcceptChanges()
+      RemoteOpenSQLQueries.WriteXml(RemoteOpenSQLQueriesFullPath)
+
+    End If
+  End Sub
+
+  Private Sub NewQueriesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles NewQueriesToolStripMenuItem.Click
+    Dim Cancel As Boolean = False
+
+    SaveQueries(Cancel)
+
+    If Cancel Then
+      Exit Sub
+    End If
+
+    RemoteOpenSQLQueriesFullPath = String.Empty
+    RemoteOpenSQLQueries.Clear()
+    QuerySelectedID = RemoteOpenSQLQueries.QueryTree.AddQueryTreeRow(0, True, "Queries", True).ID
+
+    UpdateQueryTree()
+
+    If MainTabControl.SelectedTab Is QueriesTabPage Then
+      QueryTreeView.Select()
+    End If
+  End Sub
+
+  Private Sub OpenDestinationsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenDestinationsToolStripMenuItem.Click
+    Dim Cancel As Boolean = False
+
+    SaveDestinations(Cancel)
+
+    If Cancel Then
+      Exit Sub
+    End If
+
+    If File.Exists(RemoteOpenSQLDestinationsFullPath) Then
+      DestinationsOpenFileDialog.InitialDirectory = Path.GetDirectoryName(RemoteOpenSQLDestinationsFullPath)
+    End If
+
+    Select Case DestinationsOpenFileDialog.ShowDialog
+      Case Windows.Forms.DialogResult.OK Or Windows.Forms.DialogResult.Yes
+
+        RemoteOpenSQLDestinationsFullPath = DestinationsOpenFileDialog.FileName
+
+        If File.Exists(RemoteOpenSQLDestinationsFullPath) Then
+          RemoteOpenSQLDestinations.ReadXml(RemoteOpenSQLDestinationsFullPath, XmlReadMode.IgnoreSchema)
+        End If
+
+        UpdateDestinationTree()
+ 
+        If MainTabControl.SelectedTab Is LogonTabPage Then
+          DestinationTreeView.Select()
+        End If
+    End Select
+  End Sub
+
+  Private Sub OpenQueriesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenQueriesToolStripMenuItem.Click
+    Dim Cancel As Boolean = False
+
+    SaveQueries(Cancel)
+
+    If Cancel Then
+      Exit Sub
+    End If
+
+    If File.Exists(RemoteOpenSQLQueriesFullPath) Then
+      QueriesOpenFileDialog.InitialDirectory = Path.GetDirectoryName(RemoteOpenSQLQueriesFullPath)
+    End If
+
+    Select Case QueriesOpenFileDialog.ShowDialog
+      Case Windows.Forms.DialogResult.OK Or Windows.Forms.DialogResult.Yes
+
+        RemoteOpenSQLQueriesFullPath = QueriesOpenFileDialog.FileName
+
+        If File.Exists(RemoteOpenSQLQueriesFullPath) Then
+          RemoteOpenSQLQueries.ReadXml(RemoteOpenSQLQueriesFullPath, XmlReadMode.IgnoreSchema)
+        End If
+
+        UpdateQueryTree()
+
+        If MainTabControl.SelectedTab Is QueriesTabPage Then
+          QueryTreeView.Select()
+        End If
+    End Select
+
+  End Sub
+
+  Private Sub SaveDestinationsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SaveDestinationsToolStripMenuItem.Click
+    SaveDestinations(, False)
+  End Sub
+
+  Private Sub SaveQueriesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SaveQueriesToolStripMenuItem.Click
+    SaveQueries(, False)
+  End Sub
+
+  Private Sub SaveDestinationsAsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SaveDestinationsAsToolStripMenuItem.Click
+    SaveDestinations(, False, True)
+  End Sub
+
+  Private Sub SaveQueriesAsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SaveQueriesAsToolStripMenuItem.Click
+    SaveQueries(, False, True)
+  End Sub
+
+  Private Sub ImportDestinationsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ImportDestinationsToolStripMenuItem.Click
+
+  End Sub
+
+  Private Sub ImportQueriesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ImportQueriesToolStripMenuItem.Click
+
   End Sub
 End Class
