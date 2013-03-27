@@ -191,7 +191,8 @@ Partial Class MainForm
     Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
     Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
     Me.MenuStrip.Name = "MenuStrip"
-    Me.MenuStrip.Size = New System.Drawing.Size(884, 24)
+    Me.MenuStrip.Padding = New System.Windows.Forms.Padding(8, 2, 0, 2)
+    Me.MenuStrip.Size = New System.Drawing.Size(1179, 28)
     Me.MenuStrip.TabIndex = 1
     Me.MenuStrip.Text = "MenuStrip1"
     '
@@ -199,119 +200,119 @@ Partial Class MainForm
     '
     Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewDestinationsToolStripMenuItem, Me.NewQueriesToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenDestinationsToolStripMenuItem, Me.OpenQueriesToolStripMenuItem, Me.ToolStripSeparator1, Me.SaveDestinationsToolStripMenuItem, Me.SaveQueriesToolStripMenuItem, Me.ToolStripSeparator2, Me.SaveDestinationsAsToolStripMenuItem, Me.SaveQueriesAsToolStripMenuItem, Me.ToolStripSeparator4, Me.ImportDestinationsToolStripMenuItem, Me.ImportQueriesToolStripMenuItem})
     Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-    Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+    Me.FileToolStripMenuItem.Size = New System.Drawing.Size(44, 24)
     Me.FileToolStripMenuItem.Text = "File"
     '
     'NewDestinationsToolStripMenuItem
     '
     Me.NewDestinationsToolStripMenuItem.Name = "NewDestinationsToolStripMenuItem"
-    Me.NewDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.NewDestinationsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.NewDestinationsToolStripMenuItem.Text = "New destinations"
     '
     'NewQueriesToolStripMenuItem
     '
     Me.NewQueriesToolStripMenuItem.Name = "NewQueriesToolStripMenuItem"
-    Me.NewQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.NewQueriesToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.NewQueriesToolStripMenuItem.Text = "New queries"
     '
     'ToolStripSeparator6
     '
     Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-    Me.ToolStripSeparator6.Size = New System.Drawing.Size(176, 6)
+    Me.ToolStripSeparator6.Size = New System.Drawing.Size(208, 6)
     '
     'OpenDestinationsToolStripMenuItem
     '
     Me.OpenDestinationsToolStripMenuItem.Name = "OpenDestinationsToolStripMenuItem"
-    Me.OpenDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OpenDestinationsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.OpenDestinationsToolStripMenuItem.Text = "Open destinations"
     '
     'OpenQueriesToolStripMenuItem
     '
     Me.OpenQueriesToolStripMenuItem.Name = "OpenQueriesToolStripMenuItem"
-    Me.OpenQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OpenQueriesToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.OpenQueriesToolStripMenuItem.Text = "Open queries"
     '
     'ToolStripSeparator1
     '
     Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-    Me.ToolStripSeparator1.Size = New System.Drawing.Size(176, 6)
+    Me.ToolStripSeparator1.Size = New System.Drawing.Size(208, 6)
     '
     'SaveDestinationsToolStripMenuItem
     '
     Me.SaveDestinationsToolStripMenuItem.Name = "SaveDestinationsToolStripMenuItem"
-    Me.SaveDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveDestinationsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.SaveDestinationsToolStripMenuItem.Text = "Save destinations"
     '
     'SaveQueriesToolStripMenuItem
     '
     Me.SaveQueriesToolStripMenuItem.Name = "SaveQueriesToolStripMenuItem"
-    Me.SaveQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveQueriesToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.SaveQueriesToolStripMenuItem.Text = "Save queries"
     '
     'ToolStripSeparator2
     '
     Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-    Me.ToolStripSeparator2.Size = New System.Drawing.Size(176, 6)
+    Me.ToolStripSeparator2.Size = New System.Drawing.Size(208, 6)
     '
     'SaveDestinationsAsToolStripMenuItem
     '
     Me.SaveDestinationsAsToolStripMenuItem.Name = "SaveDestinationsAsToolStripMenuItem"
-    Me.SaveDestinationsAsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveDestinationsAsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.SaveDestinationsAsToolStripMenuItem.Text = "Save destinations as"
     '
     'SaveQueriesAsToolStripMenuItem
     '
     Me.SaveQueriesAsToolStripMenuItem.Name = "SaveQueriesAsToolStripMenuItem"
-    Me.SaveQueriesAsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.SaveQueriesAsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.SaveQueriesAsToolStripMenuItem.Text = "Save queries as"
     '
     'ToolStripSeparator4
     '
     Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-    Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
+    Me.ToolStripSeparator4.Size = New System.Drawing.Size(208, 6)
     '
     'ImportDestinationsToolStripMenuItem
     '
     Me.ImportDestinationsToolStripMenuItem.Name = "ImportDestinationsToolStripMenuItem"
-    Me.ImportDestinationsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.ImportDestinationsToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.ImportDestinationsToolStripMenuItem.Text = "Import destinations"
     '
     'ImportQueriesToolStripMenuItem
     '
     Me.ImportQueriesToolStripMenuItem.Name = "ImportQueriesToolStripMenuItem"
-    Me.ImportQueriesToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.ImportQueriesToolStripMenuItem.Size = New System.Drawing.Size(211, 24)
     Me.ImportQueriesToolStripMenuItem.Text = "Import queries"
     '
     'ToolsToolStripMenuItem
     '
     Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.AbabCodeToInstallToolStripMenuItem})
     Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-    Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
+    Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(57, 24)
     Me.ToolsToolStripMenuItem.Text = "Tools"
     '
     'OptionsToolStripMenuItem
     '
     Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-    Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(212, 24)
     Me.OptionsToolStripMenuItem.Text = "Options"
     '
     'AbabCodeToInstallToolStripMenuItem
     '
     Me.AbabCodeToInstallToolStripMenuItem.Name = "AbabCodeToInstallToolStripMenuItem"
-    Me.AbabCodeToInstallToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+    Me.AbabCodeToInstallToolStripMenuItem.Size = New System.Drawing.Size(212, 24)
     Me.AbabCodeToInstallToolStripMenuItem.Text = "Abab code to install"
     '
     'HelpToolStripMenuItem
     '
     Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RemoteOpenSQLGrammarToolStripMenuItem})
     Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-    Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+    Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(53, 24)
     Me.HelpToolStripMenuItem.Text = "Help"
     '
     'RemoteOpenSQLGrammarToolStripMenuItem
     '
     Me.RemoteOpenSQLGrammarToolStripMenuItem.Name = "RemoteOpenSQLGrammarToolStripMenuItem"
-    Me.RemoteOpenSQLGrammarToolStripMenuItem.Size = New System.Drawing.Size(218, 22)
+    Me.RemoteOpenSQLGrammarToolStripMenuItem.Size = New System.Drawing.Size(258, 24)
     Me.RemoteOpenSQLGrammarToolStripMenuItem.Text = "RemoteOpenSQL Grammar"
     '
     'DestinationsSaveFileDialog
@@ -329,20 +330,22 @@ Partial Class MainForm
     Me.MainTabControl.Controls.Add(Me.QueriesTabPage)
     Me.MainTabControl.DataBindings.Add(New System.Windows.Forms.Binding("SelectedIndex", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "MainTabControl", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.MainTabControl.Location = New System.Drawing.Point(0, 24)
+    Me.MainTabControl.Location = New System.Drawing.Point(0, 28)
+    Me.MainTabControl.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.MainTabControl.Name = "MainTabControl"
     Me.MainTabControl.SelectedIndex = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.MainTabControl
-    Me.MainTabControl.Size = New System.Drawing.Size(884, 365)
+    Me.MainTabControl.Size = New System.Drawing.Size(1179, 451)
     Me.MainTabControl.TabIndex = 0
     '
     'LogonTabPage
     '
     Me.LogonTabPage.Controls.Add(Me.DestinationsSplitContainer)
     Me.LogonTabPage.Controls.Add(Me.DestinationToolStrip)
-    Me.LogonTabPage.Location = New System.Drawing.Point(4, 22)
+    Me.LogonTabPage.Location = New System.Drawing.Point(4, 25)
+    Me.LogonTabPage.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.LogonTabPage.Name = "LogonTabPage"
-    Me.LogonTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.LogonTabPage.Size = New System.Drawing.Size(876, 339)
+    Me.LogonTabPage.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.LogonTabPage.Size = New System.Drawing.Size(1171, 422)
     Me.LogonTabPage.TabIndex = 0
     Me.LogonTabPage.Text = "Logon parameters"
     Me.LogonTabPage.UseVisualStyleBackColor = True
@@ -350,7 +353,8 @@ Partial Class MainForm
     'DestinationsSplitContainer
     '
     Me.DestinationsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.DestinationsSplitContainer.Location = New System.Drawing.Point(3, 28)
+    Me.DestinationsSplitContainer.Location = New System.Drawing.Point(4, 31)
+    Me.DestinationsSplitContainer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationsSplitContainer.Name = "DestinationsSplitContainer"
     '
     'DestinationsSplitContainer.Panel1
@@ -360,8 +364,9 @@ Partial Class MainForm
     'DestinationsSplitContainer.Panel2
     '
     Me.DestinationsSplitContainer.Panel2.Controls.Add(Me.DestinationGroupBox)
-    Me.DestinationsSplitContainer.Size = New System.Drawing.Size(870, 308)
-    Me.DestinationsSplitContainer.SplitterDistance = 242
+    Me.DestinationsSplitContainer.Size = New System.Drawing.Size(1163, 387)
+    Me.DestinationsSplitContainer.SplitterDistance = 323
+    Me.DestinationsSplitContainer.SplitterWidth = 5
     Me.DestinationsSplitContainer.TabIndex = 0
     '
     'DestinationTreeView
@@ -372,9 +377,10 @@ Partial Class MainForm
     Me.DestinationTreeView.ImageList = Me.ImageList
     Me.DestinationTreeView.LabelEdit = True
     Me.DestinationTreeView.Location = New System.Drawing.Point(0, 0)
+    Me.DestinationTreeView.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationTreeView.Name = "DestinationTreeView"
     Me.DestinationTreeView.SelectedImageIndex = 0
-    Me.DestinationTreeView.Size = New System.Drawing.Size(242, 308)
+    Me.DestinationTreeView.Size = New System.Drawing.Size(323, 387)
     Me.DestinationTreeView.TabIndex = 1
     '
     'DestinationGroupBox
@@ -397,8 +403,10 @@ Partial Class MainForm
     Me.DestinationGroupBox.Controls.Add(Me.DestinationSapRouterString)
     Me.DestinationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.DestinationGroupBox.Location = New System.Drawing.Point(0, 0)
+    Me.DestinationGroupBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationGroupBox.Name = "DestinationGroupBox"
-    Me.DestinationGroupBox.Size = New System.Drawing.Size(624, 308)
+    Me.DestinationGroupBox.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.DestinationGroupBox.Size = New System.Drawing.Size(835, 387)
     Me.DestinationGroupBox.TabIndex = 14
     Me.DestinationGroupBox.TabStop = False
     Me.DestinationGroupBox.Text = "Destination"
@@ -408,36 +416,40 @@ Partial Class MainForm
     Me.PrivacyCheckBox.AutoSize = True
     Me.PrivacyCheckBox.Checked = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default.PrivacyCheckBox
     Me.PrivacyCheckBox.DataBindings.Add(New System.Windows.Forms.Binding("Checked", Global.RemoteOpenSQL.RemoteOpenSQLManager.My.MySettings.Default, "PrivacyCheckBox", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.PrivacyCheckBox.Location = New System.Drawing.Point(110, 236)
+    Me.PrivacyCheckBox.Location = New System.Drawing.Point(147, 290)
+    Me.PrivacyCheckBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.PrivacyCheckBox.Name = "PrivacyCheckBox"
-    Me.PrivacyCheckBox.Size = New System.Drawing.Size(15, 14)
+    Me.PrivacyCheckBox.Size = New System.Drawing.Size(18, 17)
     Me.PrivacyCheckBox.TabIndex = 15
     Me.PrivacyCheckBox.UseVisualStyleBackColor = True
     '
     'PrivacyLabel
     '
     Me.PrivacyLabel.AutoSize = True
-    Me.PrivacyLabel.Location = New System.Drawing.Point(62, 236)
+    Me.PrivacyLabel.Location = New System.Drawing.Point(83, 290)
+    Me.PrivacyLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.PrivacyLabel.Name = "PrivacyLabel"
-    Me.PrivacyLabel.Size = New System.Drawing.Size(42, 13)
+    Me.PrivacyLabel.Size = New System.Drawing.Size(54, 17)
     Me.PrivacyLabel.TabIndex = 14
     Me.PrivacyLabel.Text = "Privacy"
     '
     'DescriptionLabel
     '
     Me.DescriptionLabel.AutoSize = True
-    Me.DescriptionLabel.Location = New System.Drawing.Point(44, 30)
+    Me.DescriptionLabel.Location = New System.Drawing.Point(59, 37)
+    Me.DescriptionLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.DescriptionLabel.Name = "DescriptionLabel"
-    Me.DescriptionLabel.Size = New System.Drawing.Size(60, 13)
+    Me.DescriptionLabel.Size = New System.Drawing.Size(79, 17)
     Me.DescriptionLabel.TabIndex = 7
     Me.DescriptionLabel.Text = "Description"
     '
     'SapRouterStringLabel
     '
     Me.SapRouterStringLabel.AutoSize = True
-    Me.SapRouterStringLabel.Location = New System.Drawing.Point(13, 186)
+    Me.SapRouterStringLabel.Location = New System.Drawing.Point(17, 229)
+    Me.SapRouterStringLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.SapRouterStringLabel.Name = "SapRouterStringLabel"
-    Me.SapRouterStringLabel.Size = New System.Drawing.Size(91, 13)
+    Me.SapRouterStringLabel.Size = New System.Drawing.Size(121, 17)
     Me.SapRouterStringLabel.TabIndex = 13
     Me.SapRouterStringLabel.Text = "Sap Router String"
     '
@@ -445,114 +457,126 @@ Partial Class MainForm
     '
     Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Tag", Me.DestinationBindingSource, "Description", True))
     Me.DestinationDescription.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Description", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationDescription.Location = New System.Drawing.Point(110, 27)
+    Me.DestinationDescription.Location = New System.Drawing.Point(147, 33)
+    Me.DestinationDescription.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationDescription.Name = "DestinationDescription"
-    Me.DestinationDescription.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationDescription.Size = New System.Drawing.Size(449, 22)
     Me.DestinationDescription.TabIndex = 0
     '
     'PasswordLabel
     '
     Me.PasswordLabel.AutoSize = True
-    Me.PasswordLabel.Location = New System.Drawing.Point(51, 160)
+    Me.PasswordLabel.Location = New System.Drawing.Point(68, 197)
+    Me.PasswordLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.PasswordLabel.Name = "PasswordLabel"
-    Me.PasswordLabel.Size = New System.Drawing.Size(53, 13)
+    Me.PasswordLabel.Size = New System.Drawing.Size(69, 17)
     Me.PasswordLabel.TabIndex = 12
     Me.PasswordLabel.Text = "Password"
     '
     'DestinationAppServerHost
     '
     Me.DestinationAppServerHost.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "AppServerHost", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationAppServerHost.Location = New System.Drawing.Point(110, 53)
+    Me.DestinationAppServerHost.Location = New System.Drawing.Point(147, 65)
+    Me.DestinationAppServerHost.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationAppServerHost.Name = "DestinationAppServerHost"
-    Me.DestinationAppServerHost.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationAppServerHost.Size = New System.Drawing.Size(449, 22)
     Me.DestinationAppServerHost.TabIndex = 1
     '
     'UsernameLabel
     '
     Me.UsernameLabel.AutoSize = True
-    Me.UsernameLabel.Location = New System.Drawing.Point(49, 134)
+    Me.UsernameLabel.Location = New System.Drawing.Point(65, 165)
+    Me.UsernameLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.UsernameLabel.Name = "UsernameLabel"
-    Me.UsernameLabel.Size = New System.Drawing.Size(55, 13)
+    Me.UsernameLabel.Size = New System.Drawing.Size(73, 17)
     Me.UsernameLabel.TabIndex = 11
     Me.UsernameLabel.Text = "Username"
     '
     'DestinationSystemNumber
     '
     Me.DestinationSystemNumber.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "SystemNumber", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, "0", "N0"))
-    Me.DestinationSystemNumber.Location = New System.Drawing.Point(110, 79)
+    Me.DestinationSystemNumber.Location = New System.Drawing.Point(147, 97)
+    Me.DestinationSystemNumber.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationSystemNumber.MaxLength = 2
     Me.DestinationSystemNumber.Name = "DestinationSystemNumber"
-    Me.DestinationSystemNumber.Size = New System.Drawing.Size(39, 20)
+    Me.DestinationSystemNumber.Size = New System.Drawing.Size(51, 22)
     Me.DestinationSystemNumber.TabIndex = 2
     '
     'ClientLabel
     '
     Me.ClientLabel.AutoSize = True
-    Me.ClientLabel.Location = New System.Drawing.Point(71, 108)
+    Me.ClientLabel.Location = New System.Drawing.Point(95, 133)
+    Me.ClientLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.ClientLabel.Name = "ClientLabel"
-    Me.ClientLabel.Size = New System.Drawing.Size(33, 13)
+    Me.ClientLabel.Size = New System.Drawing.Size(43, 17)
     Me.ClientLabel.TabIndex = 10
     Me.ClientLabel.Text = "Client"
     '
     'DestinationClient
     '
     Me.DestinationClient.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Client", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, "0", "N0"))
-    Me.DestinationClient.Location = New System.Drawing.Point(110, 105)
+    Me.DestinationClient.Location = New System.Drawing.Point(147, 129)
+    Me.DestinationClient.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationClient.MaxLength = 3
     Me.DestinationClient.Name = "DestinationClient"
-    Me.DestinationClient.Size = New System.Drawing.Size(39, 20)
+    Me.DestinationClient.Size = New System.Drawing.Size(51, 22)
     Me.DestinationClient.TabIndex = 3
     '
     'SystemNumberLabel
     '
     Me.SystemNumberLabel.AutoSize = True
-    Me.SystemNumberLabel.Location = New System.Drawing.Point(23, 82)
+    Me.SystemNumberLabel.Location = New System.Drawing.Point(31, 101)
+    Me.SystemNumberLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.SystemNumberLabel.Name = "SystemNumberLabel"
-    Me.SystemNumberLabel.Size = New System.Drawing.Size(81, 13)
+    Me.SystemNumberLabel.Size = New System.Drawing.Size(108, 17)
     Me.SystemNumberLabel.TabIndex = 9
     Me.SystemNumberLabel.Text = "System Number"
     '
     'DestinationUsername
     '
     Me.DestinationUsername.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "Username", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationUsername.Location = New System.Drawing.Point(110, 131)
+    Me.DestinationUsername.Location = New System.Drawing.Point(147, 161)
+    Me.DestinationUsername.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationUsername.Name = "DestinationUsername"
-    Me.DestinationUsername.Size = New System.Drawing.Size(100, 20)
+    Me.DestinationUsername.Size = New System.Drawing.Size(132, 22)
     Me.DestinationUsername.TabIndex = 4
     '
     'AppServerHostLabel
     '
     Me.AppServerHostLabel.AutoSize = True
-    Me.AppServerHostLabel.Location = New System.Drawing.Point(41, 56)
+    Me.AppServerHostLabel.Location = New System.Drawing.Point(55, 69)
+    Me.AppServerHostLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
     Me.AppServerHostLabel.Name = "AppServerHostLabel"
-    Me.AppServerHostLabel.Size = New System.Drawing.Size(63, 13)
+    Me.AppServerHostLabel.Size = New System.Drawing.Size(83, 17)
     Me.AppServerHostLabel.TabIndex = 8
     Me.AppServerHostLabel.Text = "Server Host"
     '
     'DestinationPassword
     '
-    Me.DestinationPassword.Location = New System.Drawing.Point(110, 157)
+    Me.DestinationPassword.Location = New System.Drawing.Point(147, 193)
+    Me.DestinationPassword.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationPassword.Name = "DestinationPassword"
     Me.DestinationPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-    Me.DestinationPassword.Size = New System.Drawing.Size(100, 20)
+    Me.DestinationPassword.Size = New System.Drawing.Size(132, 22)
     Me.DestinationPassword.TabIndex = 5
     Me.DestinationPassword.UseSystemPasswordChar = True
     '
     'DestinationSapRouterString
     '
     Me.DestinationSapRouterString.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.DestinationBindingSource, "SAPRouterString", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-    Me.DestinationSapRouterString.Location = New System.Drawing.Point(110, 183)
+    Me.DestinationSapRouterString.Location = New System.Drawing.Point(147, 225)
+    Me.DestinationSapRouterString.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.DestinationSapRouterString.Name = "DestinationSapRouterString"
-    Me.DestinationSapRouterString.Size = New System.Drawing.Size(338, 20)
+    Me.DestinationSapRouterString.Size = New System.Drawing.Size(449, 22)
     Me.DestinationSapRouterString.TabIndex = 6
     '
     'DestinationToolStrip
     '
     Me.DestinationToolStrip.ImageScalingSize = New System.Drawing.Size(32, 32)
     Me.DestinationToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DestinationNewFolderToolStripButton, Me.DestinationNewToolStripButton, Me.DestinationDeleteToolStripButton, Me.ToolStripSeparator3})
-    Me.DestinationToolStrip.Location = New System.Drawing.Point(3, 3)
+    Me.DestinationToolStrip.Location = New System.Drawing.Point(4, 4)
     Me.DestinationToolStrip.Name = "DestinationToolStrip"
-    Me.DestinationToolStrip.Size = New System.Drawing.Size(870, 25)
+    Me.DestinationToolStrip.Size = New System.Drawing.Size(1163, 27)
     Me.DestinationToolStrip.TabIndex = 14
     Me.DestinationToolStrip.Text = "ToolStrip1"
     '
@@ -562,7 +586,7 @@ Partial Class MainForm
     Me.DestinationNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.DestinationNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewFolderToolStripButton.Name = "DestinationNewFolderToolStripButton"
-    Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(71, 22)
+    Me.DestinationNewFolderToolStripButton.Size = New System.Drawing.Size(89, 24)
     Me.DestinationNewFolderToolStripButton.Text = "New Folder"
     '
     'DestinationNewToolStripButton
@@ -571,7 +595,7 @@ Partial Class MainForm
     Me.DestinationNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.DestinationNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationNewToolStripButton.Name = "DestinationNewToolStripButton"
-    Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(98, 22)
+    Me.DestinationNewToolStripButton.Size = New System.Drawing.Size(123, 24)
     Me.DestinationNewToolStripButton.Text = "New Destination"
     '
     'DestinationDeleteToolStripButton
@@ -580,22 +604,23 @@ Partial Class MainForm
     Me.DestinationDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.DestinationDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.DestinationDeleteToolStripButton.Name = "DestinationDeleteToolStripButton"
-    Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(44, 22)
+    Me.DestinationDeleteToolStripButton.Size = New System.Drawing.Size(57, 24)
     Me.DestinationDeleteToolStripButton.Text = "Delete"
     '
     'ToolStripSeparator3
     '
     Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-    Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
+    Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 27)
     '
     'QueriesTabPage
     '
     Me.QueriesTabPage.Controls.Add(Me.QueriesSplitContainer)
     Me.QueriesTabPage.Controls.Add(Me.QueriesToolStrip)
-    Me.QueriesTabPage.Location = New System.Drawing.Point(4, 22)
+    Me.QueriesTabPage.Location = New System.Drawing.Point(4, 25)
+    Me.QueriesTabPage.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueriesTabPage.Name = "QueriesTabPage"
-    Me.QueriesTabPage.Padding = New System.Windows.Forms.Padding(3)
-    Me.QueriesTabPage.Size = New System.Drawing.Size(876, 339)
+    Me.QueriesTabPage.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.QueriesTabPage.Size = New System.Drawing.Size(1171, 422)
     Me.QueriesTabPage.TabIndex = 1
     Me.QueriesTabPage.Text = "Remote Open SQL Queries"
     Me.QueriesTabPage.UseVisualStyleBackColor = True
@@ -603,7 +628,8 @@ Partial Class MainForm
     'QueriesSplitContainer
     '
     Me.QueriesSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.QueriesSplitContainer.Location = New System.Drawing.Point(3, 28)
+    Me.QueriesSplitContainer.Location = New System.Drawing.Point(4, 31)
+    Me.QueriesSplitContainer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueriesSplitContainer.Name = "QueriesSplitContainer"
     '
     'QueriesSplitContainer.Panel1
@@ -615,9 +641,10 @@ Partial Class MainForm
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QuerySplitContainer)
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QueryDescriptionGroupBox)
     Me.QueriesSplitContainer.Panel2.Controls.Add(Me.QueryStatusStrip)
-    Me.QueriesSplitContainer.Size = New System.Drawing.Size(870, 308)
-    Me.QueriesSplitContainer.SplitterDistance = 233
-    Me.QueriesSplitContainer.TabIndex = 0
+    Me.QueriesSplitContainer.Size = New System.Drawing.Size(1163, 387)
+    Me.QueriesSplitContainer.SplitterDistance = 311
+    Me.QueriesSplitContainer.SplitterWidth = 5
+    Me.QueriesSplitContainer.TabIndex = 1
     '
     'QueryTreeView
     '
@@ -627,15 +654,17 @@ Partial Class MainForm
     Me.QueryTreeView.ImageList = Me.ImageList
     Me.QueryTreeView.LabelEdit = True
     Me.QueryTreeView.Location = New System.Drawing.Point(0, 0)
+    Me.QueryTreeView.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueryTreeView.Name = "QueryTreeView"
     Me.QueryTreeView.SelectedImageIndex = 0
-    Me.QueryTreeView.Size = New System.Drawing.Size(233, 308)
+    Me.QueryTreeView.Size = New System.Drawing.Size(311, 387)
     Me.QueryTreeView.TabIndex = 0
     '
     'QuerySplitContainer
     '
     Me.QuerySplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.QuerySplitContainer.Location = New System.Drawing.Point(0, 95)
+    Me.QuerySplitContainer.Location = New System.Drawing.Point(0, 117)
+    Me.QuerySplitContainer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QuerySplitContainer.Name = "QuerySplitContainer"
     Me.QuerySplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
     '
@@ -646,17 +675,20 @@ Partial Class MainForm
     'QuerySplitContainer.Panel2
     '
     Me.QuerySplitContainer.Panel2.Controls.Add(Me.OutputGroupBox)
-    Me.QuerySplitContainer.Size = New System.Drawing.Size(633, 191)
-    Me.QuerySplitContainer.SplitterDistance = 94
-    Me.QuerySplitContainer.TabIndex = 2
+    Me.QuerySplitContainer.Size = New System.Drawing.Size(847, 241)
+    Me.QuerySplitContainer.SplitterDistance = 118
+    Me.QuerySplitContainer.SplitterWidth = 5
+    Me.QuerySplitContainer.TabIndex = 1
     '
     'QueryGroupBox
     '
     Me.QueryGroupBox.Controls.Add(Me.QueryTextBox)
     Me.QueryGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.QueryGroupBox.Location = New System.Drawing.Point(0, 0)
+    Me.QueryGroupBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueryGroupBox.Name = "QueryGroupBox"
-    Me.QueryGroupBox.Size = New System.Drawing.Size(633, 94)
+    Me.QueryGroupBox.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.QueryGroupBox.Size = New System.Drawing.Size(847, 118)
     Me.QueryGroupBox.TabIndex = 0
     Me.QueryGroupBox.TabStop = False
     Me.QueryGroupBox.Text = "Query"
@@ -665,11 +697,12 @@ Partial Class MainForm
     '
     Me.QueryTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.QueryBindingSource, "Query", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.QueryTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.QueryTextBox.Location = New System.Drawing.Point(3, 16)
+    Me.QueryTextBox.Location = New System.Drawing.Point(4, 19)
+    Me.QueryTextBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueryTextBox.Multiline = True
     Me.QueryTextBox.Name = "QueryTextBox"
     Me.QueryTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.QueryTextBox.Size = New System.Drawing.Size(627, 75)
+    Me.QueryTextBox.Size = New System.Drawing.Size(839, 95)
     Me.QueryTextBox.TabIndex = 0
     '
     'OutputGroupBox
@@ -677,8 +710,10 @@ Partial Class MainForm
     Me.OutputGroupBox.Controls.Add(Me.OutputTextBox)
     Me.OutputGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
     Me.OutputGroupBox.Location = New System.Drawing.Point(0, 0)
+    Me.OutputGroupBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.OutputGroupBox.Name = "OutputGroupBox"
-    Me.OutputGroupBox.Size = New System.Drawing.Size(633, 93)
+    Me.OutputGroupBox.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.OutputGroupBox.Size = New System.Drawing.Size(847, 118)
     Me.OutputGroupBox.TabIndex = 0
     Me.OutputGroupBox.TabStop = False
     Me.OutputGroupBox.Text = "Output"
@@ -687,12 +722,13 @@ Partial Class MainForm
     '
     Me.OutputTextBox.BackColor = System.Drawing.SystemColors.Window
     Me.OutputTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.OutputTextBox.Location = New System.Drawing.Point(3, 16)
+    Me.OutputTextBox.Location = New System.Drawing.Point(4, 19)
+    Me.OutputTextBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.OutputTextBox.Multiline = True
     Me.OutputTextBox.Name = "OutputTextBox"
     Me.OutputTextBox.ReadOnly = True
     Me.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.OutputTextBox.Size = New System.Drawing.Size(627, 74)
+    Me.OutputTextBox.Size = New System.Drawing.Size(839, 95)
     Me.OutputTextBox.TabIndex = 0
     '
     'QueryDescriptionGroupBox
@@ -700,9 +736,11 @@ Partial Class MainForm
     Me.QueryDescriptionGroupBox.Controls.Add(Me.QueryDescriptionTextBox)
     Me.QueryDescriptionGroupBox.Dock = System.Windows.Forms.DockStyle.Top
     Me.QueryDescriptionGroupBox.Location = New System.Drawing.Point(0, 0)
+    Me.QueryDescriptionGroupBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueryDescriptionGroupBox.Name = "QueryDescriptionGroupBox"
-    Me.QueryDescriptionGroupBox.Size = New System.Drawing.Size(633, 95)
-    Me.QueryDescriptionGroupBox.TabIndex = 1
+    Me.QueryDescriptionGroupBox.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+    Me.QueryDescriptionGroupBox.Size = New System.Drawing.Size(847, 117)
+    Me.QueryDescriptionGroupBox.TabIndex = 0
     Me.QueryDescriptionGroupBox.TabStop = False
     Me.QueryDescriptionGroupBox.Text = "Description"
     '
@@ -710,41 +748,43 @@ Partial Class MainForm
     '
     Me.QueryDescriptionTextBox.DataBindings.Add(New System.Windows.Forms.Binding("Text", Me.QueryBindingSource, "Description", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
     Me.QueryDescriptionTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.QueryDescriptionTextBox.Location = New System.Drawing.Point(3, 16)
+    Me.QueryDescriptionTextBox.Location = New System.Drawing.Point(4, 19)
+    Me.QueryDescriptionTextBox.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.QueryDescriptionTextBox.Multiline = True
     Me.QueryDescriptionTextBox.Name = "QueryDescriptionTextBox"
     Me.QueryDescriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-    Me.QueryDescriptionTextBox.Size = New System.Drawing.Size(627, 76)
+    Me.QueryDescriptionTextBox.Size = New System.Drawing.Size(839, 94)
     Me.QueryDescriptionTextBox.TabIndex = 0
     '
     'QueryStatusStrip
     '
     Me.QueryStatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueryToolStripProgressBar, Me.QueryToolStripStatusLabel})
-    Me.QueryStatusStrip.Location = New System.Drawing.Point(0, 286)
+    Me.QueryStatusStrip.Location = New System.Drawing.Point(0, 358)
     Me.QueryStatusStrip.Name = "QueryStatusStrip"
-    Me.QueryStatusStrip.Size = New System.Drawing.Size(633, 22)
-    Me.QueryStatusStrip.TabIndex = 0
+    Me.QueryStatusStrip.Padding = New System.Windows.Forms.Padding(1, 0, 19, 0)
+    Me.QueryStatusStrip.Size = New System.Drawing.Size(847, 29)
+    Me.QueryStatusStrip.TabIndex = 2
     Me.QueryStatusStrip.Text = "StatusStrip1"
     '
     'QueryToolStripProgressBar
     '
     Me.QueryToolStripProgressBar.Name = "QueryToolStripProgressBar"
-    Me.QueryToolStripProgressBar.Size = New System.Drawing.Size(100, 16)
+    Me.QueryToolStripProgressBar.Size = New System.Drawing.Size(133, 23)
     '
     'QueryToolStripStatusLabel
     '
     Me.QueryToolStripStatusLabel.Name = "QueryToolStripStatusLabel"
-    Me.QueryToolStripStatusLabel.Size = New System.Drawing.Size(77, 17)
+    Me.QueryToolStripStatusLabel.Size = New System.Drawing.Size(98, 24)
     Me.QueryToolStripStatusLabel.Text = "Time Elapsed"
     '
     'QueriesToolStrip
     '
     Me.QueriesToolStrip.ImageScalingSize = New System.Drawing.Size(32, 32)
     Me.QueriesToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueryNewFolderToolStripButton, Me.QueryNewToolStripButton, Me.QueryDeleteToolStripButton, Me.QueryToolStripSeparator1, Me.StartToolStripButton, Me.StopToolStripButton, Me.ViewToolStripButton, Me.QueryToolStripSeparator2, Me.TextToolStripButton, Me.ExcelToolStripButton, Me.AccessToolStripButton, Me.ToolStripSeparator5})
-    Me.QueriesToolStrip.Location = New System.Drawing.Point(3, 3)
+    Me.QueriesToolStrip.Location = New System.Drawing.Point(4, 4)
     Me.QueriesToolStrip.Name = "QueriesToolStrip"
-    Me.QueriesToolStrip.Size = New System.Drawing.Size(870, 25)
-    Me.QueriesToolStrip.TabIndex = 15
+    Me.QueriesToolStrip.Size = New System.Drawing.Size(1163, 27)
+    Me.QueriesToolStrip.TabIndex = 0
     Me.QueriesToolStrip.Text = "Add New Folder"
     '
     'QueryNewFolderToolStripButton
@@ -753,7 +793,7 @@ Partial Class MainForm
     Me.QueryNewFolderToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.folder_new_8
     Me.QueryNewFolderToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewFolderToolStripButton.Name = "QueryNewFolderToolStripButton"
-    Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(71, 22)
+    Me.QueryNewFolderToolStripButton.Size = New System.Drawing.Size(89, 24)
     Me.QueryNewFolderToolStripButton.Text = "New Folder"
     '
     'QueryNewToolStripButton
@@ -762,7 +802,7 @@ Partial Class MainForm
     Me.QueryNewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.address_book_new_4
     Me.QueryNewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryNewToolStripButton.Name = "QueryNewToolStripButton"
-    Me.QueryNewToolStripButton.Size = New System.Drawing.Size(70, 22)
+    Me.QueryNewToolStripButton.Size = New System.Drawing.Size(86, 24)
     Me.QueryNewToolStripButton.Text = "New Query"
     '
     'QueryDeleteToolStripButton
@@ -771,13 +811,13 @@ Partial Class MainForm
     Me.QueryDeleteToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.edit_delete_6
     Me.QueryDeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.QueryDeleteToolStripButton.Name = "QueryDeleteToolStripButton"
-    Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(44, 22)
+    Me.QueryDeleteToolStripButton.Size = New System.Drawing.Size(57, 24)
     Me.QueryDeleteToolStripButton.Text = "Delete"
     '
     'QueryToolStripSeparator1
     '
     Me.QueryToolStripSeparator1.Name = "QueryToolStripSeparator1"
-    Me.QueryToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+    Me.QueryToolStripSeparator1.Size = New System.Drawing.Size(6, 27)
     '
     'StartToolStripButton
     '
@@ -786,7 +826,7 @@ Partial Class MainForm
     Me.StartToolStripButton.Image = CType(resources.GetObject("StartToolStripButton.Image"), System.Drawing.Image)
     Me.StartToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.StartToolStripButton.Name = "StartToolStripButton"
-    Me.StartToolStripButton.Size = New System.Drawing.Size(32, 22)
+    Me.StartToolStripButton.Size = New System.Drawing.Size(38, 24)
     Me.StartToolStripButton.Text = "Run"
     '
     'StopToolStripButton
@@ -796,7 +836,7 @@ Partial Class MainForm
     Me.StopToolStripButton.Image = CType(resources.GetObject("StopToolStripButton.Image"), System.Drawing.Image)
     Me.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.StopToolStripButton.Name = "StopToolStripButton"
-    Me.StopToolStripButton.Size = New System.Drawing.Size(35, 22)
+    Me.StopToolStripButton.Size = New System.Drawing.Size(44, 24)
     Me.StopToolStripButton.Text = "Stop"
     '
     'ViewToolStripButton
@@ -806,13 +846,13 @@ Partial Class MainForm
     Me.ViewToolStripButton.Image = Global.RemoteOpenSQL.RemoteOpenSQLManager.My.Resources.Resources.quickopen
     Me.ViewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.ViewToolStripButton.Name = "ViewToolStripButton"
-    Me.ViewToolStripButton.Size = New System.Drawing.Size(36, 22)
+    Me.ViewToolStripButton.Size = New System.Drawing.Size(45, 24)
     Me.ViewToolStripButton.Text = "View"
     '
     'QueryToolStripSeparator2
     '
     Me.QueryToolStripSeparator2.Name = "QueryToolStripSeparator2"
-    Me.QueryToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
+    Me.QueryToolStripSeparator2.Size = New System.Drawing.Size(6, 27)
     '
     'TextToolStripButton
     '
@@ -822,7 +862,7 @@ Partial Class MainForm
     Me.TextToolStripButton.Image = CType(resources.GetObject("TextToolStripButton.Image"), System.Drawing.Image)
     Me.TextToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.TextToolStripButton.Name = "TextToolStripButton"
-    Me.TextToolStripButton.Size = New System.Drawing.Size(33, 22)
+    Me.TextToolStripButton.Size = New System.Drawing.Size(41, 24)
     Me.TextToolStripButton.Text = "Text"
     '
     'ExcelToolStripButton
@@ -833,7 +873,7 @@ Partial Class MainForm
     Me.ExcelToolStripButton.Image = CType(resources.GetObject("ExcelToolStripButton.Image"), System.Drawing.Image)
     Me.ExcelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.ExcelToolStripButton.Name = "ExcelToolStripButton"
-    Me.ExcelToolStripButton.Size = New System.Drawing.Size(37, 22)
+    Me.ExcelToolStripButton.Size = New System.Drawing.Size(47, 24)
     Me.ExcelToolStripButton.Text = "Excel"
     '
     'AccessToolStripButton
@@ -844,13 +884,13 @@ Partial Class MainForm
     Me.AccessToolStripButton.Image = CType(resources.GetObject("AccessToolStripButton.Image"), System.Drawing.Image)
     Me.AccessToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.AccessToolStripButton.Name = "AccessToolStripButton"
-    Me.AccessToolStripButton.Size = New System.Drawing.Size(47, 22)
+    Me.AccessToolStripButton.Size = New System.Drawing.Size(57, 24)
     Me.AccessToolStripButton.Text = "Access"
     '
     'ToolStripSeparator5
     '
     Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-    Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 25)
+    Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 27)
     '
     'DestinationsOpenFileDialog
     '
@@ -862,13 +902,14 @@ Partial Class MainForm
     '
     'MainForm
     '
-    Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+    Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-    Me.ClientSize = New System.Drawing.Size(884, 389)
+    Me.ClientSize = New System.Drawing.Size(1179, 479)
     Me.Controls.Add(Me.MainTabControl)
     Me.Controls.Add(Me.MenuStrip)
     Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
     Me.MainMenuStrip = Me.MenuStrip
+    Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
     Me.Name = "MainForm"
     Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
     Me.Text = "Remote Open SQL Manager"
