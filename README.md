@@ -4,6 +4,10 @@
 
 Remote Open SQL makes it easier for SAP R3 users and developers to run Open SQL Queries on SAP R3 database. It's developed in Visual Basic .NET 2010 and ABAP. It uses Sap .NET Connector 2.0, Gold Parser Engine and Calitha Library.
 
+**Quick start guide**
+
+https://github.com/filippobottega/RemoteOpenSQL/wiki/Remote-Open-SQL-Manager-Quick-Start-Guide
+
 **News**
 
 2011-10-17 My quick presentation [video](https://sap.na.pgiconnect.com/p49054663/ "RemoteOpenSQL Presentation") at SAP Inside Track Milan.
